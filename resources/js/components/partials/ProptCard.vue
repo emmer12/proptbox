@@ -30,8 +30,7 @@
                   </div>
                   <hr>
                   <div class="c-t-a">
-                      <span class="mr-2"><i class="fa fa-eye"></i> </span>
-                      <span class=""><i class="fa fa-commenting-o"></i> </span>
+                      <span class="mr-2"><i class="fa fa-eye"></i> 23+</span>
                   </div>
               </div>
             </div>
@@ -102,8 +101,12 @@ export default {
       justify-content: flex-end;
       & span{
         color:grey;
+        font-size: 12px;
+        & i{
         font-size:20px;
         margin:0px 10px;
+
+        }
       }
     }
      

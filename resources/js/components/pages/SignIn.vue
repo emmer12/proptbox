@@ -1,18 +1,24 @@
 <template>
   <div class="signup-con">
     <div class="container">
-      <form v-on:submit.prevent>
-        <div class="form-group">
+      <form v-on:submit.prevent ref="form" :class="{shake:invalid}">
+        <div class="alert alert-danger" v-if="serverErrors" role="alert">
+          <strong>{{serverErrors}}</strong>
+        </div>
+        <div class="form-group ">
           <label for="inputName" class="col-sm-1-12 col-form-label">Email</label>
           <div class="col-sm-1-12">
             <input
               type="text"
               class="form-control"
+              :class="{'is-invalid':$v.newUser.email.$error}"
               name="inputName"
-              v-model="newUser.email"
+              v-model.trim="$v.newUser.email.$model"
               id="inputName"
               placeholder
             />
+            <div class="invalid-feedback" v-if="!$v.newUser.email.required">This field is required</div>
+            <div class="invalid-feedback " v-if="!$v.newUser.email.email">Please enter a valid email</div>
           </div>
         </div>
         <div class="form-group">
@@ -23,14 +29,16 @@
               class="form-control"
               name="inputName"
               id="inputName"
-              v-model="newUser.password"
+              :class="{'is-invalid':$v.newUser.password.$error}"
+              v-model.trim="$v.newUser.password.$model"
               placeholder
             />
+            <div class="invalid-feedback" v-if="!$v.newUser.password.required">This field is required</div>
           </div>
         </div>
         <div class="form-group">
           <div class>
-            <button type="submit" class="btn btn-primary" :disabled="loading" @click="login">Action</button>
+            <button type="submit" class="btn btn-primary btn-block" :disabled="loading" @click="login">Sign in</button>
           </div>
         </div>
 
@@ -71,26 +79,53 @@
         </div>
       </form>
     </div>
+
+
   </div>
 </template>
 
 <script>
+import { required,minLength,email } from 'vuelidate/lib/validators'
 export default {
   data() {
     return {
       value: true,
-      valid: true,
-      newUser: {},
+      invalid: false,
+      newUser: {
+        email:'',
+        password:''
+      },
       serverErrors: false,
       loading: false
     };
-  },
 
+
+  },
+    validations:{
+      newUser:{
+        email:{
+          required,
+          email
+        },
+        password:{
+          required
+        }
+      }
+    },
   methods: {
     login() {
-      this.loading = true;
+      this.$v.$touch()
+      this.$refs.form.classList.remove('shake')
+      if (this.$v.$invalid) {
+        // this.invalid=true;
+        let tis=this
+        setTimeout(function(){
+         tis.$refs.form.classList.add('shake')
+        },1000)
+      }else{
       this.valid = false;
-      this.$store
+      this.loading = true;
+           this.$store
         .dispatch("loginUser", this.newUser)
         .then(() => {
           this.newUser = {};
@@ -100,20 +135,12 @@ export default {
         .catch(err => {
           this.loading = false;
           this.newUser.password = "";
-          if (err.response.data.global) {
-            this.serverErrors = null || Object.values(err.response.data.errors);
-            this.$toast.error({
-              title: "Server Error",
-              message: "Opps! something went wrong"
-            });
-            window.scrollTo(0, 50);
-          } else {
-            this.$toast.error({
-              title: "Server Error",
-              message: err.response.data.msg
-            });
-          }
+          this.$snotify.error("Opps, something went wrong")
+          console.log(err);
+          
+            this.serverErrors = err.response ? err.response.data.msg : "invalid cridential"
         });
+      }
     }
   }
 };
@@ -152,6 +179,9 @@ export default {
     opacity:0.5
   }
 
+  .shake{
+    animation:shake 1s;
+  }
 @keyframes dash {
   to{
     stroke-dashoffset: 1000;

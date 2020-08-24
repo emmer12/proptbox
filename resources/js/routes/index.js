@@ -12,6 +12,9 @@ import Logout from '../components/pages/Logout';
 import NewList from '../components/pages/NewList';
 import ListDetails from '../components/pages/ListDetails';
 import Dashboard from '../components/pages/Dashboard';
+import MyListing from '../components/pages/MyListing';
+import MyRequest from '../components/pages/MyRequest';
+import EmailVerify from '../components/pages/EmailVerify';
 
 export const routes = [
     {
@@ -37,6 +40,14 @@ export const routes = [
         }
     },
     {
+        path: 'forget-password',
+        name: 'access.forget.password',
+        component: ForgetPassword,
+        meta: {
+            requiresVisitor: true,
+        }
+    },
+      {
         path: 'forget-password',
         name: 'access.forget.password',
         component: ForgetPassword,
@@ -83,6 +94,28 @@ export const routes = [
         }
     },
 
+    {
+        path: '/dashboard/my-listing',
+        name: 'my.listing',
+        component: MyListing,
+        meta: {
+            requiresAuth: true,
+        }
+    },
+
+    {
+        path: '/dashboard/my-request',
+        name: 'my.request',
+        component: MyRequest,
+        meta: {
+            requiresAuth: true,
+        }
+    },
+    {
+        path: '/verify-email',
+        name: 'verify-email',
+        component:EmailVerify,
+    },
 
     {
         path: '/logout',

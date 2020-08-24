@@ -1,7 +1,7 @@
 import VueRouter from "vue-router";
 import {routes} from './routes'
-
-
+import Vuelidate from 'vuelidate'
+import Snotify,{ SnotifyPosition} from 'vue-snotify'
 require('./bootstrap');
 window.Vue = require('vue');
 
@@ -14,12 +14,30 @@ const DEFAULT_TITLE="ProptBox"
 
 
 Vue.use(VueRouter);
+Vue.use(Vuelidate)
 
+const options={
+    toast:{
+        position:SnotifyPosition.rightTop
+    }
+}
+
+Vue.use(Snotify,options)
 
 let router = new VueRouter({
     mode: 'history',
     routes
 });
+
+
+
+// ************************************************** //
+//            Event Bus                               //
+// **************************************************//
+
+window.eventBus=new Vue()
+
+
 
 
 router.beforeEach((to, from, next) => {

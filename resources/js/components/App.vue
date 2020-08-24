@@ -13,6 +13,8 @@
               <!-- <div class="scroll-top" ref="scroll-top" @click="scrollTop">
                   <i class="icon angle double up"></i>
               </div> -->
+
+              <vue-snotify></vue-snotify>
     </div>
 
 
@@ -58,7 +60,10 @@
         
     }
 </script>
-
+<style >
+@import "~vue-snotify/styles/material.css";
+@import "~font-awesome/css/font-awesome.css";
+</style>
 <style lang="scss" scoped>
    .scroll-top{
        height:50px;

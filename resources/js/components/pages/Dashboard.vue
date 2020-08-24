@@ -1,15 +1,24 @@
 <template>
   <div class="dashboard">
-      <h1>Dashboard</h1>
+      <setting-view></setting-view>
   </div>
 </template>
 
 <script>
+import SettingView from "../partials/Settingview";
+
 export default {
+components:{
+  SettingView
+},
+data() {
+  return {
+  }
+},
+methods: {
+},
+created() {
+},
 
 }
 </script>
-
-<style>
-
-</style>

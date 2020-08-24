@@ -20,7 +20,6 @@ class CreatePropertyTable extends Migration
             $table->string('property_title');
             $table->longText('property_description');
             $table->string('property_price');
-            $table->string('password');
             $table->timestamps();
         });
     }

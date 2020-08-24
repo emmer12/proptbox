@@ -29,7 +29,11 @@ Route::group(['middleware'=>'auth:api'], function () {
 Route::post('/register','API\AuthController@register')->name('auth.register');
 Route::post('/login','API\AuthController@login')->name('category.login');
 
+Route::post('/login-passport','API\AuthController@loginP')->name('category.login');
 
 Route::get('/all-property','API\PropertyController@getAll');
+
+Route::get('/email-verification','API\AuthController@verify')->name('verification.verify');
+
 Route::get('/all-request','API\RequestController@getAll');
 

@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\API;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Hash;
 use App\User;
 use Auth;
-
+use Laravel\Passport\Client;
+use Mockery\Undefined;
 
 class AuthController extends Controller
 {
@@ -21,28 +24,31 @@ class AuthController extends Controller
     public function register(Request $request)
     {
 
-        $validator=$request->validate([
-            'name' =>'required',
-            'email' =>'required|unique:users',
-            // 'fullname' => ['required', 'string', 'max:255'],
+        $validator = $request->validate([
+            'username' => 'required',
+            'email' => 'required|unique:users',
+            'firstname' => ['required', 'string', 'max:255'],
+            'lastname' => ['required', 'string', 'max:255'],
+            'password' => 'required|min:6'
+            // 'location' => ['required', 'string', 'max:255'], 
             // 'phoneNo' => ['required', 'string', 'max:255'],
-            // 'location' => ['required', 'string', 'max:255'],
-            'password' => 'required|min:8',
         ]);
 
-           $user = new User();
-        
-            // $user->fullname = $request->input('fullname');
-            // $user->location = $request->input('location');
-            // $user->phoneNo = $request->input('phoneNo');
-            $user->name = $request->input('name');
-            $user->email = $request->input('email');
-            $user->password = Hash::make($request->input('password'));
-            $user->save();
-            $token = $user->createToken('proptbox-v1')->accessToken;
+        $user = new User();
 
-        return response()->json(['token'=>$token,'success'=>true],200);
-        
+        $user->firstname = $request->input('firstname');
+        $user->lastname = $request->input('lastname');
+        // $user->location = $request->input('location');
+        // $user->phoneNo = $request->input('phoneNo');
+        $user->username = $request->input('username');
+        $user->email = $request->input('email');
+        $user->password = Hash::make($request->input('password'));
+        $user->save();
+        // $user->sendEmailVerificationNotification();
+        $token = $user->createToken('proptbox-v1')->accessToken;
+
+
+        return response()->json(['success' => true], 200);
     }
 
     /**
@@ -51,23 +57,93 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function login(Request $request)
+    public function loginP(Request $request)
     {
-        $validator=$request->validate([
+        $validator = $request->validate([
             'email' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:8'],
         ]);
-        
-        if (Auth::attempt(['email'=>request('email'),'password'=>request('password')])){
-            $user=Auth::user();
-            $token=$user->createToken('proptbox-v1')->accessToken;
-            return response()->json(['success'=>true,'token'=>$token],200);
-        }
-        else{
-            return response()->json(['error'=>"Invalid username or password"],401);
-      
-         }
 
+        if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
+            $user = Auth::user();
+            $token = $user->createToken('proptbox-v1')->accessToken;
+            return response()->json(['success' => true, 'token' => $token], 200);
+        } else {
+            return response()->json(['error' => "Invalid username or password"], 401);
+        }
+    }
+
+
+    public function verify(Request $request)
+    {
+        $user = User::findOrFail($request->id);
+
+        // Do this to allow unverified user to login 
+
+        // if (!hash_equals((string) $request->id, (string) $user->getKey())) {
+        //     throw new AuthorizationException;
+        // }
+
+        // dd($request->id);
+        if (!hash_equals((string) $request->hash, sha1($user->getEmailForVerification()))) {
+            throw new AuthorizationException;
+        }
+
+        if ($user->hasVerifiedEmail()) {
+            return response()->json([
+                "msg" => "User already verified",
+                "success" => false
+            ]);
+        }
+
+        if ($user->markEmailAsVerified()) {
+            event(new Verified($user));
+        }
+
+        return response()->json([
+            "msg" => "Email Verify successfully",
+            "success" => true
+        ]);
+    }
+
+
+
+    public function login(Request $request)
+    {
+
+        $user = User::where('email', $request['email'])->where('email_verified_at', '<>', NULL)->first();
+        $passportClient = Client::where('password_client', 1)->first();
+
+        $data = [
+            'grant_type' => 'password',
+            'client_id' => $passportClient->id,
+            'client_secret' => $passportClient->secret,
+            'username' => $request['email'],
+            'password' => $request['password'],
+            'scope' => '*'
+        ];
+
+        
+
+        $tokenRequest = Request::create('/oauth/token', 'post', $data);
+        $tokenResponse = app()->handle($tokenRequest);
+        $contentString = $tokenResponse->content();
+
+
+        $result=json_decode($contentString);
+        if (!empty($result->error)) {
+            return response()->json(['msg' => "Invalid cridential"], 400);
+        }
+        else if(!$user) {
+            return response()->json(['msg' => "Email not verified"], 400);
+        }else{
+            return response()->json([
+                'data' => $result
+            ]);
+        }
+
+
+        
     }
 
     /**

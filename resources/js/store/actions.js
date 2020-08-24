@@ -4,10 +4,7 @@ export default {
 
     registerUser({ commit,rootState }, data) {
         return new Promise((resolve, reject) => {
-            Api.create(data).then(res => {
-                let token = res.data.token;
-                localStorage.setItem('token', token)
-                commit("retrieveToken", {token,user:res.data.user,root:rootState})
+            Api.registerUser(data).then(res => {
                 resolve(res)
             }).catch(err => {
                 reject(err)
@@ -21,10 +18,24 @@ export default {
     loginUser({commit}, data) {
         return new Promise((resolve, reject) => {
             Api.loginUser(data).then(res => {
-                alert()
-                let token = res.data.token;
+               if(res.data.data.error){
+                reject(res.data)
+               }else{
+                let token = res.data.data.access_token;
                 localStorage.setItem('token', token)
                 commit("retrieveToken",token)
+                resolve(res)
+               }
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+
+    emailVerification({commit}, data) {
+        return new Promise((resolve, reject) => {
+            Api.verifyEmail(data).then(res => {
                 resolve(res)
             }).catch(err => {
                 reject(err)
@@ -33,12 +44,10 @@ export default {
         })
     },
 
-
     destroyToken({getters,commit,rootState}){
         if (getters.loggedIn) {
             return new Promise((resolve)=>{
                     localStorage.removeItem('token')
-                    localStorage.removeItem('pinToken')
                     commit("destroyToken",rootState)
                     resolve(true)
                 })
