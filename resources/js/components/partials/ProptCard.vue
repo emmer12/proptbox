@@ -1,32 +1,34 @@
 <template>
-  <div style="height:1000px">
-      <!-- <strong class="anim">
-        Hello 
-      </strong> -->
+  <div style="">
 
-
-
-     <div class="container">
-       <div class="row">
-         <div class="col-md-4" v-for="(item, index) in 4" :key="index">
+      <div v-if="!lists.length">
+        <div class="container">
+          <div class="alert alert-default" style="border-left:4px solid #3490dc" role="alert">
+          <h4 class="alert-heading">Empty List:</h4>
+          <router-link  class="btn btn-primary" tag="button" :to="{name:'new-list'}">Create New <i class="fa fa-plus" aria-hidden="true"></i></router-link>
+        </div>
+        </div>
+      </div>
+      <div v-else>
+        <div class="col-md-4" v-for="(list, index) in lists" :key="index">
             <div class="card p-card">
               <div class="img">
-                <img :src="'/images/'+ (item + 1) +'.jpg'" width="100%"/>
+                <img :src="'/images/'+ 1 +'.jpg'" width="100%"/>
               </div>
 
               <div class="details">
                   <div class="title">
-                    <h4>This is the title</h4>
-                    <button v-if="item%2==0" class="btn btn-danger btn-sm">For rent</button>
+                    <h4>{{ list.space_type }}</h4>
+                    <button v-if="index%2==0" class="btn btn-danger btn-sm">For rent</button>
                     <button v-else class="btn btn-primary btn-sm">For sale</button>
                   </div>
                   <div class="l-p">
-                    <h4>Location pof prop</h4>
-                    <h5>$5000</h5>
+                    <h4><i class="fa fa-location-arrow" aria-hidden="true"></i> {{list.space_address}}</h4>
+                    <h5>${{list.rent}}</h5>
                   </div>
                   <div class="description">
-                    <h4>title of des</h4>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae tenetur natus tempore impedit esse enim!...</p>
+                    <!-- <h4>title of des</h4> -->
+                    <p>{{list.about_property}}</p>
                   </div>
                   <hr>
                   <div class="c-t-a">
@@ -35,8 +37,7 @@
               </div>
             </div>
          </div>
-       </div>
-     </div>
+      </div>
 
      
   </div>
@@ -44,7 +45,7 @@
 
 <script>
 export default {
-
+  props: ['lists']
 }
 </script>
 

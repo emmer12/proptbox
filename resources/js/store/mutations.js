@@ -24,6 +24,14 @@
                 rootState.user.user=null
 
             },
+            setUser(state,data){
+                state.user=data;
+            },
+             setListing(state,list){
+                state.listing.list=list.data;
+                state.listing.links=list.links;
+                state.listing.meta=list.meta;
+            },
             destroyPinToken(state,rootState){
                 state.pinToken=null
                 rootState.user.user=null

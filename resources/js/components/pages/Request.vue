@@ -1,10 +1,16 @@
 <template>
-  <h1>Request</h1>
+  <div>
+      <preloader :type="'list'"></preloader>
+  </div>
 </template>
 
 <script>
-export default {
+import Preloader from './../partials/ContentPreloader'
 
+export default {
+components: {
+  Preloader
+}
 }
 </script>
 

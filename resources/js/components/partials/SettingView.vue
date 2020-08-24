@@ -30,7 +30,7 @@
                     name="firstname"
                     v-model.trim="$v.newUser.firstname.$model"
                     id="firstname"
-                    placeholder="Firstname"
+                    :placeholder="user.firstname"
                   />
                   <div
                     class="invalid-feedback"
@@ -52,7 +52,7 @@
                     name="lastname"
                     v-model.trim="$v.newUser.lastname.$model"
                     id="lastname"
-                    placeholder="Lastname"
+                    :placeholder="user.lastname"
                   />
                   <div
                     class="invalid-feedback"
@@ -73,7 +73,8 @@
                     name="username"
                     v-model.trim="$v.newUser.username.$model"
                     id="username"
-                    placeholder="Username"
+                    :placeholder="user.username"
+                    
                   />
                   <div
                     class="invalid-feedback"
@@ -94,7 +95,7 @@
                     name="email"
                     v-model.trim="$v.newUser.email.$model"
                     id="email"
-                    placeholder="email"
+                   :placeholder="user.email"
                   />
                   <div
                     class="invalid-feedback"
@@ -161,7 +162,7 @@
 
 <script>
 import { required, minLength, email } from "vuelidate/lib/validators";
-
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -194,8 +195,14 @@ export default {
   methods: {
     update() {
       alert("yerss");
-    }
-  }
+    },
+  },
+
+  computed: {
+    ...mapGetters([
+      'user'
+    ])
+  },
 };
 </script>
 

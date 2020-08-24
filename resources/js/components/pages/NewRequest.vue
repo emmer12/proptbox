@@ -6,7 +6,7 @@
       <div class="c-list">
           <form action="">
               <div class="form-h">
-                  <h4><span>List</span> your space ?</h4>
+                  <h4><span>Request </span>for your space ?</h4>
               </div>
               <div class="form-group">
                   <label for="">Space Type</label>
@@ -43,7 +43,7 @@
                   <textarea placeholder="About Cohabitation"  class="form-control"></textarea> 
                </div>
 
-               <button class="btn btn-primary btn-block">Submit</button>
+               <button class="btn btn-primary btn-block">Request</button>
           </form>
       </div>
   </div>
@@ -52,14 +52,14 @@
 
 <script>
 import {TimelineLite} from "gsap/all"
-
 export default {
 mounted(){
     // let get=this.$ref.get
     let timeline=new TimelineLite()
     timeline.from('.c-list-con',{y:50,opacity:0})
     timeline.from('.form-h',{x:-20,opacity:0})
-  }
+  
+}
 }
 </script>
 

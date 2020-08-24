@@ -13,6 +13,33 @@ export default {
         })
     },
 
+    getUser({ commit }){
+        return new Promise((resolve, reject) => {
+            Api.getUser().then(res => {
+                commit('setUser',res.data.data);
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+
+
+
+    getListing({ commit,state }){
+        return new Promise((resolve, reject) => {
+            Api.getListing(state).then(res => {
+                commit('setListing',res.data);
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+
+
 
 
     loginUser({commit}, data) {

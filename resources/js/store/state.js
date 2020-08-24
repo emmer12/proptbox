@@ -7,4 +7,9 @@ export default {
       user:null,
       space:[],
       request:[],
+      listing:{
+        list:[],
+        links:null,
+        meta:null,
+      },
     }

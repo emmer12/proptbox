@@ -1,29 +1,40 @@
 <template>
-  <div class="banner">
+  <div class="banner"  v-if="user">
                <div class="des-header2">
                  <div class="display">
-                     <img src="/images/5.jpg" width="180px" height="180px"/>
+                     <img :src="'/storage/uploads/images/'+user.profile_pic_filename" width="180px" height="180px"/>
                  </div>
                  <div class="c-t-a">
                      <div class="details">
-                         <h4>Ojoolape moses</h4>
+                         <h4>{{user.firstname}} {{user.lastname}}</h4>
                          <p>Male,31</p>
                      </div>
+                 </div>
+
+                 <div class="action">
+                     <router-link v-if="from==='list'" :to="{name:'new-list'}" tag="button" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> </router-link>
+                     <router-link v-if="from==='request' " :to="{name:'new-request'}" tag="button" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> </router-link>
                  </div>
              </div>
     </div>
 </template>
 
 <script>
+import {mapGetters}  from 'vuex'
 export default {
+    props: ['from'],
     methods: {
         
-    }
+    },
+    computed: {
+        ...mapGetters(['user'])
+    },
 };
 </script>
 
 <style lang="scss" scoped>
 .banner{
+    position:relative;
   & .des-header2{
            background:white;
            display:flex;
@@ -42,6 +53,12 @@ export default {
                padding-top: 40px;
                line-height:20px;
               
+           }
+
+           & .action{
+               position: absolute;
+               right: 10px;
+               top:10px
            }
        }
 }

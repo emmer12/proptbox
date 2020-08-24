@@ -28,8 +28,19 @@
                   >List</router-link>
                   <router-link tag="button" class="btn btn-primary" :to="{name:'request'}">Request</router-link>
                 </div>
-                <div class="avatar">
+                <div v-if="loggedIn" class="avatar" @click="openDrop=!openDrop">
                   <img src="/images/user.png" />
+                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                <div class="dropdown" v-show="openDrop">
+                  <ul>
+                    <router-link tag="li" :to="{name:'dashboard'}">Account Settings</router-link>
+                    <router-link tag="li" :to="{name:'logout'}">Logout</router-link>
+                  </ul>
+                </div>
+                </div>
+                <div v-else class="log-sign">
+                    <router-link tag="a" :to="{name:'access.signup'}">Sign up</router-link>
+                    <router-link tag="a" :to="{name:'access.signin'}">Sign in</router-link>
                 </div>
               </div>
             </div>
@@ -38,7 +49,7 @@
         <div class="nav-c nav-bottom">
           <div class="row">
             <div class="col-md-6">
-              <div class="left">
+              <div class="left" v-if="$route.name==='home'">
                 <div class="culture">
                   <h1>FASTEST GROWING</h1>
                   <h1>PROPERTY HUB</h1>
@@ -77,6 +88,7 @@
 
 <script>
 import SideBar from "./SideBar";
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -85,7 +97,8 @@ export default {
   data() {
     return {
       tReveal: false,
-      drawer: false
+      drawer: false,
+      openDrop:false
     };
   },
   methods: {
@@ -95,7 +108,8 @@ export default {
   },
   watch: {
     $route(){
-      this.openDrawer()
+      this.drawer=false
+      this.openDrop=false
     }
   },
   created() {
@@ -104,6 +118,13 @@ export default {
       tis.tReveal = window.scrollY < 200 ? false : true;
     });
     window.eventBus.$on("openDrawer", this.openDrawer);
+  },
+
+  computed: {
+    ...mapGetters([
+      'user',
+      'loggedIn'
+    ])
   }
 };
 </script>
@@ -115,6 +136,7 @@ export default {
   top: 0;
   z-index: 999;
   position: relative;
+  overflow: hidden;
 }
 .nav-top {
   position: relative;
@@ -128,6 +150,44 @@ export default {
     width: 100%;
     padding: 0px 100px;
     background-color: #eef4ff;
+  }
+
+  & .log-sign{
+   & a{
+     padding:10px;
+     font-weight: 700;
+     text-decoration: none;
+    }
+  }
+
+  & .avatar{
+    cursor: pointer;
+    margin-left:10px;
+    & .dropdown{
+    background:#fff;
+    line-height:20px;
+    color:#444;
+    z-index: 999;
+    border-radius:3px;
+    padding:10px;
+    width:200px;
+    position:absolute;
+    ul{
+      margin:0px;
+      padding:0px;
+
+      & li{
+        list-style:none;
+        padding:10px;
+        border-bottom: 1px solid #ccc;
+        cursor: pointer;
+
+        &:hover{
+          background: #eef4ff;
+        }
+      }
+    }
+  }
   }
 }
 .nav-bottom {

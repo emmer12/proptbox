@@ -37,6 +37,9 @@
             console.log('Component mounted dd.');
         },
         methods: {
+            getUser:function(){
+                this.$store.dispatch('getUser');
+            },
             scrollTop:function(e){
                 console.log('scrolling');
               $('html,body').animate({scrollTop:0},'600','swing');
@@ -55,6 +58,7 @@
             //     //these hooks do not get a next function and cannot affect the navigation}
             //     this.$Progress.finish()
             // })
+            this.getUser()
             
         },
         

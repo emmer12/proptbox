@@ -10,6 +10,7 @@ import List from '../components/pages/List';
 import Request from '../components/pages/Request';
 import Logout from '../components/pages/Logout';
 import NewList from '../components/pages/NewList';
+import NewRequest from '../components/pages/NewRequest';
 import ListDetails from '../components/pages/ListDetails';
 import Dashboard from '../components/pages/Dashboard';
 import MyListing from '../components/pages/MyListing';
@@ -59,6 +60,11 @@ export const routes = [
         path: '/requests',
         name: 'request',
         component: Request
+    },
+    {
+        path: '/request/create',
+        name: 'new-request',
+        component: NewRequest,
     },
     {
         path: '/list',
