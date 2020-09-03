@@ -32,10 +32,22 @@
 
 
     <div class="row" v-if="type==='details'">
-      <div class="col-md-12">
+      <div class="col-md-12" style="margin:0px auto;max-width:550px">
         <div class="loader-con-list loads">
                  <div class="img-area"></div>
                  <div class="details-d">
+                     <div></div>
+                     <div></div>
+                 </div>
+                  <div class="details-d">
+                     <div></div>
+                     <div></div>
+                 </div>
+                  <div class="details-d">
+                     <div></div>
+                     <div></div>
+                 </div>
+                  <div class="details-d">
                      <div></div>
                      <div></div>
                  </div>

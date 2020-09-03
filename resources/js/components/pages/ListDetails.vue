@@ -3,7 +3,7 @@
      <div class="banner">
      </div>
 
-     <div class="d-contain">
+     <div v-if="list" class="d-contain">
          <div class="d-inner">
              <div class="des-header1" v-show="true">
                  <div class="display">
@@ -11,14 +11,14 @@
                  </div>
                  <div class="c-t-a">
                      <div class="details">
-                         <h4>Ojoolape moses</h4>
+                         <h4>{{list.user.firstname}} {{ list.user.lastname}}</h4>
                          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatu </p>
                      </div>
                      <span>
                          <i class="fa fa-commenting-o"></i>
                      </span>
-                     <div>
-                         <button class="btn btn-primary">$500</button>
+                     <div style="min-width:100px">
+                         <button class="btn btn-primary">$ {{list.rent}}</button>
                      </div>
                  </div>
              </div>
@@ -44,7 +44,7 @@
              <div class="des-body">
                  <div class="body-details">
                      <div>Rent</div>
-                     <div>$50 every month</div>
+                     <div>${{list.rent}} every month</div>
                  </div>
                   <div class="body-details">
                      <div>Bills</div>
@@ -56,7 +56,7 @@
                  </div>
                   <div class="body-details">
                      <div>Property type</div>
-                     <div>Rent</div>
+                     <div>{{list.space_type}}</div>
                  </div>
                   <div class="body-details">
                      <div>Room funishing</div>
@@ -64,7 +64,7 @@
                  </div>
                   <div class="body-details">
                      <div>Available on</div>
-                     <div>August 28</div>
+                     <div>{{ list.created_at }}</div>
                  </div>
 
 
@@ -74,7 +74,7 @@
                      <div>
                          <strong>About space</strong>
                      </div>
-                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur voluptatibus, nesciunt eum tenetur reprehenderit voluptas corrupti provident doloremque aliquid quos laudantium saepe magni fugiat expedita doloribus exercitationem omnis sit libero?</p>
+                     <p>{{list.about_property}}</p>
                  </div>
 
                  <div class="des">
@@ -94,12 +94,39 @@
              
          </div>
      </div>
+
+     <div v-else>
+      <preloader :type="'details'"></preloader>
+     </div>
    </div>
 </template>
 
 <script>
-export default {
+import { mapActions,mapGetters } from 'vuex'
+import Preloader from "./../partials/ContentPreloader";
 
+export default {
+    components: {
+        Preloader
+    },
+    data() {
+        return {
+            
+        }
+    },
+    methods: {
+      getListSlug(){
+          this.$store.dispatch('getListSlug',this.$route.params.slug)
+      }
+    },
+    created () {
+     this.getListSlug();
+    },
+    computed:{
+        ...mapGetters([
+            'list'
+        ])
+    }
 }
 </script>
 

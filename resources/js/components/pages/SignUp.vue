@@ -1,45 +1,65 @@
 <template>
   <div class="signup-con">
+
+    <div class="header">
+        <div class="logo">
+            <img src="/images/logo.svg" />
+        </div>
+        <h4>Sign Up</h4>
+    </div>
     <div class="container">
       <form v-on:submit.prevent ref="form">
+       
+
+        <div class="c-btn" @click="socialSignUp('google')"><img src="/svg/google.svg" width="18px" /> Continue with Google</div>
+        <div class="c-btn"  @click="socialSignUp('facebook')"><img src="/svg/facebook.svg"  width="18px" /> Continue with Facebook</div>
+
+        <loading :loading="loading"></loading>
+        
+        
+         <div class="or">
+         <span >or</span>
+        </div>
+
+
         <div class="form-group">
-          <label for="firstname" class="col-sm-1-12 col-form-label">Firstname <span>*</span></label>
+          <label for="firstname" class="col-sm-1-12 col-form-label">Fullname <span>*</span></label>
           <div class="col-sm-1-12">
             <input
-              :class="{'is-invalid':$v.newUser.firstname.$error}"
+              :class="{'is-invalid':$v.newUser.fullname.$error}"
               type="text"
               class="form-control"
-              name="firstname"
-              v-model.trim="$v.newUser.firstname.$model"
-              id="firstname"
-              placeholder="Firstname"
+              name="fullname"
+              v-model.trim="$v.newUser.fullname.$model"
+              id="fullname"
+              placeholder="Fullname"
             />
             <div
               class="invalid-feedback"
-              v-if="!$v.newUser.firstname.required"
+              v-if="!$v.newUser.fullname.required"
             >This field is required</div>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="lastname" class="col-sm-1-12 col-form-label">Lastname  <span>*</span></label>
+          <label for="phone" class="col-sm-1-12 col-form-label">Phone Number <span>*</span></label>
           <div class="col-sm-1-12">
             <input
-              type="text"
-              :class="{'is-invalid':$v.newUser.lastname.$error}"
+              type="number"
+              :class="{'is-invalid':$v.newUser.phone.$error}"
               class="form-control"
-              name="lastname"
-              v-model.trim="$v.newUser.lastname.$model"
-              id="lastname"
-              placeholder="Lastname"
+              name="phone"
+              v-model.trim="$v.newUser.phone.$model"
+              id="phone"
+              placeholder="phone"
             />
             <div
               class="invalid-feedback"
-              v-if="!$v.newUser.lastname.required"
+              v-if="!$v.newUser.phone.required"
             >This field is required</div>
           </div>
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label for="username" class="col-sm-1-12 col-form-label">Username  <span>*</span></label>
           <div class="col-sm-1-12">
             <input
@@ -56,7 +76,7 @@
               v-if="!$v.newUser.username.required"
             >This field is required</div>
           </div>
-        </div>
+        </div> -->
         <div class="form-group">
           <label for="email" class="col-sm-1-12 col-form-label">Email  <span>*</span></label>
           <div class="col-sm-1-12">
@@ -73,6 +93,21 @@
             <div class="invalid-feedback" v-if="!$v.newUser.email.email">Please enter a valid email</div>
           </div>
         </div>
+        <div class="form-group">
+          <div class="col-sm-1-12">
+            <div class="form-group">
+              <label for="location">Location</label>
+              <select class="custom-select"  :class="{'is-invalid':$v.newUser.location.$error}" id="location" v-model.trim="$v.newUser.location.$model">
+                <option selected>Select your Location</option>
+                <option value="Lagos">Lagos</option>
+                <option value="Ondo">Ondo</option>
+                <option value="Oyo">Oyo</option>
+              </select>
+            </div>
+            <div class="invalid-feedback" v-if="!$v.newUser.location.required">This field is required</div>
+          </div>
+        </div>
+
         <div class="form-group">
           <label for="password" class="col-sm-1-12 col-form-label">Passsword  <span>*</span></label>
           <div class="col-sm-1-12">
@@ -118,40 +153,18 @@
 
         <div class="form-group">
           <div class>
-            <button type="submit" class="btn btn-primary" @click="register">Register</button>
+            <button type="submit" class="btn btn-primary btn-block" @click="register">Register</button>
           </div>
         </div>
 
-        <div class="loading-overlay" v-show="loading">
-          <svg width="50px" height="50px" viewBox="0 0 345.804 345.804" xml:space="preserve">
-            <g>
-              <path
-                id="path"
-                d="M343.288,159.838L181.905,27.941c-5.242-4.283-12.77-4.283-18.009,0l-41.336,33.79V44.193c0-3.788-3.066-6.848-6.854-6.848
-		H75.928c-3.788,0-6.854,3.063-6.854,6.848v61.251L2.516,159.838c-2.933,2.391-3.36,6.711-0.97,9.641
-		c1.357,1.654,3.33,2.523,5.32,2.523c1.524,0,3.053-0.511,4.328-1.545l34.55-28.245v172.011c0,3.785,3.066,6.852,6.846,6.852
-		h240.626c3.781,0,6.854-3.066,6.854-6.852V142.216l34.55,28.245c1.273,1.037,2.807,1.545,4.326,1.545
-		c1.984,0,3.956-0.87,5.314-2.524C346.648,166.549,346.221,162.235,343.288,159.838z M82.779,51.041h26.071v21.888l-26.071,21.31
-		V51.041z M286.367,307.369H59.44V131.015l107.596-87.939c3.414-2.791,8.316-2.791,11.731,0l107.6,87.939V307.369z"
-              />
-            </g>
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-          </svg>
+        <div>
+          <router-link to="/signin">Already have an account ?</router-link>
         </div>
+
+        <loading :loading="loading"></loading>
+
+
+
       </form>
     </div>
   </div>
@@ -159,17 +172,24 @@
 
 <script>
 // import { mapActions } from 'vuex'
+import Loading from './../partials/FormLoading';
 import { required, minLength, email } from "vuelidate/lib/validators";
+import { TimelineLite } from "gsap/all";
+
 
 export default {
+  components: {
+    Loading
+  },
   data() {
     return {
       value: true,
       newUser: {
         username: "",
-        firstname: "",
-        lastname: "",
+        fullname: "",
+        phone: "",
         email: "",
+        location:'',
         password: "",
         cPassword: ""
       },
@@ -181,9 +201,10 @@ export default {
 
   validations: {
     newUser: {
-      username: { required },
-      firstname: { required },
-      lastname: { required },
+      // username: { required },
+      fullname: { required },
+      location: { required },
+      phone: { required},
       email: { required, email },
       password: { minLength: minLength(6) },
       cPassword: { required }
@@ -191,6 +212,13 @@ export default {
   },
 
   methods: {
+    socialSignUp(provider){
+        this.$store.dispatch('socialSignUp',provider).then((res)=>{
+         if (res.data.url) {
+              window.location.href = res.data.url
+            }
+        })
+    },
      register() {
      this.$v.$touch();
       this.$refs.form.classList.remove('shake')
@@ -205,59 +233,71 @@ export default {
         .dispatch("registerUser", this.newUser)
         .then(() => {
           this.newUser = {};
-          this.loading = false;         
-            this.$router.push({ name: "access.signin" });
+          this.loading = false;       
+            this.$router.push({ name: "complete.setup" });
         })
         .catch(err => {
           this.loading = false;
-          if (err.response.data.global) {
-            this.serverErrors = null || Object.values(err.response.data.errors);
-            this.$toast.error({
-              title: "Server Error",
-              message: "Opps! something went wrong"
-            });
-            window.scrollTo(0, 50);
-          } else {
-            this.$toast.error({
-              title: "Server Error",
-              message: err.response.data.msg
-            });
-          }
-
+          this.$snotify.error("Opps, something went wrong please try again")
           this.newUser.password = "";
-        });
-
-
-
-
-
-
-
-
-
-
-
+        })
         
-     }
+     }s
     }
-  }
+  },
+
+    mounted() {
+    // let get=this.$ref.get
+    let timeline = new TimelineLite();
+    // timeline.from(".signup-con", { y: 200, opacity: 0 });
+    // timeline.from(".form-h", { x: -20, opacity: 0 });
+  } 
 };
 </script>
 
 
 
-<style lang="scss" scoped>
+<style lang="scss">
 .signup-con {
   max-width: 400px;
   margin: 0px auto;
   background: white;
   padding: 10px;
   position: relative;
-
+  transform: translateY(100px);
+ & .header{
+    text-align:center;
+   & h4{
+     background:#eef4ff
+    }
+  }
 
   & label span{
     color:red;
     font-size:14px;
   }
 }
+
+@media screen and (max-width:460px) {
+  .signup-con{
+    margin:10px;
+  }
+}
+</style>
+
+<style >
+   .or{
+     text-align:center;
+     font-size:16px;
+     background:#eef4ff;
+     /* padding:5px; */
+     border-radius: 50%;
+     color:#3490dc;
+     height:30px;
+     width:30px;
+     line-height:30px;
+     left:50%;
+     position:relative;
+     transform:translateX(-50%)
+   }
 </style>

@@ -25,23 +25,20 @@ class AuthController extends Controller
     {
 
         $validator = $request->validate([
-            'username' => 'required',
+            // 'username' => 'required',
             'email' => 'required|unique:users',
-            'firstname' => ['required', 'string', 'max:255'],
-            'lastname' => ['required', 'string', 'max:255'],
-            'password' => 'required|min:6'
-            // 'location' => ['required', 'string', 'max:255'], 
-            // 'phoneNo' => ['required', 'string', 'max:255'],
+            'fullname' => ['required', 'string', 'max:255'],
+            'password' => 'required|min:6',
+            'location' => ['required', 'string', 'max:255'], 
+            'phone' => ['required', 'string', 'max:255'],
         ]);
 
         $user = new User();
 
-        $user->firstname = $request->input('firstname');
-        $user->lastname = $request->input('lastname');
-        $user->location = "Akure";
-        $user->age = 30;
-        $user->phoneNo =9038373463;
-        $user->username = $request->input('username');
+        $user->fullname = $request->input('fullname');
+        $user->location = $request->input('location');
+        $user->phoneNo =$request->input('phone');
+        // $user->username = $request->input('username');
         $user->email = $request->input('email');
         $user->password = Hash::make($request->input('password'));
         $user->save();
@@ -49,7 +46,7 @@ class AuthController extends Controller
         $token = $user->createToken('proptbox-v1')->accessToken;
 
 
-        return response()->json(['success' => true], 200);
+        return response()->json(['success' => true,"access_token"=>$token], 200);
     }
 
     /**
@@ -146,6 +143,53 @@ class AuthController extends Controller
 
         
     }
+
+    public function otherSetup(Request $request)
+    {
+        
+        $validator = $request->validate([
+            'phoneNo' => 'required',
+            'location' => ['required', 'string', 'max:255'],
+            'age' => ['required','max:255'],
+
+        ]);
+
+        $user = User::whereEmail(Auth::user()->email)->first();
+        
+
+        $user->location=$request->input('location');
+        $user->age=$request->input('age');
+        $user->phoneNo=$request->input('phoneNo');
+
+        $user->save();
+
+        return response()->json([
+            'success' => true
+        ],200);
+
+    }
+
+
+    public function otherSetupSignup(Request $request)
+    {
+        
+        $validator = $request->validate([
+            'age' => ['required','max:255'],
+
+        ]);
+
+        $user = User::whereEmail(Auth::user()->email)->first();
+        
+        $user->age=$request->input('age');
+
+        $user->save();
+
+        return response()->json([
+            'success' => true
+        ],200);
+
+    }
+
 
     /**
      * Display the specified resource.

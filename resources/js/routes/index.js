@@ -3,8 +3,12 @@ import HomePage from '../components/pages/HomePage.vue';
 import Page404 from '../components/pages/Page404';
 import SignUp from '../components/pages/SignUp';
 import SignIn from '../components/pages/SignIn';
+import Setup from '../components/pages/Setup';
+import SetupSignUp from '../components/pages/SetupSignUp';
 import ForgetPassword from '../components/pages/ForgetPassword';
+import ResetPassword from '../components/pages/ResetPassword';
 import Session from '../components/pages/Session';
+import SocialLoging from '../components/pages/SocialLoging';
 import Profile from '../components/pages/Profile';
 import List from '../components/pages/List';
 import Request from '../components/pages/Request';
@@ -24,30 +28,69 @@ export const routes = [
         component: HomePage
     },
 
-    {
-        path: '/signup',
-        name: 'access.signup',
-        component: SignUp,
-        meta: {
-            requiresVisitor: true,
+   {
+    path: '/session',
+    name: 'session',
+    component:Session,   
+       children:[
+        {
+            path: '/signup',
+            name: 'access.signup',
+            component: SignUp,
+            meta: {
+                requiresVisitor: true,
+            }
+        },
+        {
+            path: '/signin',
+            name: 'access.signin',
+            component: SignIn,
+            meta: {
+                requiresVisitor: true,
+            }
+        },
+        {
+            path: '/forget-password',
+            name: 'access.forget.password',
+            component: ForgetPassword,
+            meta: {
+                requiresVisitor: true,
+            }
+        },
+        {
+            path: '/reset-password',
+            name: 'access.reset.password',
+            component: ResetPassword,
+            meta: {
+                requiresVisitor: true,
+            }
+        },
+        {
+            path: '/sign-in/:provider/redirect',
+            name: 'loginGithub',
+            component: SocialLoging,
+            meta: {
+                requiresVisitor: true,
+            }
+        },
+        {
+            path: '/sign-in/complete-setup',
+            name: 'setup',
+            component:Setup,
+            meta: {
+               requiresAuth:true
+            }
+        },
+        {
+            path: '/sign-up/complete-setup',
+            name: 'complete.setup',
+            component:SetupSignUp,
+            // meta: {
+            //     requiresVisitor: true,
+            // }
         }
-    },
-    {
-        path: '/signin',
-        name: 'access.signin',
-        component: SignIn,
-        meta: {
-            requiresVisitor: true,
-        }
-    },
-    {
-        path: 'forget-password',
-        name: 'access.forget.password',
-        component: ForgetPassword,
-        meta: {
-            requiresVisitor: true,
-        }
-    },
+       ]
+   },
       {
         path: 'forget-password',
         name: 'access.forget.password',
@@ -65,6 +108,9 @@ export const routes = [
         path: '/request/create',
         name: 'new-request',
         component: NewRequest,
+        meta: {
+            requiresAuth:true
+         }
     },
     {
         path: '/list',
@@ -83,6 +129,9 @@ export const routes = [
         path: '/list/create',
         name: 'new-list',
         component: NewList,
+        meta: {
+            requiresAuth:true
+         }
     },
 
 

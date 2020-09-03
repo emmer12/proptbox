@@ -22,9 +22,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/create-property', 'API\PropertyController@create');
-    Route::post('/create-request', 'API\RequestController@create');
+    Route::post('/send-request', 'API\RequestController@create');
     Route::post('/create-listing', 'API\ListingController@store');
+    Route::delete('/delete-listing/{id}', 'API\ListingController@destroy');
     Route::get('/auth-user', 'API\UserController@getAuthUser');
+    
+    Route::post('/other-setup', 'API\AuthController@otherSetup');
+    Route::post('/other-setup-signup', 'API\AuthController@otherSetupSignup');
 });
 
 
@@ -43,3 +47,17 @@ Route::get('/all-request', 'API\RequestController@getAll');
 Route::get('/all-listing', 'API\ListingController@index');
 
 Route::get('/all-listing-by-location', 'API\ListingController@listingByLocation');
+
+Route::get('/get-list-by-slug/{slug}', 'API\ListingController@listingBySlug');
+
+
+// social login
+
+Route::get('/sign-in/{provider}', 'API\SocialAuthController@redirectToProvider');
+Route::get('/sign-in/{provider}/redirect', 'API\SocialAuthController@handleProviderCallback');
+
+
+// password reset
+
+Route::post('request-password-reset','API\ForgotPasswordController@sendResetLinkEmail');
+Route::post('/reset-password', 'Api\ResetPasswordController@reset')->name('api.reset-password');

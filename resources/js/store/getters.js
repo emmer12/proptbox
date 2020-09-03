@@ -9,5 +9,9 @@ export default {
 
     listing(state){
         return state.listing.list
+    },
+
+    list(state){
+        return state.listDetails
     }
 }

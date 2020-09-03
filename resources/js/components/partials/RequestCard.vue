@@ -10,7 +10,7 @@
         </div>
       </div>
        <div class="bottom-section">
-         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse autem placeat id eius voluptatibus nostrum quasi voluptatem perferendis nobis? Architecto?</p>
+         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse autem po...</p>
          <div class="c-t-b">
              <strong>Budget</strong>
              <span>$200</span>

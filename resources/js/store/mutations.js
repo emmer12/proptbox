@@ -14,8 +14,8 @@
                 state.token=token
             
             },
-            loading(state,data){
-                state.loading=data
+            setListSlug(state,data){
+                state.listDetails=data
             },
 
             destroyToken(state,rootState){

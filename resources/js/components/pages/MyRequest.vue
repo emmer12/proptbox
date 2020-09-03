@@ -1,23 +1,26 @@
 <template>
-  <div class="container">
-    <banner-view v-if="user" :from="'request'"></banner-view>
-    <div v-else>
-      <preloader :type="'pro'"></preloader>
-    </div>
-
-    <div class="listing">
-      <div class="header">
-        <h4>My Request</h4>
+  <div>
+    <!-- <div class="banner"></div> -->
+    <div class="container">
+      <banner-view v-if="user" :from="'request'"></banner-view>
+      <div v-else>
+        <preloader :type="'pro'"></preloader>
       </div>
-      <propt-card></propt-card>
+
+      <div class="listing">
+        <div class="header">
+          <h4>My Request</h4>
+        </div>
+        <propt-card></propt-card>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 import BannerView from "../partials/BannerView";
-import Preloader from './../partials/ContentPreloader'
+import Preloader from "./../partials/ContentPreloader";
 import ProptCard from "../partials/ProptCard";
 export default {
   components: {
@@ -26,11 +29,9 @@ export default {
     Preloader
   },
 
-   computed: {
-        ...mapGetters([
-            'user'
-        ])
-    },
+  computed: {
+    ...mapGetters(["user"])
+  }
 };
 </script>
 

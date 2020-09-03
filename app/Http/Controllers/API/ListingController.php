@@ -29,24 +29,26 @@ class ListingController extends Controller
      */
     public function store(Request $request)
     {
-         // $validate=$request->validate([
-        //     'property_title' => ['required'],
-        //     'property_descrition' => ['required'],
-        //     'property_price' => ['required'],
-        //     'property_location' => ['required'],
-        //     'property_type' => ['required']
-        // ]);
+         $validate=$request->validate([
+             'space_address' => ['required'],
+             'space_location' => ['required'],
+            'space_type' => ['required'],
+            'space_for' => ['required'],
+            'rent' => ['required']
+        ]);
         
         $listing=new Listing();
 
     //    die(Auth::user()->id);
 
         $listing->space_type=$request->input('space_type');
+        $listing->space_for=$request->input('space_for');
+        $listing->space_location=$request->input('space_location');
         $listing->space_address=$request->input('space_address');
         $listing->rent=$request->input('rent');
         $listing->payer_gender=$request->input('payer_gender');
-        $listing->available_form=$request->input('available_form');
-        $listing->rating=$request->input('rating');
+        $listing->available_from=$request->input('available_from');
+        $listing->rating=1;
         $listing->bedroom_type=$request->input('bedroom_type');
         $listing->about_property=$request->input('about_property');
         $listing->about_cohabitation=$request->input('about_cohabitation');
@@ -73,9 +75,10 @@ class ListingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function listingBySlug($slug)
     {
-        //
+        $list=Listing::where('slug',$slug)->first();
+        return new ListingResource($list);
     }
 
     /**
@@ -98,6 +101,14 @@ class ListingController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $userId=Auth::user()->id;
+        $post=Listing::findOrFail($id);
+        if ($post->user_id == $userId) {
+            $post->delete();
+           return response()->json(['success'=>true,'msg'=>"listing deleted"],200);
+            
+        }else {
+            return response()->json(['success'=>false,'msg'=>"You have no permission to delete this post"],400);
+        }
     }
 }

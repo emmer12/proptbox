@@ -19,15 +19,68 @@ const getListing=(state)=>{
     return Api.get(url)
 }
 
-const getUser=(data)=>{
+const getUser=()=>{
     return Api.get('auth-user');
 }
 
+const getListSlug=(slug)=>{
+    return Api.get('get-list-by-slug/'+slug);
+}
+
+const createList=(data)=>{
+    return Api.post('/create-listing',data)
+}
+
+const deleteList=(data)=>{
+    return Api.delete('/delete-listing/'+data)
+}
+
+const sendRequest=(data)=>{
+    return Api.post('/send-request',data)
+}
+const socialSignUp=(provider)=>{
+    return Api.get('/sign-in/'+provider);
+}
+
+const loginUpSocial=(payload,provider)=>{
+    return Api.get('/sign-in/'+provider+'/redirect', {
+        params: payload
+    })
+}
+const setupOther=(data)=>{
+    return Api.post('/other-setup',data)
+}
+const setupOtherSign=(data)=>{
+    return Api.post('/other-setup-signup',data)
+}
+const resetPasswordRequest=(data)=>{
+    return Api.post('/request-password-reset',data)
+}
+
+const resetPassword=(data)=>{
+    return Api.post('/reset-password',data)
+}
+
+const getRequestLimit=(state)=>{
+    let url = state.token ? '/all-request-by-location' : '/all-request-limit'
+    return Api.get(url)
+}
 
 export default {
     registerUser,
     loginUser,
     verifyEmail,
     getUser,
-    getListing
+    getListing,
+    getListSlug,
+    createList,
+    deleteList,
+    socialSignUp,
+    loginUpSocial,
+    setupOther,
+    setupOtherSign,
+    sendRequest,
+    resetPasswordRequest,
+    resetPassword,
+    getRequestLimit
 }

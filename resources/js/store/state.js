@@ -12,4 +12,6 @@ export default {
         links:null,
         meta:null,
       },
+      position:null,
+      listDetails:null
     }

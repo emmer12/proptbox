@@ -19,66 +19,66 @@
             <form v-on:submit.prevent ref="form">
               <div class="form-group">
                 <label for="firstname" class="col-sm-1-12 col-form-label">
-                  Firstname
+                  Fullname
                   <span>*</span>
                 </label>
                 <div class="col-sm-1-12">
                   <input
-                    :class="{'is-invalid':$v.newUser.firstname.$error}"
+                    :class="{'is-invalid':$v.newUser.fullname.$error}"
                     type="text"
                     class="form-control"
                     name="firstname"
-                    v-model.trim="$v.newUser.firstname.$model"
+                    v-model.trim="$v.newUser.fullname.$model"
                     id="firstname"
-                    :placeholder="user.firstname"
+                    :placeholder="user.fullname"
                   />
                   <div
                     class="invalid-feedback"
-                    v-if="!$v.newUser.firstname.required"
+                    v-if="!$v.newUser.fullname.required"
                   >This field is required</div>
                 </div>
               </div>
 
               <div class="form-group">
                 <label for="lastname" class="col-sm-1-12 col-form-label">
-                  Lastname
+                  Location
                   <span>*</span>
                 </label>
                 <div class="col-sm-1-12">
                   <input
                     type="text"
-                    :class="{'is-invalid':$v.newUser.lastname.$error}"
+                    :class="{'is-invalid':$v.newUser.location.$error}"
                     class="form-control"
-                    name="lastname"
-                    v-model.trim="$v.newUser.lastname.$model"
-                    id="lastname"
-                    :placeholder="user.lastname"
+                    name="location"
+                    v-model.trim="$v.newUser.location.$model"
+                    id="location"
+                    :placeholder="user.location"
                   />
                   <div
                     class="invalid-feedback"
-                    v-if="!$v.newUser.lastname.required"
+                    v-if="!$v.newUser.location.required"
                   >This field is required</div>
                 </div>
               </div>
               <div class="form-group">
                 <label for="username" class="col-sm-1-12 col-form-label">
-                  Username
+                  Phone number
                   <span>*</span>
                 </label>
                 <div class="col-sm-1-12">
                   <input
                     type="text"
                     class="form-control"
-                    :class="{'is-invalid':$v.newUser.username.$error}"
-                    name="username"
-                    v-model.trim="$v.newUser.username.$model"
-                    id="username"
-                    :placeholder="user.username"
+                    :class="{'is-invalid':$v.newUser.phoneNo.$error}"
+                    name="phoneNo"
+                    v-model.trim="$v.newUser.phoneNo.$model"
+                    id="phoneNo"
+                    :placeholder="user.phoneNo"
                     
                   />
                   <div
                     class="invalid-feedback"
-                    v-if="!$v.newUser.username.required"
+                    v-if="!$v.newUser.phoneNo.required"
                   >This field is required</div>
                 </div>
               </div>
@@ -168,9 +168,9 @@ export default {
     return {
       value: true,
       newUser: {
-        username: "",
-        firstname: "",
-        lastname: "",
+        phoneNo: "",
+        fullname: "",
+        location: "",
         email: "",
         password: "",
         cPassword: ""
@@ -183,9 +183,9 @@ export default {
 
   validations: {
     newUser: {
-      username: { required },
-      firstname: { required },
-      lastname: { required },
+      phoneNo: { required },
+      fullname: { required },
+      location: { required },
       email: { required, email },
       password: { minLength: minLength(6) },
       cPassword: { required }

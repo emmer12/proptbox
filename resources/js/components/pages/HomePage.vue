@@ -16,7 +16,7 @@
          </div>
 
          <div class="body">
-           <propt-card></propt-card>
+           <propt-card :lists="listing"></propt-card>
          </div>
        </div>
    </div>
@@ -26,16 +26,29 @@
 
 import ProptCard from '../partials/ProptCard'
 import RequestCard from '../partials/RequestCard'
+import { mapActions, mapGetters } from "vuex";
+
 export default {
   components: {
     ProptCard,
     RequestCard
+  },
+   methods: {
+    ...mapActions(["getListing","getRequest"])
+  },
+
+  created() {
+    this.getListing();
+  },
+  computed: {
+    ...mapGetters(["listing"])
   }
 }
 </script>
 
 <style lang="scss" scoped>
   .home-con{
+    overflow: hidden;
     & .sidebar{
       position: absolute;
       width:300px;

@@ -31,28 +31,27 @@ class RequestController extends Controller
     public function create(Request $request)
     {
 
-        //  $validate=$request->validate([
-        //     'requests_title' => ['required'],
-        //     'requests_descrition' => ['required'],
-        //     'requests_budget' => ['required'],
-        //     'requests_location' => ['required'],
-        //     'requests_type' => ['required']
-        // ]);
+         $validate=$request->validate([
+            // 'about' => ['required'],
+            'space_for' => ['required'],
+            'budget' => ['required'],
+            'space_location' => ['required'],
+            'space_type' => ['required']
+        ]);
 
         $requests=new Requests();
 
     //    die(Auth::user()->id);
 
-        $requests->requests_title=$request->input('requests_title');
-        $requests->requests_description=$request->input('requests_description');
-        $requests->requests_budget=$request->input('requests_budget');
-        $requests->requests_location=$request->input('requests_location');
-        $requests->requests_type=$request->input('requests_type');
-        $requests->slug=Str::slug($request->input('requests_title'));
+        $requests->space_for=$request->input('space_for');
+        $requests->budget=$request->input('budget');
+        $requests->space_location=$request->input('space_location');
+        $requests->space_type=$request->input('space_type');
+        $requests->about_property=$request->input('about_property');
         $requests->user_id=Auth::user()->id;
         $requests->save();
 
-        return response()->json(['success'=>true,'msg'=>"property created"],200);
+        return response()->json(['success'=>true,'msg'=>"Request sent"],200);
     }
 
     /**

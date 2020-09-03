@@ -1,7 +1,7 @@
 <template>
     <div>
 
-         <nav-view></nav-view>
+         <nav-view v-show="!['session','access.signup','access.signin','setup','access.forget.password'].includes($route.name)"></nav-view>
 
               <transition name="fade" enter-active-class="animated fadeIn"  leave-active-class="animated fadeOut" mode="out-in">
                   <router-view></router-view>
@@ -34,9 +34,23 @@
         },
         mounted() {
             // this.$Progress.finish()
-            console.log('Component mounted dd.');
         },
         methods: {
+            getCurrentLocation(){
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(this.setCurrentPosition);
+                }else{
+                    alert('geoLocation not supported');
+                }
+            },
+            setCurrentPosition(position){
+                let pos={lat:position.coords.latitude,long:position.coords.longitude}
+                console.log('====================================');
+                console.log(position);
+                console.log('====================================');
+                this.$store.dispatch('setCurrentPostion',pos)
+
+            },
             getUser:function(){
                 this.$store.dispatch('getUser');
             },
@@ -46,6 +60,8 @@
             }
         },
         created(){
+            this.getCurrentLocation()
+
             // this.$Progress.start();
             // this.$router.beforeEach((to, from, next) => {
             //     this.$Progress.start();
@@ -58,7 +74,16 @@
             //     //these hooks do not get a next function and cannot affect the navigation}
             //     this.$Progress.finish()
             // })
-            this.getUser()
+            try {
+                let token=localStorage.getItem('token')
+                if (token) {
+                    this.getUser()
+                }
+
+            } catch (error) {
+                console.log(error);
+                
+            }
             
         },
         

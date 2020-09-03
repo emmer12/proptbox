@@ -4,7 +4,11 @@
         <div class="logo">
             <img src="/images/logo.svg" />
         </div>
-        <h4>Login</h4>
+
+        <div style="border-radius:50%">
+          <img src="/images/user.png" height="100px" width="100px" style="border-radius:50%" />
+        </div>
+        <h5 style="margin:10px">Fow Steps to go</h5>
     </div>
     <div class="container">
       <form v-on:submit.prevent ref="form" :class="{shake:invalid}">
@@ -12,52 +16,56 @@
           <strong>{{serverErrors}}</strong>
         </div>
         <div class="form-group ">
-          <label for="inputName" class="col-sm-1-12 col-form-label">Email</label>
+          <label for="inputName" class="col-sm-1-12 col-form-label">Phone Number</label>
           <div class="col-sm-1-12">
             <input
-              type="text"
+              type="number"
               class="form-control"
-              :class="{'is-invalid':$v.newUser.email.$error}"
+              :class="{'is-invalid':$v.newUser.phoneNo.$error}"
               name="inputName"
-              v-model.trim="$v.newUser.email.$model"
+              v-model.trim="$v.newUser.phoneNo.$model"
               id="inputName"
-              placeholder
+              placeholder="Phone number"
             />
-            <div class="invalid-feedback" v-if="!$v.newUser.email.required">This field is required</div>
-            <div class="invalid-feedback " v-if="!$v.newUser.email.email">Please enter a valid email</div>
+            <div class="invalid-feedback" v-if="!$v.newUser.phoneNo.required">This field is required</div>
           </div>
         </div>
         <div class="form-group">
-          <label for="inputName" class="col-sm-1-12 col-form-label">Passsword</label>
           <div class="col-sm-1-12">
-            <input
-              type="password"
-              class="form-control"
-              name="inputName"
-              id="inputName"
-              :class="{'is-invalid':$v.newUser.password.$error}"
-              v-model.trim="$v.newUser.password.$model"
-              placeholder
-            />
-            <div class="invalid-feedback" v-if="!$v.newUser.password.required">This field is required</div>
+            <div class="form-group">
+              <label for="location">Location</label>
+              <select class="custom-select"  :class="{'is-invalid':$v.newUser.location.$error}" id="location" v-model.trim="$v.newUser.location.$model">
+                <option selected value="" disabled>Select your Location</option>
+                <option value="Lagos">Lagos</option>
+                <option value="Ondo">Ondo</option>
+                <option value="Oyo">Oyo</option>
+              </select>
+            </div>
+            <div class="invalid-feedback" v-if="!$v.newUser.location.required">This field is required</div>
           </div>
         </div>
 
-        <div class="f-password">
-          <router-link tag="span" :to="{name:'access.forget.password'}" class="primary-color">forgot password?</router-link>
+          <div class="form-group ">
+          <label for="inputName" class="col-sm-1-12 col-form-label">Age</label>
+          <div class="col-sm-1-12">
+            <input
+              type="number"
+              class="form-control"
+              :class="{'is-invalid':$v.newUser.age.$error}"
+              name="inputName"
+              v-model.trim="$v.newUser.age.$model"
+              id="inputName"
+              placeholder="Your age"
+            />
+            <div class="invalid-feedback" v-if="!$v.newUser.age.required">This field is required</div>
+          </div>
         </div>
+
         <div class="form-group">
           <div class>
-            <button type="submit" class="btn btn-primary btn-block" :disabled="loading" @click="login">Sign in</button>
+            <button type="submit" class="btn btn-primary btn-block" :disabled="loading" @click="finish">Finish</button>
           </div>
         </div>
-
-        <div style="text-align:center">
-         <span >or</span>
-        </div>
-
-        <div class="c-btn"><img src="/svg/google.svg" width="18px" @click="socialSignUp('google')" /> Continue with Google</div>
-        <div class="c-btn"><img src="/svg/facebook.svg" width="18px"  @click="socialSignUp('facebook')" /> Continue with Facebook</div>
 
         <loading :loading="loading"></loading>
 
@@ -72,7 +80,7 @@
 
 <script>
 import Loading from './../partials/FormLoading';
-import { required,minLength,email } from 'vuelidate/lib/validators'
+import { required,minLength } from 'vuelidate/lib/validators'
 export default {
   components: {
     Loading
@@ -82,8 +90,9 @@ export default {
       value: true,
       invalid: false,
       newUser: {
-        email:'',
-        password:''
+        phoneNo:'',
+        location:'',
+        age:''
       },
       serverErrors: false,
       loading: false
@@ -93,24 +102,19 @@ export default {
   },
     validations:{
       newUser:{
-        email:{
+        phoneNo:{
           required,
-          email
         },
-        password:{
+        location:{
+          required
+        },
+        age:{
           required
         }
       }
     },
   methods: {
-      socialSignUp(provider){
-        this.$store.dispatch('socialSignUp',provider).then((res)=>{
-         if (res.data.url) {
-              window.location.href = res.data.url
-            }
-        })
-    },
-    login() {
+    finish() {
       this.$v.$touch()
       this.$refs.form.classList.remove('shake')
       if (this.$v.$invalid) {
@@ -123,18 +127,11 @@ export default {
       this.valid = false;
       this.loading = true;
            this.$store
-        .dispatch("loginUser", this.newUser)
+        .dispatch("setupOther", this.newUser)
         .then(() => {
           this.newUser = {};
           this.loading = false;
-          this.$snotify.success("Login successful", {
-              timeout: 6000,
-              showProgressBar: false,
-              closeOnClick: false,
-              pauseOnHover: true
-            });
-          this.$router.push({ name: "home" });
-
+          this.$router.push({ name: "dashboard" });
         })
         .catch(err => {
           this.loading = false;
