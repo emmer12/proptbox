@@ -61,6 +61,21 @@
           </div>
         </div>
 
+          <div class="form-group" >
+            <label for="space_type">Payer Type</label>
+            <select 
+            v-model.trim="$v.newUser.gender.$model"
+            :class="{'is-invalid':$v.newUser.gender.$error}"
+            class="form-control" name="" id="space_type" placeholder="Space type">
+              <option value="" selected disabled>Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="others">Others</option>
+            </select>
+            <div class="invalid-feedback" v-if="!$v.newUser.gender.required">Gender is required</div>
+
+          </div>
+
         <div class="form-group">
           <div class>
             <button type="submit" class="btn btn-primary btn-block" :disabled="loading" @click="finish">Finish</button>
@@ -92,7 +107,8 @@ export default {
       newUser: {
         phoneNo:'',
         location:'',
-        age:''
+        age:'',
+        gender
       },
       serverErrors: false,
       loading: false
@@ -109,6 +125,9 @@ export default {
           required
         },
         age:{
+          required
+        },
+        gender:{
           required
         }
       }

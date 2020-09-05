@@ -26,10 +26,26 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/create-listing', 'API\ListingController@store');
     Route::delete('/delete-listing/{id}', 'API\ListingController@destroy');
     Route::get('/auth-user', 'API\UserController@getAuthUser');
+    Route::patch('/update-user', 'API\UserController@updateUser');
+    Route::post('/upload-file', 'API\UserController@uploadFile');
     
+    Route::get('/all-request-limit-by-location','API\RequestController@requestLimit');
+    Route::get('/all-request-by-location','API\RequestController@requestByLocation');
+    
+    
+    Route::get('/all-listing-by-location', 'API\ListingController@listingByLocation');
+
+
     Route::post('/other-setup', 'API\AuthController@otherSetup');
     Route::post('/other-setup-signup', 'API\AuthController@otherSetupSignup');
 });
+
+Route::post('/listing-file-upload', 'API\ListingController@uploadFiles');
+
+
+Route::get('/all-listing-by-tag', 'API\ListingController@listingByTag');
+Route::get('/all-listing-by-location-filter', 'API\ListingController@listingByFLocation');
+Route::get('/all-request-by-location-filter', 'API\RequestController@requestByFilterLocation');
 
 
 Route::post('/register', 'API\AuthController@register')->name('auth.register');
@@ -46,9 +62,20 @@ Route::get('/all-request', 'API\RequestController@getAll');
 
 Route::get('/all-listing', 'API\ListingController@index');
 
-Route::get('/all-listing-by-location', 'API\ListingController@listingByLocation');
+Route::get('/all-listing-for-guest', 'API\ListingController@guestList');
 
-Route::get('/get-list-by-slug/{slug}', 'API\ListingController@listingBySlug');
+
+Route::get('/get-list-by-id/{id}', 'API\ListingController@listingById');
+Route::get('/get-request-by-id/{id}', 'API\RequestController@requestById');
+
+
+
+Route::get('/listing-tags', 'API\TagController@index');
+
+// request requests
+Route::get('/all-request-limit-guest','API\RequestController@requestLimitGuest');
+Route::get('/all-request-guest','API\RequestController@requestGuest');
+
 
 
 // social login
@@ -61,3 +88,5 @@ Route::get('/sign-in/{provider}/redirect', 'API\SocialAuthController@handleProvi
 
 Route::post('request-password-reset','API\ForgotPasswordController@sendResetLinkEmail');
 Route::post('/reset-password', 'Api\ResetPasswordController@reset')->name('api.reset-password');
+
+

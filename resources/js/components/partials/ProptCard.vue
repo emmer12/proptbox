@@ -24,7 +24,7 @@
                     <i class="fa fa-ellipsis-v" @click="showDrop" :data-id="list.id"  aria-hidden="true"></i>
                   </div>
               </div>
-              <router-link :to="{name:'list-details',params:{slug:list.slug}}" tag="div" class="img">
+              <router-link :to="{name:'list-details',params:{id:list.id}}" tag="div" class="img">
                 <img :src="'/images/'+ 1 +'.jpg'" width="100%"/>
               </router-link>
 

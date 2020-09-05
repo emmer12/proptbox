@@ -17,7 +17,21 @@ export default {
         })
     },
 
-    
+    updateUser({ commit,dispatch}, data) {
+        return new Promise((resolve, reject) => {
+            Api.updateUser(data).then(res => {
+                let token = res.data.access_token;
+                localStorage.setItem('token', token)
+                commit("retrieveToken",token)
+                dispatch("getUser");
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+       },
+
     setupOther({ commit }, data) {
         return new Promise((resolve, reject) => {
             Api.setupOther(data).then(res => {
@@ -150,11 +164,21 @@ export default {
         })
     },
 
+    getTags({ commit }){
+    return new Promise((resolve, reject) => {
+        Api.getTags().then(res => {
+            commit('setTags',res.data.data);
+            resolve(res)
+        }).catch(err => {
+            reject(err)
 
-    getListSlug({ commit },data){
+        })
+    })
+},
+    getListId({ commit },data){
         return new Promise((resolve, reject) => {
-            Api.getListSlug(data).then(res => {
-                commit('setListSlug',res.data.data);
+            Api.getListId(data).then(res => {
+                commit('setListId',res.data.data);
                 resolve(res)
             }).catch(err => {
                 reject(err)
@@ -164,9 +188,9 @@ export default {
     },
 
 
-    getListing({ commit,state }){
+    getListing({ commit,state },data){
         return new Promise((resolve, reject) => {
-            Api.getListing(state).then(res => {
+            Api.getListing(state,data).then(res => {
                 commit('setListing',res.data);
                 resolve(res)
             }).catch(err => {
@@ -225,19 +249,107 @@ export default {
          commit('setCurrentPos',data);
     },
 
-    getRequestLimit({commit},data){
+    getRequestLimit({commit,state},data){
         return new Promise((resolve, reject) => {
-            Api.getListing(state).then(res => {
-                commit('getRequestLimit',res.data);
+            Api.getRequestLimit(state).then(res => {
+                commit('setHRequest',res.data.data);
                 resolve(res)
             }).catch(err => {
                 reject(err)
 
             })
         })
-    }
+    },
+
+    getRequest({commit,state},data){
+        return new Promise((resolve, reject) => {
+            Api.getRequest(state).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    },
 
 
+    getRequestById({ commit },data){
+        return new Promise((resolve, reject) => {
+            Api.getRequestById(data).then(res => {
+                commit('setRequestById',res.data.data);
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+
+    getState({commit},data){
+        return new Promise((resolve, reject) => {
+            Api.getState().then(res => {
+                commit('setStates',res.data);
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+
+    selectTag({},data){
+        return new Promise((resolve, reject) => {
+            Api.filterTag(data).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+
+    selectLocation({},data){
+        return new Promise((resolve, reject) => {
+            Api.filterLocation(data).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+    selectRLocation({},data){
+        return new Promise((resolve, reject) => {
+            Api.filterRLocation(data).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+
+    uploadFile({dispatch},data){
+        return new Promise((resolve, reject) => {
+            let formdata=new FormData();
+            formdata.append('file',data)
+            formdata.append('field','profile')
+
+            Api.uploadFile(formdata).then(res => {
+                dispatch('getUser');
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+
+
+    setCurrentPostion({ commit },data){
+
+    console.log(data);
+    
+    },
 
 
 }

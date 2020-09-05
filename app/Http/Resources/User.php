@@ -14,6 +14,7 @@ class User extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
+    
     public function toArray($request)
     {
         return [
@@ -28,6 +29,7 @@ class User extends JsonResource
             'request' =>  Request::collection($this->request),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'verified'=> $this->verified
             ];
     }
 }

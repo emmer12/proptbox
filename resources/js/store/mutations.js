@@ -14,11 +14,13 @@
                 state.token=token
             
             },
-            setListSlug(state,data){
+            setListId(state,data){
                 state.listDetails=data
             },
-
-            destroyToken(state,rootState){
+            setRequestById(state,data){
+                state.requestDetails=data
+            },
+                destroyToken(state,rootState){
                 state.token=null
                 state.pinToken=null
                 rootState.user.user=null
@@ -27,15 +29,23 @@
             setUser(state,data){
                 state.user=data;
             },
+            setStates(state,data){
+                state.states=data
+            },
              setListing(state,list){
-                state.listing.list=list.data;
                 state.listing.links=list.links;
                 state.listing.meta=list.meta;
+            },
+            setTags(state,data){
+                state.listingTags=data;
             },
             destroyPinToken(state,rootState){
                 state.pinToken=null
                 rootState.user.user=null
 
+            },
+            setHRequest(state,data){
+                state.hRequest=data
             }
             
 

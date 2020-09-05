@@ -54,15 +54,52 @@ class RequestController extends Controller
         return response()->json(['success'=>true,'msg'=>"Request sent"],200);
     }
 
+
+
+    public function requestLimitGuest()
+    {
+        $requests=Requests::take(6)->get();
+        return RequestResource::collection($requests); 
+    }
+
+    
+    public function requestLimit()
+    {
+        $requests=Requests::where('space_location',Auth::user()->location)->take(6)->get();;
+        return RequestResource::collection($requests); 
+    }
+
+
+    public function requestByLocation()
+    {
+        $requests=Requests::orderBy('created_at','DESC')->where('space_location',Auth::user()->location)->paginate(9);
+        return RequestResource::collection($requests);
+    }
+
+    public function requestByFilterLocation(Request $request)
+    {
+        $requests=Requests::where('space_location',$request->query('location'))->paginate(12);
+        return RequestResource::collection($requests);
+    }
+
+    public function requestGuest()
+    {
+        $requests=Requests::orderBy('created_at','DESC')->paginate(20);
+        return RequestResource::collection($requests);
+    }
+
+
     /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function requestById($id)
     {
-        //
+
+        $request=Requests::where('id',$id)->first();
+        return new RequestResource($request);
     }
 
     /**

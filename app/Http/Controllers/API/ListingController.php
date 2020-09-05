@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Listing;
+use App\Tag;
 use App\Http\Resources\Listing as ListingResource;
 use Auth;
+use phpDocumentor\Reflection\Location;
+
 class ListingController extends Controller
 {
     /**
@@ -29,12 +32,15 @@ class ListingController extends Controller
      */
     public function store(Request $request)
     {
+       
+
          $validate=$request->validate([
              'space_address' => ['required'],
              'space_location' => ['required'],
             'space_type' => ['required'],
             'space_for' => ['required'],
-            'rent' => ['required']
+            'rent' => ['required'],
+            'duration' => ['required']
         ]);
         
         $listing=new Listing();
@@ -46,16 +52,31 @@ class ListingController extends Controller
         $listing->space_location=$request->input('space_location');
         $listing->space_address=$request->input('space_address');
         $listing->rent=$request->input('rent');
+        $listing->duration=$request->input('duration');
         $listing->payer_gender=$request->input('payer_gender');
         $listing->available_from=$request->input('available_from');
-        $listing->rating=1;
         $listing->bedroom_type=$request->input('bedroom_type');
         $listing->about_property=$request->input('about_property');
         $listing->about_cohabitation=$request->input('about_cohabitation');
-        $listing->slug=Str::slug($request->input('space_type'));
         $listing->user_id=Auth::user()->id;
         $listing->save();
 
+        foreach ($request->input('selectedTags') as $tag) {
+            // $tags[]=[
+            //     'listing_id'=>$listing->id,
+            //     'name'=>$tag['value']
+            // ];  
+            $tagNew=new Tag();
+            $tagNew->listing_id=$listing->id;
+            $tagNew->name=$tag['value'];
+
+            $tagNew->save();
+            
+            $listing->tags()->attach($tagNew->id);   
+            
+            
+        }
+        // $tag = Tag::insert($tags);
         return response()->json(['success'=>true,'msg'=>"listing created"],200);
     }
 
@@ -63,11 +84,36 @@ class ListingController extends Controller
 
 
 
-    public function listingByLocation()
+    public function listingByLocation(Request $request)
     {
-        $listing=Listing::orderBy('rating','DESC')->paginate(10);
+        // return response()->json(Auth::user(), 200);
+        $listing=Listing::orderBy('rating','DESC')->where('space_location',Auth::user()->location)->paginate(2);
+        return ListingResource::collection($listing);
+      
+    }
+
+    public function listingByTag(Request $request)
+    {
+        $listing=Listing::whereHas('tags',function($query) use($request){
+            $query->where('name',$request->query('tag'));
+        })->get();
         return ListingResource::collection($listing);
     }
+
+
+    public function listingByFLocation(Request $request){
+        $listing=Listing::where('space_location',$request->query('location'))->paginate(12);
+        return ListingResource::collection($listing);
+
+    }
+
+    public function guestList()
+    {
+        // return response()->json(Auth::user(), 200);
+        $listing=Listing::orderBy('rating','DESC')->take(20)->paginate(20);
+        return ListingResource::collection($listing);
+    }
+
 
     /**
      * Display the specified resource.
@@ -75,10 +121,15 @@ class ListingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function listingBySlug($slug)
+    public function listingById($id)
     {
-        $list=Listing::where('slug',$slug)->first();
+        $list=Listing::where('id',$id)->first();
         return new ListingResource($list);
+    }
+
+
+    public function uploadFiles(Request $request){
+        return response()->json(['file'=>$request->file('file')]);
     }
 
     /**

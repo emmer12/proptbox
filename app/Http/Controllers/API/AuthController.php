@@ -151,6 +151,7 @@ class AuthController extends Controller
             'phoneNo' => 'required',
             'location' => ['required', 'string', 'max:255'],
             'age' => ['required','max:255'],
+            'gender' => ['required','max:255'],
 
         ]);
 
@@ -160,6 +161,7 @@ class AuthController extends Controller
         $user->location=$request->input('location');
         $user->age=$request->input('age');
         $user->phoneNo=$request->input('phoneNo');
+        $user->gender=$request->input('gender');
 
         $user->save();
 
@@ -175,12 +177,14 @@ class AuthController extends Controller
         
         $validator = $request->validate([
             'age' => ['required','max:255'],
+            'gender' => ['required','max:255'],
 
         ]);
 
         $user = User::whereEmail(Auth::user()->email)->first();
         
         $user->age=$request->input('age');
+        $user->gender=$request->input('gender');
 
         $user->save();
 

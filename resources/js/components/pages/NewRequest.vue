@@ -84,6 +84,17 @@
               v-if="!$v.newList.budget.required"
             >This field is required</div>
           </div> 
+           <div class="form-group">
+            <label for>Tags</label>
+             <tags-input element-id="tags"
+              v-model="newList.selectedTags"
+              :existing-tags="[
+                  { key: 'self-contain', value: 'Self Contain' },
+                  { key: 'two-bedroom', value: 'Two bedroom' },
+                  { key: 'clean', value: 'Clean' },
+              ]"
+              :typeahead="true"></tags-input>
+          </div>
           <div class="form-group">
             <label for>About Property</label>
             <textarea v-model="newList.about_property" placeholder="Specify the type and what you look forward to" class="form-control"></textarea>
@@ -118,7 +129,9 @@ export default {
         budget: "",
         space_for: "",
         space_type: "",
-        space_location:""
+        space_location:"",
+        selectedTags:[]
+
       },
       loading: false,
       serverErrors: null,

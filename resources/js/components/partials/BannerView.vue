@@ -11,8 +11,8 @@
         </div>
         <div class="c-t-a">
           <div class="details">
-            <h4>{{user.firstname}} {{user.lastname}}</h4>
-            <p>Male,31</p>
+            <h4>{{user.fullname}}</h4>
+            <p>{{ user.gender}}, {{ user.age}}</p>
           </div>
         </div>
 
@@ -35,14 +35,23 @@
           </router-link>
         </div>
 
-        <div class="verify">
-          <h4>Verify Account</h4>
-
-          <i class="fa fa-facebook active"></i>
-          <i class="fa fa-twitter" aria-hidden="true"></i>
-          <i class="fa fa-envelope active" aria-hidden="true"></i>
-          <i class="fa fa-phone" aria-hidden="true"></i>
-        </div>
+        <div class="verify-con">
+                  <h4>Verify Account</h4>
+                  <div class="verify">
+                    <div class="v-icon">
+                      <i class="fa fa-envelope active"></i>
+                      <span class="fa fa-check"></span>
+                    </div>
+                    <div class="v-icon">
+                        <i class="fa fa-user " aria-hidden="true"></i>
+                        <span class="fa fa-check"></span>
+                    </div>
+                    <div class="v-icon">
+                    <i class="fa fa-phone-square active" aria-hidden="true"></i>
+                      <span class="fa fa-check "></span>
+                    </div>
+                  </div>
+               </div>
       </div>
     </div>
   </div>
@@ -86,31 +95,19 @@ export default {
       right: 10px;
       top: 10px;
     }
-
-    & .verify {
-    // background: #f6f6f6;
-    padding: 10px;
-    position: absolute;
-    right:10px;
-    bottom:10px;
-
-    & h4{
-        font-size:16px;
-        padding:0px 20px;
-    }
-
-    & i {
-      background: grey;
-      padding: 10px;
-      margin: 20px 10px;
-      font-size: 25px;
-      border-radius: 10px;
-      color: white;
-      &.active {
-        background: #0d50bd;
-      }
-    }
-  }
   }
 }
+   .verify-con{
+     position: absolute;
+      right: 0px;
+      bottom: 9px;
+      background: transparent;
+      padding: 5px;
+
+    & h4{
+      top: 29px;
+      left: 18px;
+      position: relative;
+    }
+   }
 </style>

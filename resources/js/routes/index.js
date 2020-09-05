@@ -16,6 +16,7 @@ import Logout from '../components/pages/Logout';
 import NewList from '../components/pages/NewList';
 import NewRequest from '../components/pages/NewRequest';
 import ListDetails from '../components/pages/ListDetails';
+import RequestDetails from '../components/pages/RequestDetails';
 import Dashboard from '../components/pages/Dashboard';
 import MyListing from '../components/pages/MyListing';
 import MyRequest from '../components/pages/MyRequest';
@@ -113,7 +114,7 @@ export const routes = [
          }
     },
     {
-        path: '/list',
+        path: '/listings',
         name: 'list',
         component: List
     },
@@ -126,7 +127,7 @@ export const routes = [
 
 
     {
-        path: '/list/create',
+        path: '/listing/create',
         name: 'new-list',
         component: NewList,
         meta: {
@@ -136,9 +137,14 @@ export const routes = [
 
 
     {
-        path: '/list/:slug',
+        path: '/listing/:id',
         name: 'list-details',
         component: ListDetails,
+    },
+    {
+        path: '/request/:id',
+        name: 'request-details',
+        component: RequestDetails,
     },
     {
         path: '/dashboard',

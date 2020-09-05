@@ -17,15 +17,17 @@ class CreateListingsTable extends Migration
             $table->id();
             $table->string('space_type');
             $table->string('space_address');
-            $table->string('available_form');
+            $table->string('space_location');
+            $table->date('available_from');
             $table->integer('rent');
             $table->integer('user_id');
-            $table->string('payer_gender');
-            $table->integer('rating');
-            $table->string('bedroom_type');
-            $table->string('slug');
+            $table->string('payer_gender')->nullable();
+            $table->string('space_for');
+            $table->integer('rating')->default('1');
+            $table->string('duration')->nullable();
+            $table->string('bedroom_type')->nullable();
             $table->mediumText('about_property');
-            $table->mediumText('about_cohabitation');
+            $table->mediumText('about_cohabitation')->nullable();
             $table->timestamps();
         });
     }

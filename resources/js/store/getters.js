@@ -13,5 +13,17 @@ export default {
 
     list(state){
         return state.listDetails
+    },
+    request(state){
+        return state.requestDetails
+    },
+    hRequest(state){
+        return state.hRequest
+    },
+    lTags(state){
+        return state.listingTags
+    },
+    states(state){
+        return state.states
     }
 }

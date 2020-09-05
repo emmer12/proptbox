@@ -30,8 +30,22 @@
       </div>
     </div>
 
+     <div class="row" style="background:#eef4ff" v-if="type==='request'">
+      <div class="col-md-12" v-for="(item, index) in 3" :key="index">
+        <div class="loader-con-list loads">
+           <div class="user-request">
+                 <div class="img-big-area"></div>
+                 <div class="details">
+                     <div></div>
+                     <div></div>
+                 </div>
+           </div>
+        </div>
+      </div>
+    </div>
 
-    <div class="row" v-if="type==='details'">
+
+    <div class="row details" v-if="type==='details'">
       <div class="col-md-12" style="margin:0px auto;max-width:550px">
         <div class="loader-con-list loads">
                  <div class="img-area"></div>
@@ -65,6 +79,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.details{
+  transform: translateY(-100px);
+}
 .loader-con-list {
   background: #444;
 //   height: 260px;
@@ -92,7 +109,7 @@ export default {
 
   }
 
-  & .user-pro{
+  & .user-pro,.user-request{
       display:flex;
       padding:10px;
       & .img-big-area{
@@ -117,6 +134,15 @@ export default {
 
           }
                  
+      }
+  }
+
+  & .user-request{
+    & .img-big-area{
+          height:100px;
+          width:100px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.5);
       }
   }
 

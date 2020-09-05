@@ -3,6 +3,8 @@ import {routes} from './routes'
 import Vuelidate from 'vuelidate'
 import Snotify,{ SnotifyPosition} from 'vue-snotify'
 require('./bootstrap');
+require('@voerro/vue-tagsinput/dist/style.css')
+
 window.Vue = require('vue');
 
 import { store } from './store/'
@@ -11,10 +13,19 @@ import { store } from './store/'
 const DEFAULT_TITLE="ProptBox"
 
 
-
+import VoerroTagsInput from '@voerro/vue-tagsinput';
+ 
+Vue.component('tags-input', VoerroTagsInput);
 
 Vue.use(VueRouter);
 Vue.use(Vuelidate)
+
+
+import InfiniteLoading from 'vue-infinite-loading';
+
+Vue.use(InfiniteLoading, { /* options */ });
+
+
 
 const options={
     toast:{
@@ -23,6 +34,12 @@ const options={
 }
 
 Vue.use(Snotify,options)
+
+
+Vue.filter('capFirst',function(value){
+    return value.charAt(0).toUpperCase() + value.substr(1)
+})
+
 
 let router = new VueRouter({
     mode: 'history',

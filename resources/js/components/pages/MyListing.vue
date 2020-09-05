@@ -29,6 +29,9 @@ export default {
         ProptCard,
         Preloader
     },
+    created () {
+      this.$store.dispatch('getUser')  
+    },
 
     computed: {
         ...mapGetters([

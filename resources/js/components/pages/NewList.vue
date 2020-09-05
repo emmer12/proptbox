@@ -49,18 +49,19 @@
           </div>
 
            <div class="form-group">
-            <label for>Space Location</label>
-            <input
-              :class="{'is-invalid':$v.newList.space_location.$error}"
-              placeholder="e.g, Lagos,Abuja,Akure"
-              class="form-control" 
-              v-model.trim="$v.newList.space_location.$model"
-            />
-            <div
-              class="invalid-feedback"
-              v-if="!$v.newList.space_location.required"
-            >space location is required</div>
+          <div class="col-sm-1-12">
+            <div class="form-group">
+              <label for="location">Location</label>
+              <select class="form-control"  :class="{'is-invalid':$v.newList.space_location.$error}" id="location" v-model.trim="$v.newList.space_location.$model">
+                <option selected value="" disabled>Select your Location</option>
+                <option value="Lagos">Lagos</option>
+                <option value="Ondo">Ondo</option>
+                <option value="Oyo">Oyo</option>
+              </select>
+            </div>
+            <div class="invalid-feedback" v-if="!$v.newList.space_location.required">This field is required</div>
           </div>
+        </div>
 
           <div class="form-group">
             <label for>Space Address</label>
@@ -85,6 +86,18 @@
               v-model.trim="$v.newList.rent.$model"
             />
             <div class="invalid-feedback" v-if="!$v.newList.rent.required">This field is required</div>
+          </div>
+
+           <div class="form-group">
+            <label for>Per (Month,Year)</label>
+            <input
+            type="text"
+              :class="{'is-invalid':$v.newList.duration.$error}"
+              placeholder="e.g, Month"
+              class="form-control" 
+              v-model.trim="$v.newList.duration.$model"
+            />
+            <div class="invalid-feedback" v-if="!$v.newList.duration.required">This field is required</div>
           </div>
           <div class="form-group">
             <label for>Available From</label>
@@ -112,6 +125,18 @@
             </select>
           </div>
 
+           <div class="form-group">
+            <label for>Tags</label>
+             <tags-input element-id="tags"
+              v-model="newList.selectedTags"
+              :existing-tags="[
+                  { key: 'self-contain', value: 'Self Contain' },
+                  { key: 'two-bedroom', value: 'Two bedroom' },
+                  { key: 'clean', value: 'Clean' },
+              ]"
+              :typeahead="true"></tags-input>
+          </div>
+         
           <div class="form-group" v-if="newList.space_type==='apartment'">
             <label for>Bedroom Type</label>
             <input
@@ -132,7 +157,6 @@
               v-if="!$v.newList.about_property.required"
             >This field is required</div>
           </div>
-
           
           <div class="form-group" v-if="newList.space_type==='apartment' && newList.space_for!=='rent'">
             <label for>About Cohabitation</label>
@@ -144,6 +168,9 @@
           </div>
 
            <loading :loading="loading"></loading>
+           <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
+           <br/>
+
           
           <button class="btn btn-primary btn-block" :disabled="loading" @click="createList">
             <span v-if="loading"><i class="fa fa-spinner" aria-hidden="true"></i> </span>
@@ -159,10 +186,13 @@
 import Loading from './../partials/FormLoading';
 import { TimelineLite } from "gsap/all";
 import { required, minLength, email } from "vuelidate/lib/validators";
+import vue2Dropzone from 'vue2-dropzone'
+import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
 export default {
   components: {
-  Loading
+  Loading,
+  vueDropzone: vue2Dropzone
   },
   data() {
     return {
@@ -173,11 +203,19 @@ export default {
         available_from: "",
         bedroom_type: "",
         rent: "",
+        duration: "",
         space_address: "",
         space_for: "",
         space_type: "",
         payer_gender: "",
-        space_location:''
+        space_location:'',
+        selectedTags:[],
+      },
+      dropzoneOptions: {
+          url: process.env.MIX_API_URL+'listing-file-upload',
+          thumbnailWidth: 100,
+          maxFilesize: 0.5,
+          headers: { "My-Awesome-Header": "header value" }
       },
       loading: false,
       serverErrors: null,
@@ -193,6 +231,7 @@ export default {
       space_location: { required },
         // bedroom_type: { required },
       rent: { required },
+      duration:{ required },
       space_address: { required },
       space_type: { required },
       space_for: { required },

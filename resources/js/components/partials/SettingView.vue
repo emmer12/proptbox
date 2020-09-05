@@ -4,9 +4,15 @@
     <div class="container settings">
       <div class="row">
         <div class="col-md-4">
-          <div class="profile">
-            <img src="/images/user.png" />
+          <div class="profile" >
+            <div v-if="imgLoading" class="loading">
+               <span ><i class="fa fa-spinner" aria-hidden="true"></i> </span>
+            </div>
+            <label v-if="user" for="pro-image" style="cursor:pointer">
+              <img :src="'/uploads/profile-images/'+user.profile_pic_filename" />
             <i class="fa fa-camera" aria-hidden="true"></i>
+            </label>
+            <input type="file" id="pro-image" style="display:none" @change="processFormImg">
             <!-- <i class="fa fa-camera-retro" aria-hidden="true"></i> -->
           </div>
         </div>
@@ -16,7 +22,7 @@
             <div class="header">
               <h4>Account Setting</h4>
             </div>
-            <form v-on:submit.prevent ref="form">
+            <form v-on:submit.prevent ref="form" v-if="user">
               <div class="form-group">
                 <label for="firstname" class="col-sm-1-12 col-form-label">
                   Fullname
@@ -40,20 +46,21 @@
               </div>
 
               <div class="form-group">
-                <label for="lastname" class="col-sm-1-12 col-form-label">
-                  Location
-                  <span>*</span>
-                </label>
                 <div class="col-sm-1-12">
-                  <input
-                    type="text"
-                    :class="{'is-invalid':$v.newUser.location.$error}"
-                    class="form-control"
-                    name="location"
-                    v-model.trim="$v.newUser.location.$model"
-                    id="location"
-                    :placeholder="user.location"
-                  />
+                  <div class="form-group">
+                    <label for="location">Location</label>
+                    <select
+                      class="custom-select"
+                      :class="{'is-invalid':$v.newUser.location.$error}"
+                      id="location"
+                      v-model.trim="$v.newUser.location.$model"
+                    >
+                      <option selected value>{{user.location}}</option>
+                      <option value="Lagos">Lagos</option>
+                      <option value="Ondo">Ondo</option>
+                      <option value="Oyo">Oyo</option>
+                    </select>
+                  </div>
                   <div
                     class="invalid-feedback"
                     v-if="!$v.newUser.location.required"
@@ -74,7 +81,6 @@
                     v-model.trim="$v.newUser.phoneNo.$model"
                     id="phoneNo"
                     :placeholder="user.phoneNo"
-                    
                   />
                   <div
                     class="invalid-feedback"
@@ -95,7 +101,7 @@
                     name="email"
                     v-model.trim="$v.newUser.email.$model"
                     id="email"
-                   :placeholder="user.email"
+                    :placeholder="user.email"
                   />
                   <div
                     class="invalid-feedback"
@@ -108,20 +114,30 @@
                 </div>
               </div>
 
-              <div class="verify">
-                <h4>Verify Account</h4>
-
-                <i class="fa fa-facebook active"></i>
-                <i class="fa fa-twitter" aria-hidden="true"></i>
-                <i class="fa fa-envelope active" aria-hidden="true"></i>
-                <i class="fa fa-phone" aria-hidden="true"></i>
-              </div>
-              <div class="form-group">
+              <div class="form-group ma-5">
                 <div class>
-                  <button type="submit" class="btn btn-primary" @click="update">Update</button>
+                  <button type="submit" class="btn btn-primary btn-block" @click="update">Update</button>
                 </div>
               </div>
 
+              <div class="btn btn-primary" style="margin:10px 0px;">change your password</div>
+              <div class="verify-con">
+                <h4>Verify Account</h4>
+                <div class="verify">
+                  <div class="v-icon">
+                    <i class="fa fa-envelope active"></i>
+                    <span class="fa fa-check"></span>
+                  </div>
+                  <div class="v-icon">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                    <span class="fa fa-check"></span>
+                  </div>
+                  <div class="v-icon">
+                    <i class="fa fa-phone-square active" aria-hidden="true"></i>
+                    <span class="fa fa-check"></span>
+                  </div>
+                </div>
+              </div>
               <div class="loading-overlay" v-show="loading">
                 <svg width="50px" height="50px" viewBox="0 0 345.804 345.804" xml:space="preserve">
                   <g>
@@ -162,7 +178,7 @@
 
 <script>
 import { required, minLength, email } from "vuelidate/lib/validators";
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -171,11 +187,16 @@ export default {
         phoneNo: "",
         fullname: "",
         location: "",
-        email: "",
-        password: "",
-        cPassword: ""
+        email: ""
       },
+      newPass: {
+        password: "",
+        password_confirmation: "",
+        oldPassword: ""
+      },
+      fileSeleted:'',
       loading: false,
+      imgLoading: false,
       serverErrors: null,
       menu: false
     };
@@ -186,23 +207,57 @@ export default {
       phoneNo: { required },
       fullname: { required },
       location: { required },
-      email: { required, email },
-      password: { minLength: minLength(6) },
-      cPassword: { required }
+      email: { required, email }
     }
   },
 
   methods: {
     update() {
-      alert("yerss");
+      this.$v.$touch();
+      this.$refs.form.classList.remove("shake");
+      if (this.$v.$invalid) {
+        let tis = this;
+        setTimeout(function() {
+          tis.$refs.form.classList.add("shake");
+        }, 1000);
+      } else {
+        this.loading = true;
+        this.$store
+          .dispatch("updateUser", this.newUser)
+          .then(() => {
+            this.newUser = {};
+            this.loading = false;
+            // this.$router.push({ name: "complete.setup" });
+          })
+          .catch(err => {
+            this.loading = false;
+            this.$snotify.error("Opps, something went wrong please try again");
+          });
+      }
     },
+
+    processFormImg(e) {
+      this.fileSeleted=e.target.files[0];     
+      this.uploadImage() 
+    },
+      uploadImage(){
+        this.imgLoading=true
+        this.$store.dispatch("uploadFile",this.fileSeleted).then(()=>{
+          alert('updated')
+           this.imgLoading=false
+
+
+        }).catch((err)=>{
+          this.serverErrors=err.response.data.msg
+        this.imgLoading=false
+        })
+    },
+  
   },
 
   computed: {
-    ...mapGetters([
-      'user'
-    ])
-  },
+    ...mapGetters(["user"])
+  }
 };
 </script>
 
@@ -221,40 +276,41 @@ export default {
     width: 200px;
     border-radius: 50%;
     background: #eef4ff;
-    margin:0 auto;
-    position:relative;
+    margin: 0 auto;
+    position: relative;
+    & .loading{
+        padding-left: 5px;
+        position: absolute;
+        top: 0;
+        z-index: 999;
+        left: 0;
+        background: #3490dc69;
+        width: 100%;
+        height: 100%;
+        border-radius: 0% 50%;
+        & span i{
+          animation:rot 1s infinite linear;
+        transform-origin: center;
+        color:white;
+      }
+    }
+  
     & img {
-        width:100%;
+      height: 200px;
+      width: 200px;
       border-radius: 50%;
     }
 
-    & i{
-        position: absolute;
-        bottom:0px;
-        right:0px;
-        font-size:50px;
+    & i {
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      font-size: 50px;
     }
   }
 }
 .update {
   max-width: 400px;
-
-  & .verify {
-    background: #f6f6f6;
-    padding: 10px;
-
-    & i {
-      background: grey;
-      padding: 10px;
-      margin: 20px 10px;
-      font-size: 20px;
-      border-radius: 10px;
-      color: white;
-      &.active {
-        background: #0d50bd;
-      }
-    }
-  }
 }
 </style>
 
@@ -264,5 +320,39 @@ export default {
     color: #444;
     padding: 10px 0px;
       }
+  }
+  .verify-con {
+    background: #f6f6f6;
+    padding:10px;
+    
+    & .verify{
+    display:flex;
+
+    & .v-icon {
+    position:relative;
+
+    & span{
+      position:absolute;
+      background:green;
+      color:white;
+      right:6px;
+      bottom:23px;
+      border-radius:50%;
+      padding:3px;
+
+    }
+      i {
+      padding: 10px;
+      margin: 20px 10px;
+      font-size: 40px;
+      border-radius: 10px;
+      color: grey;
+      &.active {
+        color: #0d50bd;
+
+      }
+    }
+  }
+  }
   }
 </style>

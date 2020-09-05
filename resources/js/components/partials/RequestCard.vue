@@ -1,72 +1,77 @@
 <template>
   <div>
-     <div class="card r-card">
-      <div class="top-section">
-        <img src="/images/user.png" width="100%" />
-        <div class="details">
-          <h4>James Bruse</h4>
-          <span>12yrs </span> | <span>Female</span>
-           <p> james is looking for an apartment</p>
-        </div>
-      </div>
-       <div class="bottom-section">
-         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse autem po...</p>
-         <div class="c-t-b">
-             <strong>Budget</strong>
-             <span>$200</span>
-         </div>
-       </div>
-    </div>
+
+          <router-link tag="div" :to="{name:'request-details',params:{id:request.id}}" class="card r-card">
+            <div class="top-section">
+              <img src="/images/user.png" width="100%" />
+              <div class="details">
+                <h4>{{request.user.fullname}}</h4>
+                <span>{{request.user.age}} yrs</span> |
+                <span>Female</span>
+                <p>looking for an {{ request.space_type}}</p>
+              </div>
+            </div>
+            <div class="bottom-section">
+              <p v-if="request.about_property.length>45">{{request.about_property.substr(0,45) + '...' }}</p>
+              <p v-else>{{request.about_property}}</p>
+              <div class="c-t-b">
+                <strong>Budget</strong>
+                <span>$ {{request.budget}}</span>
+              </div>
+            </div>
+          </router-link>
+        
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  props: ["request"]
+};
 </script>
 
 <style lang="scss" scoped>
 .r-card {
   width: 100%;
   background: #f4f4f4;
-  padding:15px;
+  padding: 15px;
+  margin-bottom: 10px;
   // clip-path:circle(300px at 0px 0px);
 
-  & .top-section{
-    display:flex;
+  & .top-section {
+    display: flex;
     border-bottom: 1px solid #ddd;
-    & img{
-      width:100px;
-      height:100px;
+    & img {
+      width: 100px;
+      height: 100px;
       border-radius: 50px;
-      position:relative;
+      position: relative;
       // float:left;
-      
     }
 
-    & .details{
-      width:70%;
-      padding:10px;
-      align-items:center;
+    & .details {
+      width: 70%;
+      padding: 10px;
+      align-items: center;
       // text-align: center;
 
-      & p{
-        line-height:16px;
-        color: rgba($color:green, $alpha: 0.5);
+      & p {
+        line-height: 16px;
+        color: rgba($color: green, $alpha: 0.5);
         font-weight: 700;
       }
     }
-
   }
-      & .bottom-section{
-        padding:5px;
-        & .c-t-b{
-          display:flex;
-          justify-content: flex-end;
+  & .bottom-section {
+    padding: 5px;
+    & .c-t-b {
+      display: flex;
+      justify-content: flex-end;
 
-          & strong{
-            margin-right:10px
-          }
-        }
+      & strong {
+        margin-right: 10px;
       }
+    }
+  }
 }
 </style>

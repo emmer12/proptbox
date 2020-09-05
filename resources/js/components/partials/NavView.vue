@@ -6,12 +6,12 @@
           <div class="row">
             <div class="col-md-8 col-sm-10">
               <div class="left">
-                <div class="bar">
+                <div class="bar" @click="openDrawer">
                   <i class="fa fa-bars"></i>
                 </div>
-                <div class="logo">
+                <router-link to="/" class="logo">
                   <img src="/images/logo.svg" />
-                </div>
+                </router-link>
                 <div class="search">
                   <input type="search" class="form-control" name="search" />
                   <button class="btn btn-primary ml-2">Search</button>
@@ -29,7 +29,7 @@
                   <router-link tag="button" class="btn btn-primary" :to="{name:'request'}">Request</router-link>
                 </div>
                 <div v-if="loggedIn" class="avatar" @click="openDrop=!openDrop">
-                  <img src="/images/user.png" />
+                  <img v-if="user":src="'/uploads/profile-images/'+user.profile_pic_filename"  />
                   <i class="fa fa-caret-down" aria-hidden="true"></i>
                   <div class="dropdown" v-show="openDrop">
                     <ul>
@@ -73,7 +73,7 @@
                   >Need a space?</router-link>
                 </div>
                 <div class="avatar pl-4 d-none">
-                  <img src="/images/user.png" />
+                  <img v-if="user" :src="'/uploads/profile-images/'+user.profile_pic_filename"  />
                 </div>
               </div>
             </div>

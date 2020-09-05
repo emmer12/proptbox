@@ -1,12 +1,15 @@
 import Api from './index'
+import axios from 'axios';
 
-
- const registerUser=(data)=>{
+const registerUser=(data)=>{
     return Api.post('/register',data)
 }
 
+const updateUser=(data)=>{
+    return Api.patch('/update-user',data)
+}
 
- const loginUser=(data)=>{
+const loginUser=(data)=>{
     return Api.post('/login',data)
 }
 
@@ -14,18 +17,22 @@ const verifyEmail=(data)=>{
     return Api.get('email-verification?id='+data.id+'&hash='+data.hash)
 }
 
-const getListing=(state)=>{
-    let url = state.token ? 'all-listing-by-location' : 'all-listing'
-    return Api.get(url)
+const getListing=(state,data)=>{
+    let url = state.token ? '/all-listing-by-location' : 'all-listing-for-guest'
+    return Api.get(url,{params:data})
 }
 
 const getUser=()=>{
     return Api.get('auth-user');
 }
 
-const getListSlug=(slug)=>{
-    return Api.get('get-list-by-slug/'+slug);
+const getListId=(id)=>{
+    return Api.get('get-list-by-id/'+id);
 }
+const getRequestById=(id)=>{
+    return Api.get('get-request-by-id/'+id);
+}
+
 
 const createList=(data)=>{
     return Api.post('/create-listing',data)
@@ -62,17 +69,53 @@ const resetPassword=(data)=>{
 }
 
 const getRequestLimit=(state)=>{
-    let url = state.token ? '/all-request-by-location' : '/all-request-limit'
+    let url = state.token ? '/all-request-limit-by-location' : '/all-request-limit-guest'
     return Api.get(url)
 }
 
+const getRequest=(state,data)=>{
+    let url = state.token ? '/all-request-by-location' : '/all-request-guest'
+    return Api.get(url,{params:data})
+}
+
+const getTags=()=>{
+    return Api.get('/listing-tags')
+}
+
+const getState=()=>{
+ return axios.get('http://locationsng-api.herokuapp.com/api/v1/states');
+}
+
+const filterTag=(data)=>{
+    return Api.get('/all-listing-by-tag',{
+        params:data
+    })
+}
+const filterLocation=(data)=>{
+    return Api.get('/all-listing-by-location-filter',{
+        params:data
+    })
+}
+const filterRLocation=(data)=>{
+    return Api.get('/all-request-by-location-filter',{
+        params:data
+    })
+}
+
+const uploadFile=(data)=>{
+    return Api.post('/upload-file',data)
+}
+
+
+// M 100 350 Q 0 250 100 150 L 250 100 Q 450 50 500 150 Q 550 350 450 450 Q 400 500 250 400 Z
 export default {
     registerUser,
+    updateUser,
     loginUser,
     verifyEmail,
     getUser,
     getListing,
-    getListSlug,
+    getListId,
     createList,
     deleteList,
     socialSignUp,
@@ -82,5 +125,13 @@ export default {
     sendRequest,
     resetPasswordRequest,
     resetPassword,
-    getRequestLimit
+    getRequestLimit,
+    getRequest,
+    getRequestById,
+    getTags,
+    getState,
+    filterTag,
+    filterLocation,
+    filterRLocation,
+    uploadFile
 }

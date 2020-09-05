@@ -7,11 +7,15 @@ export default {
       user:null,
       space:[],
       request:[],
+      hRequest:[],
       listing:{
         list:[],
         links:null,
         meta:null,
       },
       position:null,
-      listDetails:null
+      listDetails:null,
+      requestDetails:null,
+      listingTags:[],
+      states:[]
     }

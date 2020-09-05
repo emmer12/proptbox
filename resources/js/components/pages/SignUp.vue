@@ -98,7 +98,7 @@
             <div class="form-group">
               <label for="location">Location</label>
               <select class="custom-select"  :class="{'is-invalid':$v.newUser.location.$error}" id="location" v-model.trim="$v.newUser.location.$model">
-                <option selected>Select your Location</option>
+                <option selected value="">Select your Location</option>
                 <option value="Lagos">Lagos</option>
                 <option value="Ondo">Ondo</option>
                 <option value="Oyo">Oyo</option>
@@ -242,7 +242,7 @@ export default {
           this.newUser.password = "";
         })
         
-     }s
+     }
     }
   },
 

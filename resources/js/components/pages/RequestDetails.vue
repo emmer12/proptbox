@@ -3,77 +3,74 @@
      <div class="banner">
      </div>
 
-     <div v-if="list" class="d-contain">
+     <div v-if="request" class="d-contain">
          <div class="d-inner">
-             <div class="des-header1" v-show="true">
+             <div class="des-header1" v-show="false">
                  <div class="display">
                      <img src="/images/5.jpg" width="100%" height="300px"/>
                  </div>
                  <div class="c-t-a">
                      <div class="details">
-                         <h4>{{list.space_type | capFirst}}</h4>
-                         <p>{{ list.space_address}}</p>
+                         <h4>{{request.space_type | capFirst}}</h4>
+                         <p>{{ request.space_address}}</p>
                      </div>
                      <span>
                          <i class="fa fa-commenting-o"></i>
                      </span>
                      <div style="min-width:100px">
-                         <button class="btn btn-primary">$ {{list.rent}}</button>
+                         <button class="btn btn-primary">$ {{request.rent}}</button>
                      </div>
                  </div>
              </div>
 
-              <div class="des-header2" v-show="false">
+              <div class="des-header2" v-show="true">
                  <div class="display">
                      <img src="/images/5.jpg" width="180px" height="180px"/>
                  </div>
                  <div class="c-t-a">
                      <div class="details">
-                         <h4>Ojoolape moses</h4>
+                         <h4>{{request.user.fullname}}</h4>
                          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatu </p>
                      </div>
                      <div class="comment">
                          <i class="fa fa-commenting-o"></i>
                      </div>
                      <div>
-                         <button class="btn btn-primary">$500</button>
+                         <button class="btn btn-primary">${{request.rent}}</button>
                      </div>
                  </div>
              </div>
 
              <div class="des-body">
-                 <div class="body-details">
+                 <!-- <div class="body-details">
                      <div>Rent</div>
-                     <div>${{list.rent}} per {{ list.duration }}</div>
-                 </div>
-                  <div class="body-details">
-                     <div>Bills</div>
-                     <div>Not Included</div>
-                 </div>
-                  <div class="body-details">
-                     <div>Security deposit</div>
-                     <div>House</div>
-                 </div>
+                     <div>${{request.rent}} every month</div>
+                 </div> -->
                   <div class="body-details">
                      <div>Property type</div>
-                     <div>{{list.space_type}}</div>
+                     <div>{{request.space_type}}</div>
                  </div>
                   <div class="body-details">
                      <div>Space Location</div>
-                     <div>{{ list.space_location }}</div>
+                     <div>{{ request.space_location}}</div>
                  </div>
                   <div class="body-details">
-                     <div>Bedroom type</div>
-                     <div>{{ list.bedroom_type}}</div>
+                     <div>Space for</div>
+                     <div>{{ space_for}}</div>
                  </div>
                   <div class="body-details">
                      <div>Available from</div>
-                     <div>{{ list.available_from }}</div>
+                     <div>{{ request.available_from }}</div>
                  </div>
 
                    <div class="body-details">
                      <div>Payer Gender</div>
-                     <div>{{ list.payer_gender }}</div>
+                     <div>{{ request.payer_gender }}</div>
+                 </div>
+
+                  <div class="body-details">
+                     <div>Budget</div>
+                     <div>{{ request.budget }}</div>
                  </div>
 
 
@@ -83,7 +80,7 @@
                      <div>
                          <strong>About space</strong>
                      </div>
-                     <p>{{list.about_property}}</p>
+                     <p>{{request.about_property}}</p>
                  </div>
 
                  <div class="des">
@@ -94,11 +91,11 @@
                      <div>
                          <strong>About cohabitation</strong>
                      </div>
-                     <p>{{ list.about_cohabitation }}</p>
+                     <!-- <p>{{ request.about_cohabitation }}</p> -->
                  </div>
 
 
-                  <p style="padding:0px 50px" v-if="isVerified"> varified</p>
+                  <p style="padding:0px 50px">Number varified</p>
              </div>
              
          </div>
@@ -124,24 +121,17 @@ export default {
         }
     },
     methods: {
-      getListId(){
-          this.$store.dispatch('getListId',this.$route.params.id)
+      getRequestById(){
+          this.$store.dispatch('getRequestById',this.$route.params.id)
       }
     },
     created () {
-     this.getListId();
+     this.getRequestById();
     },
     computed:{
         ...mapGetters([
-            'list'
-        ]),
-        isVerified(){
-             if (this.list.user.id_verified_at && this.list.user.phone_verified_at && this.list.user.email_verified_at) {
-             return true;
-                }else{
-                        return false;
-                }
-        }
+            'request'
+        ])
     }
 }
 </script>

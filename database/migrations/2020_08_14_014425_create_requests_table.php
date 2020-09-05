@@ -17,7 +17,9 @@ class CreateRequestsTable extends Migration
             $table->id();
             $table->string('requests_title');
             $table->longText('request_description');
-            $table->string('requests_budget');
+            $table->string('request_budget');
+            $table->string('space_location');
+            $table->string('user_id');
             $table->string('requests_location');
             $table->string('requests_type');
             $table->string('slug');

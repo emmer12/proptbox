@@ -22,9 +22,11 @@ class CreateUsersTable extends Migration
             $table->string('profile_pic_filename')->default('profile.png');
             $table->string('profile_pic_url')->default(env('APP_URL').'storage/uploads/images/profile.png');
             $table->string('location')->nullable();
-            $table->integer('age');
+            $table->integer('age')->nullable();
+            $table->string('gender')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
+            $table->timestamp('id_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
