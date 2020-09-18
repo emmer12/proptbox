@@ -5,40 +5,28 @@
 
      <div v-if="request" class="d-contain">
          <div class="d-inner">
-             <div class="des-header1" v-show="false">
-                 <div class="display">
-                     <img src="/images/5.jpg" width="100%" height="300px"/>
-                 </div>
-                 <div class="c-t-a">
-                     <div class="details">
-                         <h4>{{request.space_type | capFirst}}</h4>
-                         <p>{{ request.space_address}}</p>
-                     </div>
-                     <span>
-                         <i class="fa fa-commenting-o"></i>
-                     </span>
-                     <div style="min-width:100px">
-                         <button class="btn btn-primary">$ {{request.rent}}</button>
-                     </div>
-                 </div>
-             </div>
-
               <div class="des-header2" v-show="true">
                  <div class="display">
-                     <img src="/images/5.jpg" width="180px" height="180px"/>
+                     <img :src="'/uploads/profile-images/'+request.user.profile_pic_filename" width="180px" height="180px"/>
                  </div>
                  <div class="c-t-a">
                      <div class="details">
                          <h4>{{request.user.fullname}}</h4>
-                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatu </p>
+                         <p>looking for an {{ request.space_type}} </p>
                      </div>
-                     <div class="comment">
-                         <i class="fa fa-commenting-o"></i>
-                     </div>
+                    
                      <div>
-                         <button class="btn btn-primary">${{request.rent}}</button>
+                         <button class="btn btn-custom" style="cursor:default">&#8358; {{request.min_budget + "-" + request.max_budget}}</button>
                      </div>
                  </div>
+                  <div class="comment">
+                         <svg width="40" height="52" viewBox="0 0 51 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16.3353 16.4267L33.998 16.1492C35.0432 16.1328 35.9037 16.9666 35.9201 18.0118C35.9365 19.0571 35.1027 19.9175 34.0575 19.9339L16.3948 20.2115C15.3495 20.2279 14.4891 19.394 14.4727 18.3488C14.4563 17.3035 15.2901 16.4431 16.3353 16.4267Z" fill="#0D50BD"/>
+                            <path d="M16.4545 23.9965L34.1171 23.719C35.1624 23.7026 36.0228 24.5364 36.0393 25.5817C36.0557 26.6269 35.2219 27.4874 34.1766 27.5038L16.5139 27.7813C15.4687 27.7977 14.6082 26.9639 14.5918 25.9186C14.5754 24.8734 15.4092 24.0129 16.4545 23.9965Z" fill="#0D50BD"/>
+                            <path d="M16.5731 31.5661L34.2358 31.2886C35.281 31.2722 36.1415 32.106 36.1579 33.1512C36.1743 34.1965 35.3405 35.0569 34.2953 35.0734L16.6326 35.3509C15.5873 35.3673 14.7269 34.5335 14.7105 33.4882C14.694 32.443 15.5279 31.5825 16.5731 31.5661Z" fill="#0D50BD"/>
+                            <path d="M24.917 0.391477C38.656 0.17562 50.0096 11.178 50.2255 24.917C50.2745 28.0389 49.7485 31.1023 48.6594 34.0282C47.8125 36.2758 46.6765 38.3461 45.2753 40.1992L48.7973 48.1104C49.0798 48.7446 48.9923 49.4816 48.5701 50.0321C48.2145 50.4959 47.6698 50.7637 47.0983 50.7727C46.9905 50.7744 46.8812 50.7673 46.7724 50.7494L33.8679 48.7059C31.305 49.6699 28.56 50.1806 25.6999 50.2255C11.9608 50.4413 0.607299 39.439 0.391442 25.7C0.175586 11.9609 11.1779 0.607335 24.917 0.391477ZM25.6405 46.4407C28.2198 46.4002 30.6799 45.9161 32.9522 45.0014C33.2701 44.8734 33.617 44.8332 33.9549 44.8879L43.9219 46.4664L41.3501 40.6899C41.0558 40.0289 41.1643 39.2574 41.6294 38.703C43.1022 36.9485 44.2756 34.9268 45.1139 32.7008C46.036 30.2249 46.4822 27.6259 46.4406 24.9765C46.2575 13.3242 36.6288 3.99327 24.9764 4.17635C13.3241 4.35942 3.99324 13.9882 4.17631 25.6405C4.35938 37.2928 13.9881 46.6238 25.6405 46.4407Z" fill="#0D50BD"/>
+                        </svg>
+                     </div>
              </div>
 
              <div class="des-body">
@@ -56,21 +44,11 @@
                  </div>
                   <div class="body-details">
                      <div>Space for</div>
-                     <div>{{ space_for}}</div>
+                     <div>{{ request.space_for}}</div>
                  </div>
-                  <div class="body-details">
-                     <div>Available from</div>
-                     <div>{{ request.available_from }}</div>
-                 </div>
-
-                   <div class="body-details">
-                     <div>Payer Gender</div>
-                     <div>{{ request.payer_gender }}</div>
-                 </div>
-
                   <div class="body-details">
                      <div>Budget</div>
-                     <div>{{ request.budget }}</div>
+                     <div>&#8358; {{request.min_budget + '-' + request.max_budget}}</div>
                  </div>
 
 
@@ -81,21 +59,12 @@
                          <strong>About space</strong>
                      </div>
                      <p>{{request.about_property}}</p>
-                 </div>
-
-                 <div class="des">
-                     <img src="/images/user.png" width="50px" height="50px" style="border-radius:25px" />
-                     <span>Lorem ipsum dolor sit ame</span>
-                 </div>
-                 <div class="des">
-                     <div>
-                         <strong>About cohabitation</strong>
-                     </div>
-                     <!-- <p>{{ request.about_cohabitation }}</p> -->
+                <div v-if="request.user.reveal_contact">
+                    <a :href="'tel:'+request.user.phoneNo"> <i class="fa fa-phone" aria-hidden="true"></i> {{ request.user.phoneNo }}</a>
+                </div>
                  </div>
 
 
-                  <p style="padding:0px 50px">Number varified</p>
              </div>
              
          </div>
@@ -136,7 +105,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .contain{
     & .banner{
@@ -172,17 +141,23 @@ export default {
                position:relative;
                padding-top: 40px;
                line-height:20px;
-               & .comment{
-                   position:absolute;
-                   top:0px;
-                   right:0px;
+
+               .details p{
+                   color:#0ca93f
+               }
+              
+           }
+            & .comment{
+                  position: absolute;
+                top: 10px;
+                right: 15px;
+                cursor:pointer;
                    & i{
                    color: #334499;
                    font-size: 28px;
                    
                }
                }
-           }
        }
        & .des-header1{
            & .display{
@@ -220,6 +195,17 @@ export default {
     & .des-body{
           & .body-details,.des{
             padding:10px 50px;
+            
+            & a{
+                color:white;
+                padding:10px;
+                font-weight:700;
+                line-height: 4;
+                background: #3490dc;
+                border: 2px solid white;
+                border-radius: 11px;
+                text-decoration: none;
+            }
 
      }   
         & .body-details{
@@ -239,4 +225,39 @@ export default {
 
 }
 }
+
+</style>
+
+
+<style lang="scss" scoped>
+    
+@media (max-width:460px){
+    
+.contain {
+& .banner{
+    height:100px;
+    background: #eef4ff;
+}
+ & .d-contain{
+    margin: 0px 10px;
+     transform: translateY(-40px);
+     & .d-inner .des-header2 .display{
+          & img{
+              height:100px;
+              width:100px;
+          }
+      }
+     svg{
+         height:30px;     }
+    & .des-body{
+        & .body-details{
+                padding:10px 20px;
+
+        }   
+    }
+       }
+
+}
+}
+
 </style>

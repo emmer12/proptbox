@@ -75,8 +75,10 @@ class UserController extends Controller
             ]);
         }
         $user->update($request->all());
-        return response()->json(['success'=> $user,'msg'=>'updated successfully'],200);
-        // or $user->update($request->has('password') ? $request->all() : $request->except(['password']));
+        $user = Auth::user();
+        $token = $user->createToken('proptbox-v1')->accessToken;
+        return response()->json(['success' => true,"access_token"=>$token], 200);
+
     }
 
 

@@ -1,9 +1,9 @@
 <template>
    <div class="home-con">
-       <div class="sidebar">
+       <div class="sidebar d-none d-sm-block d-md-block">
          <div class="header">
            <span>Request</span>
-           <router-link to="#">View all</router-link>
+           <router-link  :to="{name:'request'}">View all</router-link>
            
          </div>
            <div class="body">
@@ -29,17 +29,17 @@
            </div>
 
            <div class="footer">
-            <router-link :to="{name:'request'}">View all <i class="fa fa-arrow-right" aria-hidden="true"></i></router-link>
+            <router-link :to="{name:'request'}">View all <i class="fa fa-arrow-down" aria-hidden="true"></i></router-link>
            </div>
        </div>
 
        <div class="right">
-          <div class="header">
+          <!-- <div class="header">
             <router-link to="#">Filter</router-link>
-         </div>
+         </div> -->
 
          <div class="body">
-           <div  v-if="listing.length" >
+           <div  v-if="!loading" >
               <propt-card :lists="listing"></propt-card>
            </div>
              
@@ -47,6 +47,9 @@
               <preloader :type="'list'"></preloader>
             </div>
           <infinite-loading @infinite="infiniteHandler"></infinite-loading> 
+         </div>
+         <div v-if="!loggedIn">
+           <span class="btn btn-primary">Register to view more</span>
          </div>
        </div>
    </div>
@@ -70,16 +73,19 @@ export default {
       page:1,
       listing:[],
       loadingReq:true,
+      loading:true
     }
   },
    methods: {
     ...mapActions(["getListing","getRequestLimit"]),
 
     infiniteHandler($state){
+      this.loading=true
       this.getListing({
         page:this.page
       }).then(({data})=>{
-         if (this.page<data.meta.total) {
+        this.loading=false
+         if (this.page<=data.meta.total) {
           this.page += 1;
           data.data.forEach(list=>{
             if (!this.listing.includes(list)) {
@@ -88,7 +94,6 @@ export default {
           })
           $state.loaded();
         } else {
-          alert()
           $state.complete();
         }
       })
@@ -98,13 +103,13 @@ export default {
   },
 
   created() {
-    // this.infiniteHandler();
+    this.infiniteHandler();
     this.getRequestLimit().then(()=>{
       this.loadingReq=false;
     });
   },
   computed: {
-    ...mapGetters(["hRequest"])
+    ...mapGetters(["hRequest","loggedIn"])
   }
 }
 </script>
@@ -169,6 +174,14 @@ export default {
         margin-bottom:20px;
 
       }
+    }
+  }
+
+  @media (max-width:460px){
+    .home-con{
+      & .right{
+      margin-left:0px;
+    }
     }
   }
 </style>

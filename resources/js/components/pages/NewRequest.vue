@@ -11,11 +11,18 @@
           </div>
 
           <div v-if="serverErrors">
-            <div v-for="(error, index) in serverErrors" :key="index" class="alert alert-danger" role="alert">
-              <strong><i class="fa fa-warning"></i> {{error[0]}}</strong>
+            <div
+              v-for="(error, index) in serverErrors"
+              :key="index"
+              class="alert alert-danger"
+              role="alert"
+            >
+              <strong>
+                <i class="fa fa-warning"></i>
+                {{error[0]}}
+              </strong>
             </div>
           </div>
-
 
           <div class="form-group">
             <label for="space_type">Space Type</label>
@@ -49,63 +56,87 @@
             >
               <option value selected disabled>Space For</option>
               <option value="rent">Rent</option>
-              <option value="shear">Shear</option>
+              <option value="shear">Sheare</option>
             </select>
             <div
               class="invalid-feedback"
               v-if="!$v.newList.space_for.required"
             >This field is required</div>
           </div>
-          
-           <div class="form-group">
-            <label for>Space Location</label>
-            <input
-              :class="{'is-invalid':$v.newList.space_location.$error}"
-              placeholder="e.g, Lagos,Abuja,Akure"
-              class="form-control" 
-              v-model.trim="$v.newList.space_location.$model"
-            />
-            <div
-              class="invalid-feedback"
-              v-if="!$v.newList.space_location.required"
-            >space location is required</div>
-          </div>
 
           <div class="form-group">
-            <label for>Budget</label>
-            <input type="number" 
-            placeholder="Budget" 
-            class="form-control"
-            :class="{'is-invalid':$v.newList.budget.$error}"
-              v-model.trim="$v.newList.budget.$model"
-             />
+            <div class="col-sm-1-12">
+              <div class="form-group">
+                <label for="location">Location</label>
+                <select
+                  class="form-control"
+                  :class="{'is-invalid':$v.newList.space_location.$error}"
+                  id="location"
+                  v-model.trim="$v.newList.space_location.$model"
+                >
+                  <option selected value disabled>Select your Location</option>
+                  <option value="Lagos">Lagos</option>
+                  <option value="Ondo">Ondo</option>
+                  <option value="Oyo">Oyo</option>
+                </select>
+              </div>
               <div
-              class="invalid-feedback"
-              v-if="!$v.newList.budget.required"
-            >This field is required</div>
-          </div> 
-           <div class="form-group">
-            <label for>Tags</label>
-             <tags-input element-id="tags"
-              v-model="newList.selectedTags"
-              :existing-tags="[
-                  { key: 'self-contain', value: 'Self Contain' },
-                  { key: 'two-bedroom', value: 'Two bedroom' },
-                  { key: 'clean', value: 'Clean' },
-              ]"
-              :typeahead="true"></tags-input>
+                class="invalid-feedback"
+                v-if="!$v.newList.space_location.required"
+              >This field is required</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label for>Min budget</label>
+                <input
+                  type="number"
+                  placeholder="Min"
+                  class="form-control"
+                  :class="{'is-invalid':$v.newList.min_budget.$error}"
+                  v-model.trim="$v.newList.min_budget.$model"
+                />
+                <div
+                  class="invalid-feedback"
+                  v-if="!$v.newList.min_budget.required"
+                >This field is required</div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label for>Max budget</label>
+                <input
+                  type="number"
+                  placeholder="Max"
+                  class="form-control"
+                  :class="{'is-invalid':$v.newList.max_budget.$error}"
+                  v-model.trim="$v.newList.max_budget.$model"
+                />
+                <div
+                  class="invalid-feedback"
+                  v-if="!$v.newList.max_budget.required"
+                >This field is required</div>
+              </div>
+            </div>
           </div>
           <div class="form-group">
             <label for>About Property</label>
-            <textarea v-model="newList.about_property" placeholder="Specify the type and what you look forward to" class="form-control"></textarea>
+            <textarea
+              v-model="newList.about_property"
+              placeholder="Specify the type and what you look forward to"
+              class="form-control"
+            ></textarea>
           </div>
-         
-        
-           <loading :loading="loading"></loading>
-          
+
+          <loading :loading="loading"></loading>
+
           <button class="btn btn-primary btn-block" :disabled="loading" @click="makeRequest">
-            <span v-if="loading"><i class="fa fa-spinner" aria-hidden="true"></i> </span>
-             Submit
+            <span v-if="loading">
+              <i class="fa fa-spinner" aria-hidden="true"></i>
+            </span>
+            Submit
           </button>
         </form>
       </div>
@@ -115,23 +146,23 @@
 
 <script>
 import { required, minLength, email } from "vuelidate/lib/validators";
-import Loading from './../partials/FormLoading';
+import Loading from "./../partials/FormLoading";
 import { TimelineLite } from "gsap/all";
 export default {
-     components: {
-  Loading
+  components: {
+    Loading
   },
   data() {
     return {
       value: true,
       newList: {
         about_property: "",
-        budget: "",
+        min_budget: "",
+        max_budget:"",
         space_for: "",
         space_type: "",
-        space_location:"",
-        selectedTags:[]
-
+        space_location: "",
+        selectedTags: []
       },
       loading: false,
       serverErrors: null,
@@ -141,15 +172,16 @@ export default {
 
   validations: {
     newList: {
-    //   about_property: { required },
-      budget: { required },
+      //   about_property: { required },
       space_type: { required },
       space_for: { required },
-      space_location:{required}
+      space_location: { required },
+      min_budget: { required },
+      max_budget: { required }
     }
   },
   methods: {
-     makeRequest() {
+    makeRequest() {
       this.$v.$touch();
       this.$refs.form.classList.remove("shake");
       if (this.$v.$invalid) {
@@ -164,21 +196,21 @@ export default {
           .then(() => {
             this.newList = {};
             this.loading = false;
-            alert()
-            this.$snotify.success("List created")
+            alert();
+            this.$snotify.success("List created");
             this.$router.push({ name: "my.listing" });
           })
           .catch(err => {
-             this.loading = false;
-             this.$snotify.error("Opps, something went wrong")
-             this.serverErrors = Object.values(err.response.data.errors);
-             window.scrollTo(0,0)
+            this.loading = false;
+            this.$snotify.error("Opps, something went wrong");
+            this.serverErrors = Object.values(err.response.data.errors);
+            window.scrollTo(0, 0);
           });
       }
-    }  
+    }
   },
   mounted() {
-      // let get=this.$ref.get
+    // let get=this.$ref.get
     let timeline = new TimelineLite();
     timeline.from(".c-list-con", { y: 50, opacity: 0 });
     timeline.from(".form-h", { x: -20, opacity: 0 });

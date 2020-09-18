@@ -10,6 +10,8 @@ use App\Tag;
 use App\Http\Resources\Listing as ListingResource;
 use Auth;
 use phpDocumentor\Reflection\Location;
+use Image;
+use Input;
 
 class ListingController extends Controller
 {
@@ -24,6 +26,25 @@ class ListingController extends Controller
         return ListingResource::collection($listing);
     }
 
+
+
+    public function searchList(Request $request)
+    {
+
+        $value=$request->query('s');
+
+        $listing=Listing::where('bedroom_type','LIKE',"%$value%")->orWhere('space_type','LIKE',"%$value%")->orWhere('space_address','LIKE',"%$value%")->latest()->paginate(20);
+        return ListingResource::collection($listing);
+    }
+
+
+    public function filterRange(Request $request)
+    {
+
+        $listing=Listing::whereBetween('rent',array($request->min_budget,$request->max_budget))->paginate(20);
+        return ListingResource::collection($listing);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -32,7 +53,6 @@ class ListingController extends Controller
      */
     public function store(Request $request)
     {
-       
 
          $validate=$request->validate([
              'space_address' => ['required'],
@@ -40,7 +60,9 @@ class ListingController extends Controller
             'space_type' => ['required'],
             'space_for' => ['required'],
             'rent' => ['required'],
-            'duration' => ['required']
+            'duration' => ['required'],
+            'images' => ['required'],
+
         ]);
         
         $listing=new Listing();
@@ -58,6 +80,7 @@ class ListingController extends Controller
         $listing->bedroom_type=$request->input('bedroom_type');
         $listing->about_property=$request->input('about_property');
         $listing->about_cohabitation=$request->input('about_cohabitation');
+        $listing->images=$request->input('images');
         $listing->user_id=Auth::user()->id;
         $listing->save();
 
@@ -87,7 +110,9 @@ class ListingController extends Controller
     public function listingByLocation(Request $request)
     {
         // return response()->json(Auth::user(), 200);
-        $listing=Listing::orderBy('rating','DESC')->where('space_location',Auth::user()->location)->paginate(2);
+
+        
+        $listing=Listing::orderBy('rating','DESC')->where('space_location',Auth::user()->location)->paginate(10);
         return ListingResource::collection($listing);
       
     }
@@ -128,8 +153,31 @@ class ListingController extends Controller
     }
 
 
-    public function uploadFiles(Request $request){
-        return response()->json(['file'=>$request->file('file')]);
+    public function uploadFiles(Request $request)
+    {
+        // $validate=$request->validate([
+        //     'file' => 'required|image|mimes:jpg,png,jpeg,svg|max:1048'
+        // ]);
+        // $_FILES['file']['name']
+     
+        foreach($request->file('file') as $file) {
+            // if ($request->file()) {
+                $fileName = 'listing-'.time().'-'.$file->getClientOriginalName(); 
+                $path = public_path('uploads/listing/'.$fileName);
+          
+                Image::make($file)->resize(600,null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($path); 
+
+                $preview[]=$fileName;
+                
+        // }
+        }
+        
+        return response()->json(['files'=>json_encode($preview)]);
+
+
+    
     }
 
     /**
@@ -139,9 +187,17 @@ class ListingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function updateList(Request $request)
     {
-        //
+        
+        $list=Listing::find($request->input('id'));
+        if ($list->user_id == Auth::user()->id) {
+            $list->update($request->except(['id','rating','created_at']));
+            return response()->json(['success'=>$list->user_id],200);
+        }else{
+            return response()->json(['success'=>false,'msg'=>'You have no permission to update this field'],401);
+        }
+        
     }
 
     /**

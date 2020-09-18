@@ -1,6 +1,6 @@
 <template>
   <div class="request-con">
-    <div class="left">
+    <div class="left  d-none d-sm-block d-md-block"  :class="{sticky}">
       <div class="header">
         <span>Filter</span>
       </div>
@@ -32,13 +32,41 @@
           <span>Busget</span>
         </div>
 
-        <input type="range" />
+        <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label for>Min budget</label>
+                      <input
+                        type="number"
+                        placeholder="Min"
+                        class="form-control"
+                        v-model="budget.min_budget"
+                      />
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label for>Max budget</label>
+                      <input
+                        type="number"
+                        placeholder="Max"
+                        class="form-control"
+                        v-model="budget.max_budget"
+                        v-on:blur="filterR"
+                      />
+                    </div>
+                  </div>
+                  
+                </div>
       </div>
     </div>
 
     <div class="right">
       <div class="header">
-        <button class="btn btn-outlined">Search</button>
+         <div class="s-con" id="s-con">
+            <input placeholder="Search"  @focus="focusSearch"  v-on:blur="blurSearch" v-model="search" class="form-control" />
+            <div class="btn btn-primary" @click="submitSearch" style="height:40px;margin-left:5px"><i class="fa fa-search" aria-hidden="true"></i></div>
+          </div>
       </div>
       <div class="container">
         <div v-if="!loading">
@@ -81,39 +109,101 @@ export default {
       loading: true,
       mode:'start',
       page: 1,
-      location:''
+      search:"",
+      location:'',
+       budget:{
+        max_budget:'',
+        min_budget:''
+      },
+      sticky:false
     };
   },
   methods: {
-    ...mapActions(["getRequest","selectLocation"]),
+    ...mapActions(["getRequest","selectRLocation",'filterReqRange','Request','searchRequest']),
 
     infiniteHandler($state) {
       this.getRequest({
         page: this.page
       }).then(({ data }) => {
         this.loading = false;
-        if (this.page < data.meta.total) {
+        if (this.page < data.meta.total || this.page===1) {
           this.page += 1;
-          data.data.forEach(list => {
-            if (!this.requests.includes(list)) {
-              this.requests.push(list);
+          data.data.forEach(request => {
+            if (!this.requests.includes(request)) {
+              this.requests.push(request);
             }
           });
           $state.loaded();
         } else {
+          alert()
           $state.complete();
         }
       });
     },
+     submitSearch(){
+      if (this.$route.query.search!==`${this.search}`) {
+           this.$router.push({name:'request',query:{search:this.search}})
+          }  
+    },
+   created () {
+     this.infiniteHandler()
+    },
      filterLocation(){
     this.mode='location'
-    this.selectLocation({
+    this.loading=true
+    this.selectRLocation({
         location: this.location
       }).then((res)=>{
-        this.listing=res.data.data;     
+        this.loading=false
+        this.requests=res.data.data;     
       })
    },
+   filterR(){
+    this.mode='range'
+    this.loading=true
+    this.filterReqRange(
+        this.budget
+      ).then((res)=>{
+        this.loading=false
+        this.requests=res.data.data;
+      })
+   },
+   searchR(){
+    this.mode='search'
+    this.loading=true
+    this.searchRequest({
+        s:this.$route.query.search || this.search
+      }).then((res)=>{
+        this.loading=false
+        this.requests=res.data.data;
+      })
+   },
+    focusSearch(){
+      let el=document.getElementById('s-con').classList.add('focus')
+   },
+   blurSearch(){
+      let el=document.getElementById('s-con').classList.remove('focus')
+   }
   },
+  watch: {
+     $route() {
+      this.searchR()
+    }
+  },
+
+  created () {
+     let tis = this;
+    document.addEventListener("scroll", function() {
+      tis.sticky = window.scrollY < 300 ? false : true;
+    });
+    if (this.$route.query.search) {
+      this.searchR()
+    }else{
+      this.infiniteHandler()
+    }
+    // this.getState();
+    },
+  
   computed: {
     ...mapGetters([
       "states"
@@ -122,7 +212,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .request-con {
   & .left {
     width: 270px;
@@ -161,7 +251,22 @@ export default {
         margin: 5px;
         right: 20px;
       }
+        & .s-con{
+        display: flex;
+        transition:0.3s;
+        float: right;
+        width:70%;
+
+        &.focus{
+          width:100%;
+        } 
+      }
     }
   }
 }
+ @media (max-width:460px){
+    .request-con .right{
+      margin-left:0px;
+    }
+  }
 </style>

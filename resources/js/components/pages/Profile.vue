@@ -1,6 +1,6 @@
 <template>
   <div>
-          
+      Profile ....  
   </div>
 </template>
 
@@ -17,14 +17,7 @@ export default {
     };
   },
   methods: {
-    getUser(){
-       this.$store.dispatch('getUserByUsername',this.$route.params.username).then((res)=>{
-       this.$store.dispatch("getProfileFollow", { uid: res.data.user._id }).then(res=> {
-         this.follower=res.data.follower
-         this.following=res.data.following
-         this.loading=false
-       })
-    })
+    getUser(){      
     }
   },
   watch: {

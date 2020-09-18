@@ -15,14 +15,13 @@ class CreateRequestsTable extends Migration
     {
         Schema::create('requests', function (Blueprint $table) {
             $table->id();
-            $table->string('requests_title');
-            $table->longText('request_description');
-            $table->string('request_budget');
             $table->string('space_location');
+            $table->string('space_for');
+            $table->integer('min_budget');
+            $table->integer('max_budget');
             $table->string('user_id');
-            $table->string('requests_location');
-            $table->string('requests_type');
-            $table->string('slug');
+            $table->mediumText('about_property');
+            $table->string('space_type');
             $table->timestamps();
         });
     }

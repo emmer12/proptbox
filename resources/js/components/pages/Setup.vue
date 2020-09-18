@@ -62,7 +62,7 @@
         </div>
 
           <div class="form-group" >
-            <label for="space_type">Payer Type</label>
+            <label for="space_type">Gender</label>
             <select 
             v-model.trim="$v.newUser.gender.$model"
             :class="{'is-invalid':$v.newUser.gender.$error}"
@@ -84,8 +84,6 @@
 
         <loading :loading="loading"></loading>
 
-        
-        
       </form>
     </div>
 
@@ -108,7 +106,7 @@ export default {
         phoneNo:'',
         location:'',
         age:'',
-        gender
+        gender:''
       },
       serverErrors: false,
       loading: false
@@ -154,7 +152,6 @@ export default {
         })
         .catch(err => {
           this.loading = false;
-          this.newUser.password = "";
           this.$snotify.error("Opps, something went wrong")
           console.log(err);
           

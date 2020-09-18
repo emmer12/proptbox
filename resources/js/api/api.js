@@ -9,6 +9,11 @@ const updateUser=(data)=>{
     return Api.patch('/update-user',data)
 }
 
+const updateList=(data)=>{
+    return Api.patch('/update-listing',data)
+}
+
+
 const loginUser=(data)=>{
     return Api.post('/login',data)
 }
@@ -101,6 +106,30 @@ const filterRLocation=(data)=>{
         params:data
     })
 }
+const filterRange=(data)=>{
+    return Api.get('/filter-range',{
+        params:data
+    })
+}
+const filterReqRange=(data)=>{
+    return Api.get('/filter-request-range',{
+        params:data
+    })
+}
+
+const searchListing=(data)=>{
+    return Api.get('/search-listing',{
+        params:data
+    })
+}
+
+
+const searchRequest=(data)=>{
+    return Api.get('/search-request',{
+        params:data
+    })
+}
+
 
 const uploadFile=(data)=>{
     return Api.post('/upload-file',data)
@@ -133,5 +162,10 @@ export default {
     filterTag,
     filterLocation,
     filterRLocation,
-    uploadFile
+    uploadFile,
+    updateList,
+    searchListing,
+    searchRequest,
+    filterRange,
+    filterReqRange
 }

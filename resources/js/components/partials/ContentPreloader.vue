@@ -45,7 +45,7 @@
     </div>
 
 
-    <div class="row details" v-if="type==='details'">
+    <div class="row l-details" v-if="type==='details'">
       <div class="col-md-12" style="margin:0px auto;max-width:550px">
         <div class="loader-con-list loads">
                  <div class="img-area"></div>
@@ -79,7 +79,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.details{
+.l-details{
   transform: translateY(-100px);
 }
 .loader-con-list {

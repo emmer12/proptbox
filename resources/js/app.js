@@ -2,6 +2,9 @@ import VueRouter from "vue-router";
 import {routes} from './routes'
 import Vuelidate from 'vuelidate'
 import Snotify,{ SnotifyPosition} from 'vue-snotify'
+import Vue from 'vue'
+import VueAgile from 'vue-agile'
+ 
 require('./bootstrap');
 require('@voerro/vue-tagsinput/dist/style.css')
 
@@ -14,11 +17,12 @@ const DEFAULT_TITLE="ProptBox"
 
 
 import VoerroTagsInput from '@voerro/vue-tagsinput';
- 
+
 Vue.component('tags-input', VoerroTagsInput);
 
 Vue.use(VueRouter);
 Vue.use(Vuelidate)
+Vue.use(VueAgile)
 
 
 import InfiniteLoading from 'vue-infinite-loading';

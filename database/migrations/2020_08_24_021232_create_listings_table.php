@@ -27,6 +27,7 @@ class CreateListingsTable extends Migration
             $table->string('duration')->nullable();
             $table->string('bedroom_type')->nullable();
             $table->mediumText('about_property');
+            $table->longText('images')->default('empty.jpg');
             $table->mediumText('about_cohabitation')->nullable();
             $table->timestamps();
         });

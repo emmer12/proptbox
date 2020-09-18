@@ -1,18 +1,20 @@
 <template>
   <div class>
     <div class="banner"></div>
-    <div class="container settings">
+    <div class="container settings" v-if="user">
       <div class="row">
         <div class="col-md-4">
-          <div class="profile" >
+          <div class="profile">
             <div v-if="imgLoading" class="loading">
-               <span ><i class="fa fa-spinner" aria-hidden="true"></i> </span>
+              <span>
+                <i class="fa fa-spinner" aria-hidden="true"></i>
+              </span>
             </div>
-            <label v-if="user" for="pro-image" style="cursor:pointer">
+            <label for="pro-image" style="cursor:pointer">
               <img :src="'/uploads/profile-images/'+user.profile_pic_filename" />
-            <i class="fa fa-camera" aria-hidden="true"></i>
+              <i class="fa fa-camera" aria-hidden="true"></i>
             </label>
-            <input type="file" id="pro-image" style="display:none" @change="processFormImg">
+            <input type="file" id="pro-image" style="display:none" @change="processFormImg" />
             <!-- <i class="fa fa-camera-retro" aria-hidden="true"></i> -->
           </div>
         </div>
@@ -24,24 +26,18 @@
             </div>
             <form v-on:submit.prevent ref="form" v-if="user">
               <div class="form-group">
-                <label for="firstname" class="col-sm-1-12 col-form-label">
+                <label for="fullname" class="col-sm-1-12 col-form-label">
                   Fullname
                   <span>*</span>
                 </label>
                 <div class="col-sm-1-12">
                   <input
-                    :class="{'is-invalid':$v.newUser.fullname.$error}"
                     type="text"
                     class="form-control"
-                    name="firstname"
-                    v-model.trim="$v.newUser.fullname.$model"
-                    id="firstname"
-                    :placeholder="user.fullname"
+                    name="fullname"
+                    v-model="user.fullname"
+                    id="fullname"
                   />
-                  <div
-                    class="invalid-feedback"
-                    v-if="!$v.newUser.fullname.required"
-                  >This field is required</div>
                 </div>
               </div>
 
@@ -49,22 +45,13 @@
                 <div class="col-sm-1-12">
                   <div class="form-group">
                     <label for="location">Location</label>
-                    <select
-                      class="custom-select"
-                      :class="{'is-invalid':$v.newUser.location.$error}"
-                      id="location"
-                      v-model.trim="$v.newUser.location.$model"
-                    >
-                      <option selected value>{{user.location}}</option>
+                    <select class="custom-select" id="location" v-model="user.location">
+                      <option selected :value="user.loaction">{{user.location}}</option>
                       <option value="Lagos">Lagos</option>
                       <option value="Ondo">Ondo</option>
                       <option value="Oyo">Oyo</option>
                     </select>
                   </div>
-                  <div
-                    class="invalid-feedback"
-                    v-if="!$v.newUser.location.required"
-                  >This field is required</div>
                 </div>
               </div>
               <div class="form-group">
@@ -76,16 +63,10 @@
                   <input
                     type="text"
                     class="form-control"
-                    :class="{'is-invalid':$v.newUser.phoneNo.$error}"
                     name="phoneNo"
-                    v-model.trim="$v.newUser.phoneNo.$model"
+                    v-model="user.phoneNo"
                     id="phoneNo"
-                    :placeholder="user.phoneNo"
                   />
-                  <div
-                    class="invalid-feedback"
-                    v-if="!$v.newUser.phoneNo.required"
-                  >This field is required</div>
                 </div>
               </div>
               <div class="form-group">
@@ -97,20 +78,10 @@
                   <input
                     type="email"
                     class="form-control"
-                    :class="{'is-invalid':$v.newUser.email.$error}"
                     name="email"
-                    v-model.trim="$v.newUser.email.$model"
+                    v-model="user.email"
                     id="email"
-                    :placeholder="user.email"
                   />
-                  <div
-                    class="invalid-feedback"
-                    v-if="!$v.newUser.email.required"
-                  >This field is required</div>
-                  <div
-                    class="invalid-feedback"
-                    v-if="!$v.newUser.email.email"
-                  >Please enter a valid email</div>
                 </div>
               </div>
 
@@ -124,17 +95,21 @@
               <div class="verify-con">
                 <h4>Verify Account</h4>
                 <div class="verify">
-                  <div class="v-icon">
-                    <i class="fa fa-envelope active"></i>
-                    <span class="fa fa-check"></span>
+                  <div class="v-icon" @click="verify('email')">
+                    <i class="fa fa-envelope" :class="{active:user.email_verified_at}"></i>
+                    <span class="fa fa-check" v-if="user.email_verified_at"></span>
                   </div>
-                  <div class="v-icon">
-                    <i class="fa fa-user" aria-hidden="true"></i>
-                    <span class="fa fa-check"></span>
+                  <div class="v-icon" @click="verify('id')">
+                    <i class="fa fa-user" aria-hidden="true" :class="{active:user.id_verified_at}"></i>
+                    <span class="fa fa-check" v-if="user.id_verified_at"></span>
                   </div>
-                  <div class="v-icon">
-                    <i class="fa fa-phone-square active" aria-hidden="true"></i>
-                    <span class="fa fa-check"></span>
+                  <div class="v-icon" @click="verify('phone')">
+                    <i
+                      class="fa fa-phone-square"
+                      aria-hidden="true"
+                      :class="{active:user.phone_verified_at}"
+                    ></i>
+                    <span class="fa fa-check" v-if="user.phone_verified_at"></span>
                   </div>
                 </div>
               </div>
@@ -173,6 +148,11 @@
         </div>
       </div>
     </div>
+    <div v-else class="loading">
+      <span>
+        <i class="fa fa-spinner" aria-hidden="true"></i>
+      </span>
+    </div>
   </div>
 </template>
 
@@ -183,18 +163,18 @@ export default {
   data() {
     return {
       value: true,
-      newUser: {
-        phoneNo: "",
-        fullname: "",
-        location: "",
-        email: ""
-      },
+      // newUser: {
+      //   phoneNo: "",
+      //   fullname:"",
+      //   location: "",
+      //   email: ""
+      // },
       newPass: {
         password: "",
         password_confirmation: "",
         oldPassword: ""
       },
-      fileSeleted:'',
+      fileSeleted: "",
       loading: false,
       imgLoading: false,
       serverErrors: null,
@@ -202,57 +182,69 @@ export default {
     };
   },
 
-  validations: {
-    newUser: {
-      phoneNo: { required },
-      fullname: { required },
-      location: { required },
-      email: { required, email }
-    }
-  },
+  // validations: {
+  //   newUser: {
+  //     phoneNo: { required },
+  //     fullname: { required },
+  //     location: { required },
+  //     email: { required, email }
+  //   }
+  // },
 
   methods: {
     update() {
-      this.$v.$touch();
-      this.$refs.form.classList.remove("shake");
-      if (this.$v.$invalid) {
-        let tis = this;
-        setTimeout(function() {
-          tis.$refs.form.classList.add("shake");
-        }, 1000);
-      } else {
-        this.loading = true;
-        this.$store
-          .dispatch("updateUser", this.newUser)
-          .then(() => {
-            this.newUser = {};
-            this.loading = false;
-            // this.$router.push({ name: "complete.setup" });
-          })
-          .catch(err => {
-            this.loading = false;
-            this.$snotify.error("Opps, something went wrong please try again");
+      this.loading = true;
+      this.$store
+        .dispatch("updateUser", this.user)
+        .then(() => {
+          this.newUser = {};
+          this.loading = false;
+          this.$snotify.success("Updated", {
+            timeout: 6000,
+            showProgressBar: true,
+            pauseOnHover: true
           });
-      }
+        })
+        .catch(err => {
+          this.loading = false;
+          this.$snotify.error("Opps, something went wrong please try again");
+        });
     },
 
     processFormImg(e) {
-      this.fileSeleted=e.target.files[0];     
-      this.uploadImage() 
+      this.fileSeleted = e.target.files[0];
+      this.uploadImage();
     },
-      uploadImage(){
-        this.imgLoading=true
-        this.$store.dispatch("uploadFile",this.fileSeleted).then(()=>{
-          alert('updated')
-           this.imgLoading=false
-
-
-        }).catch((err)=>{
-          this.serverErrors=err.response.data.msg
-        this.imgLoading=false
+    uploadImage() {
+      this.imgLoading = true;
+      this.$store
+        .dispatch("uploadFile", this.fileSeleted)
+        .then(() => {
+          alert("updated");
+          this.imgLoading = false;
         })
+        .catch(err => {
+          this.serverErrors = err.response.data.msg;
+          this.imgLoading = false;
+        });
     },
-  
+
+    verify(field) {
+      if (field === "email") {
+        alert("email verification...");
+      } else if (field === "phone") {
+        alert("phone verification...");
+      } else {
+        alert("Id verification...");
+      }
+    }
+
+    // inputHandler(e,field){
+    //  if (field==='fullname') {
+    //     this.newUser.fullname=e.target.value
+    //  }
+
+    // }
   },
 
   computed: {
@@ -262,6 +254,17 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.loading {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 10px);
+  & span i {
+    animation: rot 1s infinite linear;
+    transform-origin: center;
+    color: grey;
+    font-size: 30px;
+  }
+}
 .banner {
   height: 50px;
   background: #eef4ff;
@@ -278,23 +281,23 @@ export default {
     background: #eef4ff;
     margin: 0 auto;
     position: relative;
-    & .loading{
-        padding-left: 5px;
-        position: absolute;
-        top: 0;
-        z-index: 999;
-        left: 0;
-        background: #3490dc69;
-        width: 100%;
-        height: 100%;
-        border-radius: 0% 50%;
-        & span i{
-          animation:rot 1s infinite linear;
+    & .loading {
+      padding-left: 5px;
+      position: absolute;
+      top: 0;
+      z-index: 999;
+      left: 0;
+      background: #3490dc69;
+      width: 100%;
+      height: 100%;
+      border-radius: 0% 50%;
+      & span i {
+        animation: rot 1s infinite linear;
         transform-origin: center;
-        color:white;
+        color: white;
       }
     }
-  
+
     & img {
       height: 200px;
       width: 200px;
@@ -315,44 +318,67 @@ export default {
 </style>
 
 <style lang="scss">
-    .header {
-      & h4{
+.header {
+  & h4 {
     color: #444;
     padding: 10px 0px;
-      }
   }
-  .verify-con {
-    background: #f6f6f6;
-    padding:10px;
-    
-    & .verify{
-    display:flex;
+}
+.verify-con {
+  background: #f6f6f6;
+  padding: 10px;
+
+  & .verify {
+    display: flex;
 
     & .v-icon {
-    position:relative;
+      position: relative;
 
-    & span{
-      position:absolute;
-      background:green;
-      color:white;
-      right:6px;
-      bottom:23px;
-      border-radius:50%;
-      padding:3px;
-
-    }
+      & span {
+        position: absolute;
+        background: green;
+        color: white;
+        right: 6px;
+        bottom: 23px;
+        border-radius: 50%;
+        padding: 3px;
+      }
       i {
-      padding: 10px;
-      margin: 20px 10px;
-      font-size: 40px;
-      border-radius: 10px;
-      color: grey;
-      &.active {
-        color: #0d50bd;
-
+        padding: 10px;
+        margin: 20px 10px;
+        font-size: 40px;
+        border-radius: 10px;
+        color: grey;
+        cursor: pointer;
+        &.active {
+          color: #0d50bd;
+        }
       }
     }
   }
+}
+
+@media (max-width: 460px) {
+  .verify-con {
+    & h4{
+      font-size: 16px;
+     font-weight: 700;
+    }
+    & .verify {
+          justify-content: center;
+      & .v-icon {
+        & i {
+          font-size: 30px;
+          border-radius: 10px;
+          color: grey;
+          cursor: pointer;
+          padding: 10px 10px;
+          &.active {
+            color: #0d50bd;
+          }
+        }
+      }
+    }
   }
-  }
+}
 </style>

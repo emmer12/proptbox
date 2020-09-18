@@ -27,7 +27,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::delete('/delete-listing/{id}', 'API\ListingController@destroy');
     Route::get('/auth-user', 'API\UserController@getAuthUser');
     Route::patch('/update-user', 'API\UserController@updateUser');
+    Route::patch('/update-listing', 'API\ListingController@updateList');
     Route::post('/upload-file', 'API\UserController@uploadFile');
+    Route::post('/listing-file-upload', 'API\ListingController@uploadFiles');
     
     Route::get('/all-request-limit-by-location','API\RequestController@requestLimit');
     Route::get('/all-request-by-location','API\RequestController@requestByLocation');
@@ -38,9 +40,18 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::post('/other-setup', 'API\AuthController@otherSetup');
     Route::post('/other-setup-signup', 'API\AuthController@otherSetupSignup');
+
 });
 
-Route::post('/listing-file-upload', 'API\ListingController@uploadFiles');
+Route::get('/search-request','API\RequestController@searchReq');
+
+Route::get('/search-listing', 'API\ListingController@searchList');
+
+Route::get('/filter-range', 'API\ListingController@filterRange');
+
+Route::get('/filter-request-range', 'API\RequestController@filterRange');
+
+
 
 
 Route::get('/all-listing-by-tag', 'API\ListingController@listingByTag');

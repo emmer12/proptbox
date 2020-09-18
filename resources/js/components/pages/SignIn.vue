@@ -129,8 +129,7 @@ export default {
           this.loading = false;
           this.$snotify.success("Login successful", {
               timeout: 6000,
-              showProgressBar: false,
-              closeOnClick: false,
+              showProgressBar: true,
               pauseOnHover: true
             });
           this.$router.push({ name: "home" });

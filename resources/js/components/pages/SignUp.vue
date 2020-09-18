@@ -136,18 +136,22 @@
           <div class="col-sm-1-12">
             <input
               type="password"
-              :class="{'is-invalid':$v.newUser.cPassword.$error}"
+              :class="{'is-invalid':$v.newUser.password_confirmation.$error}"
               class="form-control"
               name="c-password"
               id="c-password"
-              v-model.trim="$v.newUser.cPassword.$model"
+              v-model.trim="$v.newUser.password_confirmation.$model"
               placeholder="********"
 
             />
             <div
               class="invalid-feedback"
-              v-if="!$v.newUser.cPassword.required"
+              v-if="!$v.newUser.password_confirmation.required"
             >This field is required</div>
+             <div
+              class="invalid-feedback"
+              v-if="!$v.newUser.password_confirmation.sameAsPassword"
+            >Password do not match</div>
           </div>
         </div>
 
@@ -173,7 +177,7 @@
 <script>
 // import { mapActions } from 'vuex'
 import Loading from './../partials/FormLoading';
-import { required, minLength, email } from "vuelidate/lib/validators";
+import { required, minLength, email,sameAs } from "vuelidate/lib/validators";
 import { TimelineLite } from "gsap/all";
 
 
@@ -191,7 +195,7 @@ export default {
         email: "",
         location:'',
         password: "",
-        cPassword: ""
+        password_confirmation: ""
       },
       loading: false,
       serverErrors: null,
@@ -206,8 +210,8 @@ export default {
       location: { required },
       phone: { required},
       email: { required, email },
-      password: { minLength: minLength(6) },
-      cPassword: { required }
+      password: {required, minLength: minLength(6) },
+      password_confirmation: { required,sameAsPassword:sameAs('password') }
     }
   },
 

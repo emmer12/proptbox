@@ -3,7 +3,7 @@
 
           <router-link tag="div" :to="{name:'request-details',params:{id:request.id}}" class="card r-card">
             <div class="top-section">
-              <img src="/images/user.png" width="100%" />
+              <router-link to="/"><img :src="'/uploads/profile-images/'+request.user.profile_pic_filename" width="100%" /></router-link>
               <div class="details">
                 <h4>{{request.user.fullname}}</h4>
                 <span>{{request.user.age}} yrs</span> |
@@ -16,7 +16,7 @@
               <p v-else>{{request.about_property}}</p>
               <div class="c-t-b">
                 <strong>Budget</strong>
-                <span>$ {{request.budget}}</span>
+                <span>&#8358;{{request.min_budget + '-' + request.max_budget}}</span>
               </div>
             </div>
           </router-link>
@@ -57,7 +57,7 @@ export default {
 
       & p {
         line-height: 16px;
-        color: rgba($color: green, $alpha: 0.5);
+        color: #0ca93f;
         font-weight: 700;
       }
     }
@@ -74,4 +74,7 @@ export default {
     }
   }
 }
+
+
 </style>
+

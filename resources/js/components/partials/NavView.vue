@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="nav">
+    <div class="nav d-none d-sm-block d-md-block" >
       <div class="container">
         <div class="nav-c nav-top" :class="{added:tReveal}">
           <div class="row">
-            <div class="col-md-8 col-sm-10">
+            <div class="col-md-5 col-sm-10">
               <div class="left">
                 <div class="bar" @click="openDrawer">
                   <i class="fa fa-bars"></i>
@@ -12,24 +12,41 @@
                 <router-link to="/" class="logo">
                   <img src="/images/logo.svg" />
                 </router-link>
-                <div class="search">
-                  <input type="search" class="form-control" name="search" />
-                  <button class="btn btn-primary ml-2">Search</button>
                 </div>
               </div>
-            </div>
-            <div class="col-md-4 col-sm-2">
-              <div class="right">
-                <div v-show="tReveal">
+            <div class="col-md-4">
+               <div class="mid">
+                  <div>
                   <router-link
                     tag="button"
                     class="btn btn-primary pr-4 pl-4"
-                    :to="{name:'list'}"
-                  >List</router-link>
-                  <router-link tag="button" class="btn btn-primary" :to="{name:'request'}">Request</router-link>
+                    :to="{name: loggedIn ? 'new-list' : 'access.signin'}"
+                    :class="{'active':$route.name=='new-list' }"
+                  >List your space</router-link>
+                  <router-link
+                    tag="button"
+                    class="btn btn-primary"
+                    :class="{'active':'new-request'}"
+                    :to="{name:loggedIn ? 'new-request' : 'access.signup'}"
+                  >Need a space ?</router-link>
+                </div>
+            </div>
+            </div>
+            <div class="col-md-3 col-sm-2">
+              <div class="right">
+                <div class="s-icon" @click="sShow=!sShow"><i class="fa fa-search" aria-hidden="true"></i> </div>
+                <div class="search-field" v-show="sShow">
+                    <div class="form-group">
+                      <select class="form-control" name="" v-model="sTerm" id="">
+                        <option selected value="listing">Listing</option>
+                        <option value="request">Request</option>
+                      </select>
+                    </div>
+                   <input placeholder="Search" v-model="search" class="form-control" />
+                   <div class="btn btn-primary" @click="submitSearch" style="height:40px;margin-left:5px"><i class="fa fa-search" aria-hidden="true"></i></div>
                 </div>
                 <div v-if="loggedIn" class="avatar" @click="openDrop=!openDrop">
-                  <img v-if="user":src="'/uploads/profile-images/'+user.profile_pic_filename"  />
+                  <img v-if="user" :src="'/uploads/profile-images/'+user.profile_pic_filename"  />
                   <i class="fa fa-caret-down" aria-hidden="true"></i>
                   <div class="dropdown" v-show="openDrop">
                     <ul>
@@ -58,20 +75,7 @@
             </div>
             <div class="col-md-6">
               <div class="right">
-                <div v-if="loggedIn">
-                  <router-link
-                    tag="button"
-                    class="btn btn-primary pr-4 pl-4"
-                    :to="{name:'new-list'}"
-                    :class="{'active':$route.name=='new-list'}"
-                  >List your space</router-link>
-                  <router-link
-                    tag="button"
-                    class="btn btn-primary"
-                    :class="{'active':$route.name=='new-request'}"
-                    :to="{name:'new-request'}"
-                  >Need a space?</router-link>
-                </div>
+                
                 <div class="avatar pl-4 d-none">
                   <img v-if="user" :src="'/uploads/profile-images/'+user.profile_pic_filename"  />
                 </div>
@@ -83,15 +87,59 @@
     </div>
 
     <div v-show="tReveal" style="margin-top:100px">Nav reveal test</div>
+  
 
     <!-- Drawer View -->
-    <transition
+    <transition v-if="loggedIn"
       enter-active-class="animated slideInLeft"
       leave-active-class="animated slideOutLeft"
     >
-      <side-bar v-show="drawer"></side-bar>
+      <side-bar v-show="drawer" ></side-bar>
     </transition>
     <!-- Close Drawer View -->
+     
+
+     <div class="mobile-nav d-sm-none">
+       <div class="top">
+         <div>
+             <router-link to="/" class="logo">
+                  <img src="/images/logo.svg" />
+                </router-link>
+         </div>
+         <div>
+             <div class="left">
+                  <router-link
+                    tag="button"
+                    class="btn btn-primary pr-4 pl-4"
+                    :to="{name: loggedIn ? 'new-list' : 'access.signin'}"
+                    :class="{'active':$route.name=='new-list' }"
+                  >List</router-link>
+                  <router-link
+                    tag="button"
+                    class="btn btn-primary"
+                    :class="{'active':'new-request'}"
+                    :to="{name:loggedIn ? 'new-request' : 'access.signup'}"
+                  >Request</router-link>
+                <!-- <button class="s-icon" @click="sShow=!sShow"><i class="fa fa-search" aria-hidden="true"></i></button> -->
+
+                <!-- <div class="search-field" v-show="sShow">
+                  <div class="form-group">
+                    <select class="form-control" name="" v-model="sTerm" id="">
+                      <option selected value="listing">Listing</option>
+                      <option value="request">Request</option>
+                    </select>
+                  </div>
+                  <input placeholder="Search" v-model="search" class="form-control" />
+                  <div class="btn btn-primary" @click="submitSearch" style="height:40px;margin-left:5px"><i class="fa fa-search" aria-hidden="true"></i></div>
+              </div> -->
+                </div>
+         </div>
+
+       </div>
+       <div class="bottom">
+       </div>
+     </div>
+
   </div>
 </template>
 
@@ -105,14 +153,32 @@ export default {
   },
   data() {
     return {
+      sShow:false,
       tReveal: false,
       drawer: false,
-      openDrop: false
+      openDrop: false,
+      sTerm:"listing",
+      search:''
     };
   },
   methods: {
     openDrawer() {
       this.drawer = !this.drawer;
+    },
+    submitSearch(){
+      if (this.search!=='') {
+        if (this.sTerm==="listing") {
+              if (this.$route.query.search!==`${this.search}`) {
+                this.$router.push({name:'list',query:{search:this.search}})
+              }  
+        }else{
+           if (this.$route.query.search!==`${this.search}`) {
+             this.$router.push({name:'request',query:{search:this.search}})
+           }  
+       }
+      }else{
+        return
+      }
     }
   },
   watch: {
@@ -200,6 +266,9 @@ export default {
     }
   }
 }
+.mid {
+   line-height: 70px;    
+   }
 .nav-bottom {
   height: 100px;
   & .right {
@@ -207,6 +276,7 @@ export default {
     justify-content: space-between;
     line-height: 100px !important;
   }
+  
 
   & .left-b {
     display: block;
@@ -230,10 +300,31 @@ export default {
     float: right;
     line-height: 70px;
     display: flex;
+    position: relative;
+
+    & .s-icon{
+    padding: 0px 17px;
+    font-size: 19px;
+    cursor: pointer;
+  }
+    
+    & .search-field{
+         background: white;
+        padding: 10px;
+        position: absolute;
+        top: 70px;
+        z-index: 9999;
+        display: flex;
+        max-width: 400px;
+        width: 400px;
+        transform: translateX(-360px);
+    }
     & img {
       height: 40px;
       width: 40px;
       border-radius: 20px;
+      line-height: 70px;
+
     }
   }
   & .left {
@@ -250,22 +341,47 @@ export default {
       text-align: center;
       font-size: 20px;
       line-height: 30px;
-      margin: 0px 30px;
+      margin: 0px 0px;
       cursor: pointer;
     }
 
-    & .logo,
-    .search {
+    & .logo{
       line-height: 70px;
+      
     }
-    & .search {
-      margin: 0px 0px 0px 50px;
+    & .mid {
+      margin: 0px 0px 0px 0px;
       display: flex;
+      justify-content:center;
+      margin-left:50px;
+      line-height: 70px;
       & button {
         margin-right: 10px;
       }
     }
   }
   //   line-height: 50px;
+}
+
+.mobile-nav {
+  .top{
+    display:flex;
+    height:70px;
+    background:#eef4ff;
+    line-height:70px;
+
+    & .left{
+      position: absolute;
+      right: 10px;
+
+      .s-icon{
+        border:none;
+        outline:none;
+        font-size:16px;
+        background:transparent
+        
+      }
+   }
+  }
 }
 </style>

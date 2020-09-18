@@ -4,7 +4,7 @@
       <div class="des-header2">
         <div class="display">
           <img
-            :src="'/storage/uploads/images/'+user.profile_pic_filename"
+            :src="'/uploads/profile-images/'+user.profile_pic_filename"
             width="180px"
             height="180px"
           />
@@ -35,23 +35,23 @@
           </router-link>
         </div>
 
-        <div class="verify-con">
-                  <h4>Verify Account</h4>
-                  <div class="verify">
-                    <div class="v-icon">
-                      <i class="fa fa-envelope active"></i>
-                      <span class="fa fa-check"></span>
-                    </div>
-                    <div class="v-icon">
-                        <i class="fa fa-user " aria-hidden="true"></i>
-                        <span class="fa fa-check"></span>
-                    </div>
-                    <div class="v-icon">
-                    <i class="fa fa-phone-square active" aria-hidden="true"></i>
-                      <span class="fa fa-check "></span>
-                    </div>
+      <div class="verify-con">
+                <h4>Verify Account</h4>
+                <div class="verify">
+                  <div class="v-icon" @click="verify('email')">
+                    <i class="fa fa-envelope" :class="{active:user.email_verified_at}"></i>
+                    <span class="fa fa-check" v-if="user.email_verified_at"></span>
                   </div>
-               </div>
+                  <div class="v-icon" @click="verify('id')" >
+                    <i class="fa fa-user" aria-hidden="true" :class="{active:user.id_verified_at}"></i>
+                    <span class="fa fa-check" v-if="user.id_verified_at"></span>
+                  </div>
+                  <div class="v-icon" @click="verify('phone')">
+                    <i class="fa fa-phone-square" aria-hidden="true" :class="{active:user.phone_verified_at}"></i>
+                    <span class="fa fa-check" v-if="user.phone_verified_at"></span>
+                  </div>
+                </div>
+        </div>
       </div>
     </div>
   </div>
@@ -97,17 +97,26 @@ export default {
     }
   }
 }
-   .verify-con{
-     position: absolute;
-      right: 0px;
-      bottom: 9px;
-      background: transparent;
-      padding: 5px;
-
-    & h4{
-      top: 29px;
-      left: 18px;
-      position: relative;
+  
+   @media (max-width:460px) {
+    .banner-user{
+    
+    & .des-header2 {
+      display:block;
+      text-align:center;
+      & .display {
+        & img {
+          width:100px;
+          height:100px;
+          border-radius: 50%;
+        }
+      }
+      & .c-t-a {
+          padding-left: 20px;
+        padding-top: 15px;
+        line-height: 12px;
+      }
     }
+   }
    }
 </style>

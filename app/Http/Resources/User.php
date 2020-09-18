@@ -23,11 +23,16 @@ class User extends JsonResource
             'fullname' => $this->fullname,
             'phoneNo' => $this->phoneNo,
             'email' => $this->email,
+            'gender' => $this->gender,
+            'age' => $this->age,
             'profile_pic_url' => $this->profile_pic_url,
             'profile_pic_filename' => $this->profile_pic_filename,
             'listing' =>  Listing::collection($this->listing),
             'request' =>  Request::collection($this->request),
             'created_at' => $this->created_at,
+            'email_verified_at' => $this->email_verified_at,
+            'phone_verified_at' => $this->phone_verified_at,
+            'id_verified_at' => $this->id_verified_at,
             'updated_at' => $this->updated_at,
             'verified'=> $this->verified
             ];

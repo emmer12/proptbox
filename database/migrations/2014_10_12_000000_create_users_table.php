@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('phoneNo')->nullable();
             $table->string('profile_pic_filename')->default('profile.png');
+            $table->boolean('reveal_contact')->default(true);
             $table->string('profile_pic_url')->default(env('APP_URL').'storage/uploads/images/profile.png');
             $table->string('location')->nullable();
             $table->integer('age')->nullable();

@@ -41,6 +41,7 @@ class SocialAuthController extends Controller
             if (empty($user->email)) {
                 $email=$user->name.'@facebook.com';
             }
+            $email=$user->email;
             // create user and add the provider
             $newUser=true;
             $appUser = User::create([

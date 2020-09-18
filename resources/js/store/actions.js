@@ -32,6 +32,19 @@ export default {
         })
        },
 
+       updateList({ dispatch}, data) {
+        return new Promise((resolve, reject) => {
+            Api.updateList(data).then(res => {
+                dispatch("getListing");
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+       },
+
+
     setupOther({ commit }, data) {
         return new Promise((resolve, reject) => {
             Api.setupOther(data).then(res => {
@@ -310,6 +323,52 @@ export default {
     selectLocation({},data){
         return new Promise((resolve, reject) => {
             Api.filterLocation(data).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+
+    searchListing({},data){
+        return new Promise((resolve, reject) => {
+            Api.searchListing(data).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+    searchRequest({},data){
+        return new Promise((resolve, reject) => {
+            Api.searchRequest(data).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+
+    filterRange({},data){
+        console.log(data)
+        return new Promise((resolve, reject) => {
+            Api.filterRange(data).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+
+    
+    filterReqRange({},data){
+        console.log(data)
+        return new Promise((resolve, reject) => {
+            Api.filterReqRange(data).then(res => {
                 resolve(res)
             }).catch(err => {
                 reject(err)

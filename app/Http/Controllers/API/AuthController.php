@@ -28,7 +28,7 @@ class AuthController extends Controller
             // 'username' => 'required',
             'email' => 'required|unique:users',
             'fullname' => ['required', 'string', 'max:255'],
-            'password' => 'required|min:6',
+            'password' => 'required|min:6|confirmed',
             'location' => ['required', 'string', 'max:255'], 
             'phone' => ['required', 'string', 'max:255'],
         ]);
@@ -132,9 +132,10 @@ class AuthController extends Controller
         if (!empty($result->error)) {
             return response()->json(['msg' => "Invalid cridential"], 400);
         }
-        else if(!$user) {
-            return response()->json(['msg' => "Email not verified"], 400);
-        }else{
+        // else if(!$user) {
+        //     return response()->json(['msg' => "Email not verified"], 400);
+        // }
+        else{
             return response()->json([
                 'data' => $result
             ]);

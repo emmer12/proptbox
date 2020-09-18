@@ -22,9 +22,16 @@ class RequestController extends Controller
         return RequestResource::collection($requests); 
     }
 
+    public function searchReq(Request $request)
+    {
+
+        $value=$request->query('s');
+        $req=Requests::where('about_property','LIKE',"%$value%")->orWhere('space_type','LIKE',"%$value%")->latest()->paginate(20);
+        return RequestResource::collection($req);
+    }
     /**
      * Store a newly created resource in storage.
-     *
+     *]
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
@@ -34,9 +41,10 @@ class RequestController extends Controller
          $validate=$request->validate([
             // 'about' => ['required'],
             'space_for' => ['required'],
-            'budget' => ['required'],
             'space_location' => ['required'],
-            'space_type' => ['required']
+            'space_type' => ['required'],
+            'min_budget' => ['required'],
+            'max_budget' => ['required']
         ]);
 
         $requests=new Requests();
@@ -44,7 +52,8 @@ class RequestController extends Controller
     //    die(Auth::user()->id);
 
         $requests->space_for=$request->input('space_for');
-        $requests->budget=$request->input('budget');
+        $requests->min_budget=$request->input('min_budget');
+        $requests->max_budget=$request->input('max_budget');
         $requests->space_location=$request->input('space_location');
         $requests->space_type=$request->input('space_type');
         $requests->about_property=$request->input('about_property');
@@ -82,13 +91,20 @@ class RequestController extends Controller
         return RequestResource::collection($requests);
     }
 
+    
+    public function filterRange(Request $request)
+    {
+        // return response()->json([$request->min_budget]);
+
+        $requests=Requests::whereBetween('min_budget',array($request->min_budget,$request->max_budget))->orWhereBetween('max_budget',array($request->min_budget,$request->max_budget))->paginate(20);
+        return RequestResource::collection($requests);
+    }
+
     public function requestGuest()
     {
         $requests=Requests::orderBy('created_at','DESC')->paginate(20);
         return RequestResource::collection($requests);
     }
-
-
     /**
      * Display the specified resource.
      *

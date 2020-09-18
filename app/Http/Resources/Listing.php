@@ -28,12 +28,14 @@ class Listing extends JsonResource
         'rating'=>$this->rating,
         'duration'=>$this->duration,
         'rent'=>$this->rent,
-        'location'=>$this->space_location,
+        'space_location'=>$this->space_location,
         'slug'=>$this->slug,
         'space_address'=>$this->space_address,
+        'space_for'=>$this->space_for,
         'space_type'=>$this->space_type,
         'updated_at'=>$this->updated_at,
         'created_at'=>$this->created_at,
+        'images'=>json_decode($this->images),
         'user'=>$user,
     ];
     }

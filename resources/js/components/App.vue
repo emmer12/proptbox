@@ -13,8 +13,10 @@
               <!-- <div class="scroll-top" ref="scroll-top" @click="scrollTop">
                   <i class="icon angle double up"></i>
               </div> -->
-
+              <message v-if="user && !user.verified" :msg="'Your account has not been verified'"></message>
               <vue-snotify></vue-snotify>
+
+        <footer-nav></footer-nav>
     </div>
 
 
@@ -22,9 +24,14 @@
 
 <script>
  import NavView from "./partials/NavView.vue";
+ import FooterNav from "./partials/FooterNav.vue";
+ import Message from "./partials/Message";
+import { mapGetters } from 'vuex';
     export default {
         components:{
             NavView,
+            Message,
+            FooterNav
         },
         data(){
             return {
@@ -60,7 +67,7 @@
             }
         },
         created(){
-            this.getCurrentLocation()
+            // this.getCurrentLocation()
 
             // this.$Progress.start();
             // this.$router.beforeEach((to, from, next) => {
@@ -85,6 +92,11 @@
                 
             }
             
+        },
+        computed: {
+            ...mapGetters([
+                'user'
+            ])
         },
         
     }
