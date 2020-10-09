@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Listing;
 use App\Tag;
+use App\View;
 use App\Http\Resources\Listing as ListingResource;
 use Auth;
-use phpDocumentor\Reflection\Location;
 use Image;
 use Input;
 
@@ -22,7 +22,7 @@ class ListingController extends Controller
      */
     public function index()
     {
-        $listing=Listing::orderBy('rating','DESC')->paginate(10);
+        $listing=Listing::orderBy('boosted_at','DESC')->orderBy('created_at','DESC')->paginate(10);
         return ListingResource::collection($listing);
     }
 
@@ -112,7 +112,7 @@ class ListingController extends Controller
         // return response()->json(Auth::user(), 200);
 
         
-        $listing=Listing::orderBy('rating','DESC')->where('space_location',Auth::user()->location)->paginate(10);
+        $listing=Listing::orderBy('boosted_at','DESC')->orderBy('created_at','DESC')->where('space_location',Auth::user()->location)->paginate(10);
         return ListingResource::collection($listing);
       
     }
@@ -127,7 +127,7 @@ class ListingController extends Controller
 
 
     public function listingByFLocation(Request $request){
-        $listing=Listing::where('space_location',$request->query('location'))->paginate(12);
+        $listing=Listing::where('space_location',$request->query('location'))->orderBy('boosted_at','DESC')->orderBy('created_at','DESC')->paginate(12);
         return ListingResource::collection($listing);
 
     }
@@ -135,7 +135,7 @@ class ListingController extends Controller
     public function guestList()
     {
         // return response()->json(Auth::user(), 200);
-        $listing=Listing::orderBy('rating','DESC')->take(20)->paginate(20);
+        $listing=Listing::orderBy('boosted_at','DESC')->orderBy('created_at','DESC')->take(20)->paginate(20);
         return ListingResource::collection($listing);
     }
 
@@ -148,7 +148,7 @@ class ListingController extends Controller
      */
     public function listingById($id)
     {
-        $list=Listing::where('id',$id)->first();
+        $list=Listing::where('id',$id)->firstOrFail();
         return new ListingResource($list);
     }
 
@@ -186,7 +186,7 @@ class ListingController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
-     */
+     */ 
     public function updateList(Request $request)
     {
         
@@ -196,8 +196,7 @@ class ListingController extends Controller
             return response()->json(['success'=>$list->user_id],200);
         }else{
             return response()->json(['success'=>false,'msg'=>'You have no permission to update this field'],401);
-        }
-        
+        } 
     }
 
     /**
@@ -217,5 +216,17 @@ class ListingController extends Controller
         }else {
             return response()->json(['success'=>false,'msg'=>"You have no permission to delete this post"],400);
         }
+    }
+
+    public function createView(Request $request)
+    {
+        $views=new View();
+
+        $views->listing_id=$request->input('id');
+
+        $views->save();
+
+        return response()->json(['success'=>true],200);
+
     }
 }

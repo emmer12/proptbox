@@ -126,8 +126,9 @@ export default {
                     this.resetPassword({...this.newUser, token})
                         .then(() => {
                                 this.$router.push({name: 'access.signin'});
+                                 this.$snotify.success("Your password has been succefully reset ")
                         }).catch(() =>{
-                        alert('failed')
+                            this.$snotify.error("Opps, something went wrong.Please try again")
                     });
             },
   }

@@ -165,6 +165,39 @@ export default {
         })
     },
 
+    sendChat({ commit,dispatch}, data) {
+        return new Promise((resolve, reject) => {
+            Api.sendChat(data).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+
+    
+    makePayment({}, data) {
+        return new Promise((resolve, reject) => {
+            Api.makePayment(data).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+    createChat({ commit,dispatch}, data) {
+        return new Promise((resolve, reject) => {
+            Api.createChat(data).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+
     getUser({ commit }){
         return new Promise((resolve, reject) => {
             Api.getUser().then(res => {
@@ -176,6 +209,86 @@ export default {
             })
         })
     },
+    
+    getUserById({ commit },data){
+        console.log(data);            
+        return new Promise((resolve, reject) => {
+            Api.getUserById(data).then(res => {
+                commit('setFUser',res.data.data);
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+
+    checkChat({ commit },data){
+        return new Promise((resolve, reject) => {
+            Api.checkChat(data).then(res => {
+                console.log(res);
+                
+                // commit('checkChat',res.data.data);
+                resolve(res)
+
+            }).catch(err => {
+                reject(err)
+    
+            })
+        })
+    },
+    getChats({ commit },data){
+        return new Promise((resolve, reject) => {
+            Api.getChats(data).then(res => {
+                commit('setChats',res.data.data);
+                resolve(res)
+
+            }).catch(err => {
+                reject(err)
+    
+            })
+        })
+    },
+    setChat({ commit,dispatch },data){
+        return new Promise((resolve, reject) => {
+                commit('setActive',data);
+                dispatch("getUser");
+            }).catch(err => {
+                reject(err)
+            })
+    },
+
+    markChat({ commit }){
+        return new Promise((resolve, reject) => {
+            Api.markChat().then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+    
+            })
+        })
+    },
+
+    clearActive({ commit }){
+        return new Promise((resolve, reject) => {
+                commit('clearActive');
+            }).catch(err => {
+                reject(err)
+            })
+    },
+
+    changePass({dispatch},data){
+        return new Promise((resolve, reject) => {
+            Api.changePass(data).then(res => {
+                dispatch("getUser");
+                resolve(res);
+            }).catch(err => {
+                reject(err)
+    
+            })
+        })
+    },
+
 
     getTags({ commit }){
     return new Promise((resolve, reject) => {
@@ -276,7 +389,7 @@ export default {
 
     getRequest({commit,state},data){
         return new Promise((resolve, reject) => {
-            Api.getRequest(state).then(res => {
+            Api.getRequest(state,data).then(res => {
                 resolve(res)
             }).catch(err => {
                 reject(err)
@@ -387,6 +500,18 @@ export default {
         })
     },
 
+    viewList({},data){
+        return new Promise((resolve, reject) => {
+            Api.viewList(data).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+
+
     uploadFile({dispatch},data){
         return new Promise((resolve, reject) => {
             let formdata=new FormData();
@@ -395,6 +520,30 @@ export default {
 
             Api.uploadFile(formdata).then(res => {
                 dispatch('getUser');
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+    uploadVFile({dispatch},data){
+        return new Promise((resolve, reject) => {
+            let formdata=new FormData();
+            formdata.append('file',data.file)
+            formdata.append('field',data.field)
+            Api.uploadVFile(formdata).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+
+    verifyId({}, data) {
+        return new Promise((resolve, reject) => {
+            Api.verifyId(data).then(res => {
                 resolve(res)
             }).catch(err => {
                 reject(err)

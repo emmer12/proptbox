@@ -1,5 +1,5 @@
 <template>
-   <div class="contain">
+   <div class="contain"  v-if="!notFound">
      <div class="banner">
      </div>
 
@@ -7,7 +7,9 @@
          <div class="d-inner">
               <div class="des-header2" v-show="true">
                  <div class="display">
-                     <img :src="'/uploads/profile-images/'+request.user.profile_pic_filename" width="180px" height="180px"/>
+                     <router-link tag="div" :to="{name:'profile',params:{id:request.user.id}}">
+                       <img :src="'/uploads/profile-images/'+request.user.profile_pic_filename" width="180px" height="180px"/>
+                     </router-link>
                  </div>
                  <div class="c-t-a">
                      <div class="details">
@@ -19,7 +21,8 @@
                          <button class="btn btn-custom" style="cursor:default">&#8358; {{request.min_budget + "-" + request.max_budget}}</button>
                      </div>
                  </div>
-                  <div class="comment">
+                   <button ref="ccs" type="button" class="btn btn-primary btn-lg d-none" data-toggle="modal" data-target="#modelId"></button>
+                  <div class="comment" style="cursor:pointer" v-if="!loading"  @click="openChat">
                          <svg width="40" height="52" viewBox="0 0 51 52" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M16.3353 16.4267L33.998 16.1492C35.0432 16.1328 35.9037 16.9666 35.9201 18.0118C35.9365 19.0571 35.1027 19.9175 34.0575 19.9339L16.3948 20.2115C15.3495 20.2279 14.4891 19.394 14.4727 18.3488C14.4563 17.3035 15.2901 16.4431 16.3353 16.4267Z" fill="#0D50BD"/>
                             <path d="M16.4545 23.9965L34.1171 23.719C35.1624 23.7026 36.0228 24.5364 36.0393 25.5817C36.0557 26.6269 35.2219 27.4874 34.1766 27.5038L16.5139 27.7813C15.4687 27.7977 14.6082 26.9639 14.5918 25.9186C14.5754 24.8734 15.4092 24.0129 16.4545 23.9965Z" fill="#0D50BD"/>
@@ -68,11 +71,45 @@
              </div>
              
          </div>
+
+
+  
      </div>
 
      <div v-else>
       <preloader :type="'details'"></preloader>
      </div>
+
+               <!-- Modal -->
+     <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <h5 class="modal-title">Start Chat</h5>
+                         <button type="button" ref="ccc" class="close" data-dismiss="modal" aria-label="Close">
+                             <span aria-hidden="true">&times;</span>
+                         </button>
+                 </div>
+                 <div class="modal-body">
+                       <div class="form-group">
+                         <label for="">Message</label>
+                         <input type="text" name="" id="" v-model="msg" class="form-control" placeholder="Send Message" required aria-describedby="helpId">
+                         <small id="helpId" class="text-muted"></small>
+                       </div>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-primary" :disabled="loading" @click="createChat"> <span v-if="loading"><i class="fa fa-spinner" aria-hidden="true"></i> </span> Send</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+
+   </div>
+   <div v-else class="container">
+        <div class="alert alert-info" role="alert">
+          <strong><i class="fa fa-wind-warning    "></i> Page not found</strong>
+      </div>
+      <router-link to="/listings" tag="button" class="btn btn-primary"> Go back Listing</router-link>
    </div>
 </template>
 
@@ -86,20 +123,83 @@ export default {
     },
     data() {
         return {
-            
+          notFound:'',
+          availableChat:null,
+          startChat:false,
+          msg:"",
+          loading:''  
         }
     },
     methods: {
       getRequestById(){
-          this.$store.dispatch('getRequestById',this.$route.params.id)
-      }
+         this.$store.dispatch('getRequestById',this.$route.params.id).then(()=>{
+              this.ckeckChat();
+          }).catch((res)=>{
+         this.notFound=res.response.data.message
+       });
+      },
+       createChat(){
+        let data={}
+        data.to= this.request.user.id
+        data.on=this.request.id+'request'
+        data.msg=this.msg
+        this.loading=true
+      this.$store.dispatch('createChat',data).then(()=>{
+        this.loading=false
+        this.msg=''
+        this.$refs.ccc.click()
+        this.$router.push({ name: "chats" });
+
+      }).catch(()=>{
+           this.loading=false;
+            this.msg='';
+            this.$snotify.error("Opps, something went wrong")
+      })
+    },
+      ckeckChat(){
+          let data={}
+          data.to= this.request.user.id
+          data.on=this.request.id+'request'
+         
+             this.loading=true;
+             this.$store.dispatch('checkChat',data).then((res)=>{
+              this.loading=false
+              if (!res.data.chats) {
+                  this.availableChat=null;
+              }else{
+                  this.availableChat=res.data.chats
+              }
+          })
+      },
+       openChat(){
+          if (this.loggedIn) {
+              if (this.availableChat) {
+                  this.$store.dispatch('setChat',this.availableChat.id);
+                  this.$router.push({ name: "chats" });
+              }else{
+                  this.startChat=true;
+                  this.$refs.ccs.click()
+              }      
+          }else{
+              this.$snotify.info("Sign up to start chat with"+this.request.user.fullname, {
+              timeout: 6000,
+              showProgressBar: true,
+              pauseOnHover: true,
+               closeOnClick: false,
+                buttons: [
+                    {text: 'Sign up', action: () =>this.$router.push('/signup'), bold: true}]
+            });
+          }
+      },
     },
     created () {
      this.getRequestById();
+     window.scrollTo(0,0)
     },
     computed:{
         ...mapGetters([
-            'request'
+            'request',
+            'loggedIn'
         ])
     }
 }

@@ -4,9 +4,20 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Events\NewChat;
 use App\User;
 use App\Http\Resources\User as UserResource;
+use App\Http\Resources\ChatsResouces;
+use App\Notifications\chatNotification;
 use Auth;
+use Image;
+use App\Chat;
+use App\Messages;
+use App\Listing;
+use App\Payments;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
+use Str;
 class UserController extends Controller
 {
     /**
@@ -81,6 +92,34 @@ class UserController extends Controller
 
     }
 
+    public function changePass(Request $request)
+    {
+        $validate=$request->validate([
+            'password' => 'required|confirmed|min:6',
+            'oldPassword'=>'required'
+        ]);
+        
+        $user=Auth::user();
+
+        $isPass=Hash::check($request->input('oldPassword'),$user->password);
+
+        if ($isPass) {
+            $user->password = Hash::make($request->input('oldPassword'));
+    
+            $user->setRememberToken(Str::random(60));
+    
+            $user->save();
+
+            return response()->json(['success'=>'Updated'],200);
+            
+        }
+        else {
+            return response()->json(['success'=>false,'msg'=>'Password supplied not match with the old password'],400);
+        }
+
+
+
+    }
 
 
 
@@ -107,6 +146,39 @@ class UserController extends Controller
         }
     }
 
+
+
+
+    
+    public function uploadVFile(Request $request)
+    {
+        $validate=$request->validate([
+            'file' => 'required|image|mimes:jpg,png,jpeg,svg|max:1048'
+        ]);
+        if ($request->file()) {
+
+                $fileName = 'id'.time().'.'.$request->file->extension();  
+                $path = public_path('uploads/ids/'.$fileName);
+                $file=$request->file;
+
+                Image::make($file)->resize(300,160, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($path); 
+
+                return response()->json(['success'=>'Uploaded','filename'=>$fileName,'field'=>$request->input('field')],200);
+        }
+    }
+
+    public function getUserById(Request $request) {
+        $user=User::findOrFail($request->query('id'));
+
+         if ($user->id_verified_at && $user->phone_verified_at && $user->email_verified_at) {
+            $user->verified=true;
+        }else{
+            $user->verified=false;
+        }
+        return new UserResource($user);
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -114,9 +186,143 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+    public function createChat(Request $request)
+    {
+        $chat = new Chat();
+
+        $user=User::find($request->input('to'));
+        
+
+        $chat->from=Auth::user()->id;
+        $chat->to=$request->input('to');
+        $chat->on=$request->input('on');
+
+        $chat->save();
+
+        $msg = new Messages();
+
+        $msg->msg=$request->input('msg');
+        $msg->chat_id=$chat->id;
+        $msg->user_id=Auth::user()->id;
 
 
-     
+
+        $msg->save();
+
+        broadcast(new NewChat($msg));
+
+        $user->notify(new chatNotification($chat->to));
+
+        return response()->json(['success'=>true,'chats'=>$chat],200);
+
+    }
+
+
+
+    public function sendChat(Request $request)
+    {
+        $msg = new Messages();
+
+        $user=User::find($request->input('to'));
+
+
+        $msg->msg=$request->input('msg');
+        $msg->chat_id=$request->input('chat_id');
+        $msg->user_id=Auth::user()->id;
+        $msg->save();
+        
+        broadcast(new NewChat($msg));
+
+        $user->notify(new chatNotification($user->id));
+
+        return response()->json(['success'=>true,'msg'=>$msg],200);
+    }
+
+    public function getChat(Request $request)
+    {
+        $chats=Chat::where('to',Auth::user()->id)->orWhere('from',Auth::user()->id)->get();
+        return ChatsResouces::collection($chats);
+    }
+
+
+    public function getChatMessages(Request $request)
+    {
+         $chats=Chat::find($request->query('id'))->messages()->get();
+         return response()->json(['success'=>true,'chats'=>$chats],200);
+    }
+
+    public function checkChat(Request $request)
+    {
+        $chats=Chat::where('on',$request->query('on'))->where('to',$request->query('to'))->where('from',Auth::user()->id)->first();
+        return response()->json(['success'=>true,'chats'=>$chats],200);
+    }
+
+
+    public function markChat()
+    {
+        Auth::user()->unreadNotifications->markAsRead();
+        return response()->json(['success'=>true],200);
+    }
+
+    public function verifyPayment(Request $request)
+    {
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => "https://api.paystack.co/transaction/verify/".$request->query('reference'),
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 30,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "GET",
+          CURLOPT_HTTPHEADER => array(
+            "Authorization: Bearer sk_test_f95cf6515fb76187eb141a0777fd476eb987b76e",
+            "Cache-Control: no-cache",
+          ),
+         ));
+        
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+        
+        if ($err) {
+          echo "cURL Error #:" . $err;
+        } else {
+          echo $response;
+          $payment=new Payments();
+
+          $payment->listing_id=$request->query('listing');
+          $payment->reference=$request->query('reference');
+          $payment->amount=$request->query('amount');
+          $payment->type='boost';
+          
+          if ($request->query('amount')==700) {
+              $days=7;
+          }elseif ($request->query('amount')==1000) {
+              $days=14;
+          }elseif ($request->query('amount')==3000) {
+              $days=31;
+          }
+          $now=Carbon::now();
+          $expire=$now->addDays($days);
+
+          $payment->expired_at=$expire;
+
+          $payment->save();
+
+          $listing=Listing::find($payment->listing_id);
+          $listing->update([
+            'boosted'=>true,
+            'boosted_at'=>$payment->created_at,
+            'expired_at'=>$payment->expired_at,
+            'rating'=>2
+        ]);
+
+          return response()->json(['success'=>true],200);
+        }
+    }
+
+   
     public function destroy($id)
     {
         //

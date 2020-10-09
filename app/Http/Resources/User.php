@@ -24,6 +24,7 @@ class User extends JsonResource
             'phoneNo' => $this->phoneNo,
             'email' => $this->email,
             'gender' => $this->gender,
+            'bio' => $this->bio,
             'age' => $this->age,
             'profile_pic_url' => $this->profile_pic_url,
             'profile_pic_filename' => $this->profile_pic_filename,
@@ -34,7 +35,10 @@ class User extends JsonResource
             'phone_verified_at' => $this->phone_verified_at,
             'id_verified_at' => $this->id_verified_at,
             'updated_at' => $this->updated_at,
-            'verified'=> $this->verified
+            'verified'=> $this->verified,
+            'notifications'=> $this->notifications,
+            'reveal_contact'=> $this->reveal_contact
+
             ];
     }
 }

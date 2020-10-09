@@ -39,8 +39,8 @@
             v-model.trim="$v.newList.space_for.$model"
             class="form-control" name="" id="space_for" placeholder="Space type">
               <option value="" selected disabled>Space For</option>
-              <option value="rent">Rent</option>
-              <option value="share" v-if="newList.space_type==='apartment'">Share</option>
+              <option value="Rent">Rent</option>
+              <option value="Cohab" v-if="newList.space_type==='apartment'">Cohab</option>
             </select>
             <div
               class="invalid-feedback"
@@ -53,10 +53,8 @@
             <div class="form-group">
               <label for="location">Location</label>
               <select class="form-control"  :class="{'is-invalid':$v.newList.space_location.$error}" id="location" v-model.trim="$v.newList.space_location.$model">
-                <option selected value="" disabled>Select your Location</option>
-                <option value="Lagos">Lagos</option>
-                <option value="Ondo">Ondo</option>
-                <option value="Oyo">Oyo</option>
+                <option selected value="" disabled>Select Listing Location</option>
+                <option :value="state.name" v-for="(state, index) in states" :key="index">{{state.name}}</option>
               </select>
             </div>
             <div class="invalid-feedback" v-if="!$v.newList.space_location.required">This field is required</div>
@@ -114,14 +112,14 @@
             >Available from is required</div>
           </div>
            <div class="form-group" v-if="newList.space_type==='apartment'">
-            <label for="space_type">Payer Type</label>
+            <label for="space_type">Preferred Gender</label>
             <select 
             v-model="newList.payer_gender"
             class="form-control" name="" id="space_type" placeholder="Space type">
-              <option value="" selected disabled>Payer Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Femle</option>
-              <option value="others">Others</option>
+              <option value="" selected disabled>Preferred Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Couple Only">Couple only</option>
             </select>
           </div>
 
@@ -130,24 +128,33 @@
              <tags-input element-id="tags"
               v-model="newList.selectedTags"
               :existing-tags="[
-                  { key: 'self-contain', value: 'Self Contain' },
-                  { key: 'two-bedroom', value: 'Two bedroom' },
-                  { key: 'clean', value: 'Clean' },
+                  { key: 'ensuite', value: 'Ensuite' },
+                  { key: 'apartment', value: 'Apartment' },
+                  { key: 'rent', value: 'Rent' },
+                  { key: 'cohab', value: 'Cohab' },
+                  { key: 'self-contain', value: 'Self contained' },
+                  { key: '1-bedroom-flat', value: '1 Bedroom flat' },
+                  { key: '2-bedroom-flat', value: '2 Bedroom flat' },
+                  { key: '3-bedroom-flat', value: '3 Bedroom flat' },
               ]"
               :typeahead="true"></tags-input>
           </div>
          
           <div class="form-group" v-if="newList.space_type==='apartment'">
             <label for>Bedroom Type</label>
-            <input
-              placeholder="E.g, Self contain,Three bed room flat"
-              class="form-control" 
-              v-model="newList.bedroom_type"
-            />
+              <select 
+            v-model="newList.bedroom_type"
+            class="form-control" name="" id="bedroom_type" >
+              <option value="" selected disabled>Bedroom type</option>
+              <option value="Shared bathroom">Shared bathroom</option>
+              <option value="Own bathroom ">Own bathroom</option>
+              <option value="Ensuite">Ensuite</option>
+            </select>
           </div>
 
           <div class="form-group">
             <label for>About Property</label>
+            <small><i class="fa fa-question-circle" aria-hidden="true"></i> Tell us what's "wow" about the property and the area</small>
             <textarea placeholder="About Property" 
             class="form-control"
             :class="{'is-invalid':$v.newList.about_property.$error}"
@@ -159,7 +166,8 @@
           </div>
           
           <div class="form-group" v-if="newList.space_type==='apartment' && newList.space_for!=='rent'">
-            <label for>About Cohabitation</label>
+            <label for>About Cohabitant</label>
+            <small><i class="fa fa-question-circle" aria-hidden="true"></i> Share a bit about yourself (personality) and what you're looking out for in your cohabitant(s) </small>
             <textarea
               placeholder="About Cohabitation"
               class="form-control" 
@@ -170,7 +178,16 @@
 
            <loading :loading="loading"></loading>
            <!-- <upload-component></upload-component> -->
-           <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions" @vdropzone-success-multiple="uploaded" ></vue-dropzone>
+           <div>
+             <label >Upload your display picture</label>
+              <vue-dropzone 
+           ref="myVueDropzone" 
+           id="dropzone" 
+           :options="dropzoneOptions" 
+           @vdropzone-success-multiple="uploaded" 
+           @vdropzone-error="error"
+            ></vue-dropzone>
+           </div>
            <br/>
 
           
@@ -216,17 +233,28 @@ export default {
         selectedTags:[],
         images:'',
       },
+      // 'http://localhost:8000/api/listing-file-upload',
+      //http://proptybox.com.ng/api/listing-file-upload
       dropzoneOptions: {
-          url: 'http://proptybox.com.ng/api/listing-file-upload',
+          url:'http://localhost:8000/api/listing-file-upload',
           thumbnailWidth: 100,
           thumbnailHeight: 100,
           maxFilesize: 0.5,
           method:'POST',
+          addRemoveLinks: true,
           // parallelUploads: 10,
+          
           acceptedFiles:'image/*',
           uploadMultiple:true,
           dictDefaultMessage:"<i class='fa fa-cloud-upload'>Drag files here or click to Upload</i>",
            headers: { "Authorization": "Bearer "+ localStorage.getItem('token')  },
+           init: function() {
+            this.on("error", function(file, message) { 
+                window.eventBus.$emit('fileError',message)
+                this.removeFile(file); 
+            });
+
+    }
       },
       loading: false,
       serverErrors: null,
@@ -283,16 +311,21 @@ export default {
         let next=res.files;
         let open=prev.substr(0,prev.length-1);
         let close=','.concat(next.substr(1));
-        
-
         this.newList.images=open.concat(close);
 
-
-
+        this.$snotify.success("file uploaded")
       }else{
         this.newList.images=res.files
       }
-    }
+    },
+    error(file){
+      // console.log(file);
+      // let msg=`${file.upload.filename}, 'Upload error' + ${file.status}`
+      // this.$snotify.error("Opps,"+msg)
+    },
+    getState(){
+      this.$store.dispatch('getState');
+    },
   },
   mounted() {
     // let get=this.$ref.get
@@ -300,10 +333,21 @@ export default {
     timeline.from(".c-list-con", { y: 50, opacity: 0 });
     timeline.from(".form-h", { x: -20, opacity: 0 });
   },
+  created(){
+    this.getState();
+    window.eventBus.$on('fileError',msg=>{
+        this.$snotify.error(msg, {
+              timeout: 6000,
+              showProgressBar: true,
+              pauseOnHover: true
+            });
+    });
+  },
 
   computed: {
     ...mapGetters([
-      'loggedIn'
+      'loggedIn',
+      'states'
     ])
   }
 };
@@ -342,6 +386,11 @@ button{
       max-width: 400px;
       margin: 0px auto;
       padding: 10px;
+
+      small{
+          display: block;
+          padding: 7px 0px;
+      }
       & .form-control {
         background: #eef4ff;
       }

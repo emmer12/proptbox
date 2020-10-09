@@ -1,10 +1,10 @@
 <template>
   <div class="message" v-if="open">
-      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <div class="alert alert-primary alert-dismissible fade show" role="alert">
         <button type="button" class="close"  @click="close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <strong> {{ msg || "this is the message " }}</strong> 
+        <strong> {{ msg }}</strong> 
       </div>
  </div>
 </template>
@@ -18,7 +18,7 @@ export default {
      }
     },
     methods: {
-        close(){
+    close(){
             this.open=false
         }
     },
@@ -31,6 +31,7 @@ export default {
        right:0px;
        bottom:80px;
        max-width:400px;
+       z-index:999
 
    }
 </style>

@@ -9,7 +9,7 @@
 export default {
  created(){
          this.$store.dispatch('destroyToken').then(()=>{
-           this.$router.push({name:'access.signin'})
+           this.$router.push({name:'home'})
          })
        }
 }

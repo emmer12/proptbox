@@ -4,7 +4,7 @@ import Vuelidate from 'vuelidate'
 import Snotify,{ SnotifyPosition} from 'vue-snotify'
 import Vue from 'vue'
 import VueAgile from 'vue-agile'
- 
+import moment from 'moment' 
 require('./bootstrap');
 require('@voerro/vue-tagsinput/dist/style.css')
 
@@ -44,6 +44,11 @@ Vue.filter('capFirst',function(value){
     return value.charAt(0).toUpperCase() + value.substr(1)
 })
 
+Vue.filter("timeAgo",function(value){
+    if(value){
+        return moment(String(value)).fromNow('dd')
+    }
+})
 
 let router = new VueRouter({
     mode: 'history',
@@ -65,7 +70,7 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (!store.getters.loggedIn) {
             next({
-                name: 'session.signin',
+                name: 'access.signin',
             })
         }
         else {

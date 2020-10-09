@@ -25,5 +25,17 @@ export default {
     },
     states(state){
         return state.states
+    },
+    profile(state){
+        return state.profile
+    },
+    chats(state){
+        return state.chat.chats
+    },
+    activeChat(state){
+        return state.chat.activeChat
+    },
+    messages(state){
+        return state.chat.messages
     }
 }

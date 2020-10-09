@@ -3,7 +3,7 @@
 
           <router-link tag="div" :to="{name:'request-details',params:{id:request.id}}" class="card r-card">
             <div class="top-section">
-              <router-link to="/"><img :src="'/uploads/profile-images/'+request.user.profile_pic_filename" width="100%" /></router-link>
+              <router-link :to="{name:'profile',params:{id:request.user.id}}"><img :src="'/uploads/profile-images/'+request.user.profile_pic_filename" width="100%" /></router-link>
               <div class="details">
                 <h4>{{request.user.fullname}}</h4>
                 <span>{{request.user.age}} yrs</span> |

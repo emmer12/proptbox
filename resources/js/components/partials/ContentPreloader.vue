@@ -44,6 +44,20 @@
       </div>
     </div>
 
+    <div class="row" style="background:#eef4ff" v-if="type==='request-mobile'">
+      <div class="col-md-12" v-for="(item, index) in 1" :key="index">
+        <div class="loader-con-list loads">
+           <div class="user-request">
+                 <div class="img-big-area"></div>
+                 <div class="details">
+                     <div></div>
+                     <div></div>
+                 </div>
+           </div>
+        </div>
+      </div>
+    </div>
+
 
     <div class="row l-details" v-if="type==='details'">
       <div class="col-md-12" style="margin:0px auto;max-width:550px">
@@ -189,5 +203,12 @@ export default {
   100% {
     transform: translateX(100%);
   }
+}
+
+
+@media (max-width: 460px){
+  .l-details{
+  transform: translateY(-50px);
+}
 }
 </style>

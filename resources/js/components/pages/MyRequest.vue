@@ -11,7 +11,23 @@
         <div class="header">
           <h4>My Request</h4>
         </div>
-        <propt-card></propt-card>
+       <div v-if="user">
+              <div v-if="user.request.length">
+                <div class="row">
+                  <div class="" v-for="(request, index) in user.request" :key="index">
+                    <request-card :request="request"></request-card>
+                  </div>
+                </div>
+              </div>
+              <div v-else>
+                <div class="alert alert-default" style="border-left:4px solid #3490dc" role="alert">
+                  <h4 class="alert-heading">No request available</h4>
+                </div>
+              </div>
+            </div>
+            <div v-else>
+              <preloader :type="'request'"></preloader>
+            </div>
       </div>
     </div>
   </div>
@@ -22,11 +38,13 @@ import { mapGetters } from "vuex";
 import BannerView from "../partials/BannerView";
 import Preloader from "./../partials/ContentPreloader";
 import ProptCard from "../partials/ProptCard";
+import RequestCard from "../partials/RequestCard";
 export default {
   components: {
     BannerView,
     ProptCard,
-    Preloader
+    Preloader,
+    RequestCard
   },
 
   computed: {

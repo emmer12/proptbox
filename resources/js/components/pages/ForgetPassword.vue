@@ -9,6 +9,16 @@
     </div>
 
      <form>
+       <div v-show="success" class="alert alert-primary alert-dismissible fade show" role="alert">
+         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+           <span class="sr-only">Close</span>
+         </button>
+         <strong>Request sent succesfully</strong> Check your email address to continue.
+       </div>
+       <div v-show="serverError" class="alert alert-danger" role="alert">
+         <strong>{{serverError}}</strong>
+       </div>
        <div class="form-group ">
           <label for="inputName" class="col-sm-1-12 col-form-label">Email</label>
           <div class="col-sm-1-12">
@@ -67,18 +77,22 @@ export default {
   methods: {
     requestPass() {
         this.loading = true;
+        this.serverError=false
         this.$store
           .dispatch("resetPasswordRequest", this.newUser)
           .then(() => {
-            this.newUser = {};
+            this.newUser = {
+              email:''
+            };
             this.loading = false;
             this.success=true
-           alert('sent')
+            this.$snotify.success("Request recieved")
           })
           .catch(err => {
             this.loading = false;
-            this.serverError=err.response.data.msg;
-           alert('error')
+            this.serverError=err.response.data.response == 'passwords.user' ? `user with email Address ${this.newUser.email} not found` : "err.response.data.message";
+            
+           this.$snotify.error("Opps, something went wrong.Please try again")
           });
       }
   }

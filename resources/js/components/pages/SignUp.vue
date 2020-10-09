@@ -98,10 +98,8 @@
             <div class="form-group">
               <label for="location">Location</label>
               <select class="custom-select"  :class="{'is-invalid':$v.newUser.location.$error}" id="location" v-model.trim="$v.newUser.location.$model">
-                <option selected value="">Select your Location</option>
-                <option value="Lagos">Lagos</option>
-                <option value="Ondo">Ondo</option>
-                <option value="Oyo">Oyo</option>
+                <option selected value="" disabled>Select your Location</option>
+                <option :value="state.name" v-for="(state, index) in states" :key="index">{{state.name}}</option>
               </select>
             </div>
             <div class="invalid-feedback" v-if="!$v.newUser.location.required">This field is required</div>
@@ -162,7 +160,7 @@
         </div>
 
         <div>
-          <router-link to="/signin">Already have an account ?</router-link>
+          <router-link to="/signin" tag="strong" style="cursor:pointer">Already have an account ?</router-link>
         </div>
 
         <loading :loading="loading"></loading>
@@ -179,6 +177,7 @@
 import Loading from './../partials/FormLoading';
 import { required, minLength, email,sameAs } from "vuelidate/lib/validators";
 import { TimelineLite } from "gsap/all";
+import {mapGetters} from 'vuex'
 
 
 export default {
@@ -223,6 +222,9 @@ export default {
             }
         })
     },
+     getState(){
+      this.$store.dispatch('getState');
+    },
      register() {
      this.$v.$touch();
       this.$refs.form.classList.remove('shake')
@@ -255,7 +257,13 @@ export default {
     let timeline = new TimelineLite();
     // timeline.from(".signup-con", { y: 200, opacity: 0 });
     // timeline.from(".form-h", { x: -20, opacity: 0 });
-  } 
+     this.getState();
+  },
+   computed: {
+    ...mapGetters([
+      'states'
+    ])
+  }
 };
 </script>
 

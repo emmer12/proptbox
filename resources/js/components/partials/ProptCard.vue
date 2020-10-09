@@ -1,28 +1,18 @@
 <template>
-  <div style="">
-      <div v-if="!lists.length">
-        <div class="container">
-          <div class="alert alert-default" style="border-left:4px solid #3490dc" role="alert">
-          <h4 class="alert-heading">Empty List:</h4>
-          <router-link  class="btn btn-primary" tag="button" :to="{name:'new-list'}">Create New <i class="fa fa-plus" aria-hidden="true"></i></router-link>
-        </div>
-        </div>
-      </div>
-      <div v-else class="row">
-        <div class="col-md-4 col-sm-12 col-xs-12" v-for="(list, index) in lists" :key="index">
+  <div>
             <div class="card p-card">
               <div class="user-action" v-show="user && user.id==list.user.id"> 
-                  <!-- <div class="btn btn" @click="deleteList(list.id)">
-                      
-                  </div> -->
                   <ul class="drop" :id="'drop'+list.id">
                      <li @click="editShow(list.id)">Edit</li>
-                     <router-link to="#" tag="li">Boost</router-link>
+                     <router-link :to="{name:'boost',params:{id:list.id}}" tag="li">Boost</router-link>
                      <li @click="deleteList(list.id)">Delete</li>
                   </ul>
                   <div class='btn' >
                     <i class="fa fa-ellipsis-v" @click="showDrop" :data-id="list.id"  aria-hidden="true"></i>
                   </div>
+              </div>
+              <div class="boosted" v-if="list.boosted">
+                Boosted
               </div>
               <router-link :to="{name:'list-details',params:{id:list.id}}" tag="div" class="img">
                 <img :src="list.images ? '/uploads/listing/'+list.images[0] : '/images/'+ 1 +'.jpg'" width="100%"/>
@@ -31,16 +21,17 @@
               <div class="details">
                   <div class="title">
                     <h4>{{ list.space_type }}</h4>
-                    <button v-if="index%2==0" class="btn btn-danger btn-sm">For {{ list.space_for }}</button>
+                    <button v-if="list.id%2==0" class="btn btn-success btn-sm">For {{ list.space_for }}</button>
                     <button v-else class="btn btn-primary btn-sm">For {{ list.space_for }}</button>
                   </div>
                   <div class="l-p">
-                    <h4> {{list.space_address}}</h4>
+                     <h4 v-if="list.space_address.length>20">{{list.space_address.substr(0,20) + '...' }}</h4>
+                     <h4 v-else>{{list.space_address}}</h4>
                     <h5>&#8358;{{list.rent}}</h5>
                   </div>
                   <div class="description">
-                    <!-- <h4>title of des</h4> -->
-                    <p>{{list.about_property}}</p>
+                     <p v-if="list.about_property.length>70">{{list.about_property.substr(0,70) + '...' }}</p>
+                     <p v-else>{{list.about_property}}</p>
                   </div>
                   <hr>
                   <div class="c-t-a">
@@ -56,30 +47,23 @@
                             </svg>
                      </div>
                       <div v-else></div>
-                      <span class="mr-2"><i class="fa fa-eye"></i> 23+</span>
+                      <span class="mr-2"><i class="fa fa-eye"></i>{{ list.views.length }}</span>
                   </div>
               </div>
-            </div>
-         </div>
-      </div>
 
-      <edit-modal :id="id" v-if="editMode"></edit-modal>
-     
+     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import EditModal from './EditModal'
 export default {
-  props: ['lists'],
+  props: ['ld','list'],
   components: {
-    EditModal
   },
   data () {
     return {
       drop:false,
-      editMode:false,
       id:4
     }
   },
@@ -95,8 +79,7 @@ export default {
       }
     },
     editShow(id){
-      this.id=id;
-      this.editMode=true
+      window.eventBus.$emit('showEdit',id);
     },
     showDrop(e){
     let id=e.target.getAttribute('data-id');
@@ -117,12 +100,10 @@ export default {
     // })
     // },1000)
     },
-    closeEdit(){
-      this.editMode=false     
-    }
+   
   },
   created () {
-    window.eventBus.$on('closeEdit',this.closeEdit)
+    
   },
   computed: {
     ...mapGetters([
@@ -136,6 +117,16 @@ export default {
  .p-card{
    padding:10px;
    margin-bottom:20px;
+
+   .boosted{
+    position: absolute;
+    left: 10px;
+    top: 20px;
+    background: #efef15;
+    color: #222;
+    padding: 5px 10px;
+    font-weight: 600;
+   }
    & .user-action{
      position:absolute;
      right:0px;
@@ -146,6 +137,7 @@ export default {
        & i{
          color:white;
          font-size:30px;
+         text-shadow: 2px 2px 6px #333;
        }
      }
      & ul.drop{
@@ -178,6 +170,7 @@ export default {
    }
    & .img img{
      border-radius:5px;
+     height: 200px;
    }
    & .details{
      border:1px solid #f6f6f6;
@@ -239,7 +232,7 @@ export default {
         & i{
         font-size:20px;
         margin:0px 10px;
-
+        
         }
       }
     }

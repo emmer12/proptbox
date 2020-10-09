@@ -46,10 +46,8 @@
                   <div class="form-group">
                     <label for="location">Location</label>
                     <select class="custom-select" id="location" v-model="user.location">
-                      <option selected :value="user.loaction">{{user.location}}</option>
-                      <option value="Lagos">Lagos</option>
-                      <option value="Ondo">Ondo</option>
-                      <option value="Oyo">Oyo</option>
+                      <option selected :value="user.location">{{user.location}}</option>
+                      <option :value="state.name" v-for="(state, index) in states" :key="index">{{state.name}}</option>
                     </select>
                   </div>
                 </div>
@@ -69,6 +67,11 @@
                   />
                 </div>
               </div>
+
+              <div class="form-group">
+                <label for="bio">Bio</label>
+                <textarea v-model="user.bio" class="form-control" id="bio" cols="20" rows="5" placeholder="Brief description about yourself"></textarea>
+              </div>
               <div class="form-group">
                 <label for="email" class="col-sm-1-12 col-form-label">
                   Email
@@ -85,24 +88,125 @@
                 </div>
               </div>
 
+              <div class="form-check my-4">
+                <label class="form-check-label">
+                  <input type="checkbox" class="form-check-input" v-model="user.reveal_contact" id="" value="checkedValue" :checked="user.reveal_contact">
+                    Make Contact public
+                </label>
+              </div>
+
+
+
               <div class="form-group ma-5">
                 <div class>
                   <button type="submit" class="btn btn-primary btn-block" @click="update">Update</button>
                 </div>
               </div>
 
-              <div class="btn btn-primary" style="margin:10px 0px;">change your password</div>
-              <div class="verify-con">
+              <div id="accordianId" role="tablist" aria-multiselectable="true">
+        
+                <div class="card">
+                  <div class="card-header" role="tab" id="section2HeaderId">
+                    <h5 class="mb-0">
+                      <a  style="margin:10px 0px;" class="btn btn-primary" data-toggle="collapse" data-parent="#accordianId" href="#section2ContentId" aria-expanded="true" aria-controls="section2ContentId">
+                       Change your password     
+                      </a>
+                    </h5>
+                  </div>
+                  <div id="section2ContentId" class="collapse in" role="tabpanel" aria-labelledby="section2HeaderId">
+                    <div class="card-body">
+                         <div class="form-group">
+                            <label for="password" class="col-sm-1-12 col-form-label">Old Passsword<span>*</span></label>
+                            <div class="col-sm-1-12">
+                              <input
+                                type="password"
+                                :class="{'is-invalid':$v.newPass.oldPassword.$error}"
+                                class="form-control"
+                                name="oldPassword"
+                                id="oldPassword"
+                                v-model.trim="$v.newPass.oldPassword.$model"
+                                placeholder="********"
+                              />
+                              <div
+                                class="invalid-feedback"
+                                v-if="!$v.newPass.oldPassword.required"
+                              >This field is required</div>
+                              <div
+                                class="invalid-feedback"
+                                v-if="!$v.newPass.oldPassword.minLength"
+                              >Password must be minimum of 6 character</div>
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <label for="password" class="col-sm-1-12 col-form-label">Passsword  <span>*</span></label>
+                            <div class="col-sm-1-12">
+                              <input
+                                type="password"
+                                :class="{'is-invalid':$v.newPass.password.$error}"
+                                class="form-control"
+                                name="password"
+                                id="password"
+                                v-model.trim="$v.newPass.password.$model"
+                                placeholder="********"
+                              />
+                              <div
+                                class="invalid-feedback"
+                                v-if="!$v.newPass.password.required"
+                              >This field is required</div>
+                              <div
+                                class="invalid-feedback"
+                                v-if="!$v.newPass.password.minLength"
+                              >Password must be minimum of 6 character</div>
+                            </div>
+                          </div>
+
+
+                          <div class="form-group">
+                            <label for="c-password" class="col-sm-1-12 col-form-label">Confirm Passsword  <span>*</span></label>
+                            <div class="col-sm-1-12">
+                              <input
+                                type="password"
+                                :class="{'is-invalid':$v.newPass.password_confirmation.$error}"
+                                class="form-control"
+                                name="c-password"
+                                id="c-password"
+                                v-model.trim="$v.newPass.password_confirmation.$model"
+                                placeholder="********"
+
+                              />
+                              <div
+                                class="invalid-feedback"
+                                v-if="!$v.newPass.password_confirmation.required"
+                              >This field is required</div>
+                              <div
+                                class="invalid-feedback"
+                                v-if="!$v.newPass.password_confirmation.sameAsPassword"
+                              >Password do not match</div>
+                            </div>
+                          </div>
+
+
+
+                          <button  :disabled="passLoading" class="btn btn-primary" @click="changePass"><span v-show="passLoading" ><i  class="fa fa-spinner" aria-hidden="true"></i></span> Change</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <br><br>
+
+             
+              <div class="verify-con-settings">
                 <h4>Verify Account</h4>
                 <div class="verify">
                   <div class="v-icon" @click="verify('email')">
                     <i class="fa fa-envelope" :class="{active:user.email_verified_at}"></i>
                     <span class="fa fa-check" v-if="user.email_verified_at"></span>
                   </div>
-                  <div class="v-icon" @click="verify('id')">
+                  <router-link tag="div" class="v-icon" :to="{name:'id.verification'}">
                     <i class="fa fa-user" aria-hidden="true" :class="{active:user.id_verified_at}"></i>
                     <span class="fa fa-check" v-if="user.id_verified_at"></span>
-                  </div>
+                   </router-link>
                   <div class="v-icon" @click="verify('phone')">
                     <i
                       class="fa fa-phone-square"
@@ -157,7 +261,7 @@
 </template>
 
 <script>
-import { required, minLength, email } from "vuelidate/lib/validators";
+import { required, minLength, email,sameAs } from "vuelidate/lib/validators";
 import { mapGetters } from "vuex";
 export default {
   data() {
@@ -177,19 +281,19 @@ export default {
       fileSeleted: "",
       loading: false,
       imgLoading: false,
+      passLoading: false,
       serverErrors: null,
       menu: false
     };
   },
 
-  // validations: {
-  //   newUser: {
-  //     phoneNo: { required },
-  //     fullname: { required },
-  //     location: { required },
-  //     email: { required, email }
-  //   }
-  // },
+  validations: {
+    newPass: {
+      password: { required, minLength: minLength(6) },
+      password_confirmation: { required,sameAsPassword:sameAs('password') },
+      oldPassword: { required , minLength: minLength(6) },
+    }
+  },
 
   methods: {
     update() {
@@ -211,6 +315,9 @@ export default {
         });
     },
 
+    getState(){
+      this.$store.dispatch('getState')
+    },
     processFormImg(e) {
       this.fileSeleted = e.target.files[0];
       this.uploadImage();
@@ -220,13 +327,45 @@ export default {
       this.$store
         .dispatch("uploadFile", this.fileSeleted)
         .then(() => {
-          alert("updated");
-          this.imgLoading = false;
+            this.$snotify.success("Profile updated", { 
+              timeout: 6000,
+              showProgressBar: true,
+              pauseOnHover: true
+            });
+            this.imgLoading = false;
         })
         .catch(err => {
           this.serverErrors = err.response.data.msg;
           this.imgLoading = false;
         });
+    },
+
+    changePass(){
+      this.$v.$touch();
+       if (this.$v.$invalid) {
+         return
+       }else{
+       this.passLoading=true
+       this.$store
+        .dispatch("changePass", this.newPass)
+        .then(() => {
+          this.$snotify.success("Password changed successfully", { 
+            timeout: 6000,
+              showProgressBar: true,
+              pauseOnHover: true
+            });
+            this.passLoading = false;
+            this.newPass={}
+            window.scrollTo(0,0)
+        })
+        .catch(err => {
+          this.serverErrors = err.response.data.msg;
+          this.passLoading = false;
+          this.$snotify.error( this.serverErrors);
+
+          this.newPass={}
+        });
+       }
     },
 
     verify(field) {
@@ -246,9 +385,12 @@ export default {
 
     // }
   },
+  created () {
+    this.getState()
+  },
 
   computed: {
-    ...mapGetters(["user"])
+    ...mapGetters(["user","states"])
   }
 };
 </script>
@@ -324,10 +466,15 @@ export default {
     padding: 10px 0px;
   }
 }
-.verify-con {
+.verify-con-settings{
+  position:relative !important;
+}
+.verify-con,.verify-con-settings {
   background: #f6f6f6;
   padding: 10px;
-
+    right: 0px;
+    position: absolute;
+    bottom: 10px;
   & .verify {
     display: flex;
 
@@ -359,7 +506,11 @@ export default {
 }
 
 @media (max-width: 460px) {
+  .settings .profile .loading {
+        margin-left: 50%;
+    }
   .verify-con {
+    position: relative;
     & h4{
       font-size: 16px;
      font-weight: 700;

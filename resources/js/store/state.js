@@ -13,9 +13,15 @@ export default {
         links:null,
         meta:null,
       },
+      profile:null,
       position:null,
       listDetails:null,
       requestDetails:null,
       listingTags:[],
-      states:[]
+      states:[],
+      chat:{
+        activeChat:null,
+        chats:[],
+        messages:[]
+      }
     }

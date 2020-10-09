@@ -114,7 +114,7 @@ class RequestController extends Controller
     public function requestById($id)
     {
 
-        $request=Requests::where('id',$id)->first();
+        $request=Requests::where('id',$id)->firstOrFail();
         return new RequestResource($request);
     }
 

@@ -14,6 +14,14 @@
                 </router-link>
                 </div>
               </div>
+               <router-link v-if="notify" :to="{name:'chats'}" tag="div" class="d-notification">
+                <svg width="35" height="34" viewBox="0 0 16 16" class="bi bi-chat-text" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+                  <path fill-rule="evenodd" d="M4 5.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8zm0 2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5z"/>
+                    <span v-if="notify && notify.length">{{ notify.length}}</span>
+                </svg>
+                <span v-if="notify.length">{{ notify.length }}</span>
+              </router-link>
             <div class="col-md-4">
                <div class="mid">
                   <div>
@@ -57,13 +65,13 @@
                 </div>
                 <div v-else class="log-sign">
                   <router-link tag="a" :to="{name:'access.signup'}">Sign up</router-link>
-                  <router-link tag="a" :to="{name:'access.signin'}">Sign in</router-link>
+                  <router-link tag="a" class="btn btn-primary" :to="{name:'access.signin'}">Sign in</router-link>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="nav-c nav-bottom">
+        <div class="nav-c nav-bottom" v-show="!['about','terms'].includes($route.name)">
           <div class="row">
             <div class="col-md-6">
               <div class="left-b" v-if="$route.name==='home'">
@@ -99,24 +107,24 @@
     <!-- Close Drawer View -->
      
 
-     <div class="mobile-nav d-sm-none">
+     <div class="mobile-nav d-sm-none" :class="{added:tReveal}">
        <div class="top">
          <div>
              <router-link to="/" class="logo">
-                  <img src="/images/logo.svg" />
+                  <img src="/images/logo.svg" width="80%" />
                 </router-link>
          </div>
          <div>
              <div class="left">
                   <router-link
                     tag="button"
-                    class="btn btn-primary pr-4 pl-4"
+                    class="btn btn-primary btn-sm pr-4 pl-4"
                     :to="{name: loggedIn ? 'new-list' : 'access.signin'}"
                     :class="{'active':$route.name=='new-list' }"
                   >List</router-link>
                   <router-link
                     tag="button"
-                    class="btn btn-primary"
+                    class="btn btn-primary btn-sm"
                     :class="{'active':'new-request'}"
                     :to="{name:loggedIn ? 'new-request' : 'access.signup'}"
                   >Request</router-link>
@@ -158,7 +166,7 @@ export default {
       drawer: false,
       openDrop: false,
       sTerm:"listing",
-      search:''
+      search:'',
     };
   },
   methods: {
@@ -190,7 +198,7 @@ export default {
   created() {
     let tis = this;
     document.addEventListener("scroll", function() {
-      tis.tReveal = window.scrollY < 200 ? false : true;
+         tis.tReveal = window.scrollY < 200 ? false : true;
     });
     window.eventBus.$on("openDrawer", this.openDrawer);
 
@@ -200,12 +208,53 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["user", "loggedIn"])
+    ...mapGetters(["user", "loggedIn"]),
+
+     notify(){
+      if (this.$store.getters.user) {
+        let not=this.$store.getters.user.notifications
+        return not.filter(notif=>!notif.read_at)
+      }
+
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.d-notification{
+  position:fixed;
+  right:10px;
+  bottom:50px;
+  background: #3490dc;
+  height: 50px;
+  width:50px;
+  line-height:43px;
+  border-radius:50%;
+  text-align: center;
+  color:white;
+  border:2px solid white;
+  cursor:pointer;
+  z-index: 9999;
+
+  i{
+        color:white;
+       font-size:28px;
+      }
+
+      span{
+        height:20px;
+        width:20px;
+        border-radius:50%;
+        background:#F44336;
+        color:white;
+        position:absolute; 
+        top:-10px;
+        right:-4px;
+        line-height:20px;
+        text-align:center
+      }
+}
 .nav {
   background-color: #eef4ff;
   left: 0;
@@ -271,6 +320,8 @@ export default {
    }
 .nav-bottom {
   height: 100px;
+  position:relative;
+  z-index:7800;
   & .right {
     display: flex;
     justify-content: space-between;
@@ -364,6 +415,15 @@ export default {
 }
 
 .mobile-nav {
+  transition: 0.3s ease-in;
+   position: relative;
+  &.added{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 999;
+    width: 100%;
+  }
   .top{
     display:flex;
     height:70px;

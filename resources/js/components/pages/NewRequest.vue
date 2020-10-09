@@ -75,9 +75,7 @@
                   v-model.trim="$v.newList.space_location.$model"
                 >
                   <option selected value disabled>Select your Location</option>
-                  <option value="Lagos">Lagos</option>
-                  <option value="Ondo">Ondo</option>
-                  <option value="Oyo">Oyo</option>
+                 <option :value="state.name" v-for="(state, index) in states" :key="index">{{state.name}}</option>
                 </select>
               </div>
               <div
@@ -132,6 +130,7 @@
 
           <loading :loading="loading"></loading>
 
+          
           <button class="btn btn-primary btn-block" :disabled="loading" @click="makeRequest">
             <span v-if="loading">
               <i class="fa fa-spinner" aria-hidden="true"></i>
@@ -139,6 +138,9 @@
             Submit
           </button>
         </form>
+
+
+
       </div>
     </div>
   </div>
@@ -196,7 +198,6 @@ export default {
           .then(() => {
             this.newList = {};
             this.loading = false;
-            alert();
             this.$snotify.success("List created");
             this.$router.push({ name: "my.listing" });
           })
@@ -207,6 +208,9 @@ export default {
             window.scrollTo(0, 0);
           });
       }
+    },
+    getState(){
+      this.$store.dispatch('getState');
     }
   },
   mounted() {
@@ -214,7 +218,14 @@ export default {
     let timeline = new TimelineLite();
     timeline.from(".c-list-con", { y: 50, opacity: 0 });
     timeline.from(".form-h", { x: -20, opacity: 0 });
-  }
+
+    this.getState();
+  },
+ computed: {
+    states(){
+      return this.$store.getters.states;
+    }
+ },
 };
 </script>
 

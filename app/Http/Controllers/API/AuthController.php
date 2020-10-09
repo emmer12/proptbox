@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Hash;
 use App\User;
 use Auth;
 use Laravel\Passport\Client;
-use Mockery\Undefined;
+use App\IdVerify;
+
 
 class AuthController extends Controller
 {
@@ -195,6 +196,41 @@ class AuthController extends Controller
 
     }
 
+
+    public function idVerify(Request $request)
+    {
+
+        $validator = $request->validate([
+            // 'username' => 'required',
+            'name' => 'required',
+            'nationality' => ['required', 'string', 'max:255'],
+            'oso' => 'required',
+            'front' => 'required',
+            'back' => 'required',
+            'id_type' => ['required'],
+        ]);
+
+        $verify = new IdVerify();
+
+        $verify->name = $request->input('name');
+        $verify->nationality = $request->input('nationality');
+        $verify->oso = $request->input('oso');
+        $verify->id_type = $request->input('id_type');
+        $verify->front_img = $request->input('front');
+        $verify->back_img = $request->input('back');
+        $verify->save();
+
+        $user=Auth::user();
+
+        $user->id_verified_at=now();
+        $user->save();
+
+        return response()->json(['success' => true], 200);
+    }
+
+
+
+    
 
     /**
      * Display the specified resource.

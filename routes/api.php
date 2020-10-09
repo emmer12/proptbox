@@ -28,7 +28,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/auth-user', 'API\UserController@getAuthUser');
     Route::patch('/update-user', 'API\UserController@updateUser');
     Route::patch('/update-listing', 'API\ListingController@updateList');
+ 
     Route::post('/upload-file', 'API\UserController@uploadFile');
+    Route::post('/upload-v-file', 'API\UserController@uploadVFile');
+ 
+ 
     Route::post('/listing-file-upload', 'API\ListingController@uploadFiles');
     
     Route::get('/all-request-limit-by-location','API\RequestController@requestLimit');
@@ -37,11 +41,37 @@ Route::group(['middleware' => 'auth:api'], function () {
     
     Route::get('/all-listing-by-location', 'API\ListingController@listingByLocation');
 
-
     Route::post('/other-setup', 'API\AuthController@otherSetup');
     Route::post('/other-setup-signup', 'API\AuthController@otherSetupSignup');
 
+
+    Route::post('/verify-id','API\AuthController@idVerify');
+
+
+    Route::post('/create-chat','API\UserController@createChat');
+
+    Route::post('/send-chat','API\UserController@sendChat');
+    
+    Route::get('/get-chats','API\UserController@getChat');
+
+    Route::post('/change-pass','API\UserController@changePass');
+
+
+    Route::get('/verify-payment','API\UserController@verifyPayment');
+
+
+    Route::get('/get-chats-msg','API\UserController@getChatMessages');
+    
+    Route::get('/check-chat','API\UserController@checkChat');
+    
+    Route::get('/mark-chat','API\UserController@markChat');
+
 });
+
+Route::get('/get-user-by-id','API\UserController@getUserById');
+
+
+Route::post('/create-views','API\ListingController@createView');
 
 Route::get('/search-request','API\RequestController@searchReq');
 

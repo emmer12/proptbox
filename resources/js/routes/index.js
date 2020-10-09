@@ -21,6 +21,13 @@ import Dashboard from '../components/pages/Dashboard';
 import MyListing from '../components/pages/MyListing';
 import MyRequest from '../components/pages/MyRequest';
 import EmailVerify from '../components/pages/EmailVerify';
+import IdVerification from '../components/pages/IdRequest';
+import Boost from '../components/pages/Boost';
+import OtherPage from '../components/pages/OtherPage';
+import ChatPage from '../components/pages/ChatPage';
+import AboutPage from '../components/pages/AboutPage';
+import ContactPage from '../components/pages/ContactPage';
+import TermsPage from '../components/pages/TermsPage';
 
 export const routes = [
     {
@@ -120,7 +127,7 @@ export const routes = [
     },
 
     {
-        path: '/profile/:username',
+        path: '/profile/:id',
         name: 'profile',
         component: Profile,
     },
@@ -135,6 +142,15 @@ export const routes = [
          }
     },
 
+    
+    {
+        path: '/chats',
+        name: 'chats',
+        component: ChatPage,
+        meta: {
+            requiresAuth:true
+         }
+    },
 
     {
         path: '/listing/:id',
@@ -173,9 +189,30 @@ export const routes = [
         }
     },
     {
+        path: '/id-verification',
+        name: 'id.verification',
+        component: IdVerification,
+        meta: {
+            requiresAuth: true,
+        }
+    },
+    {
+        path: '/boost/:id',
+        name: 'boost',
+        component: Boost,
+        meta: {
+            requiresAuth: true,
+        }
+    },
+    {
         path: '/verify-email',
         name: 'verify-email',
         component:EmailVerify,
+    },
+    {
+        path: '/explore',
+        name: 'explore',
+        component: OtherPage,
     },
 
     {
@@ -185,6 +222,21 @@ export const routes = [
         meta: {
             requiresAuth: true,
         }
+    },
+    {
+        path: '/about',
+        name: 'about',
+        component: AboutPage,
+    },
+     {
+        path: '/contact',
+        name: 'contact',
+        component: ContactPage,
+    },
+    {
+        path: '/terms',
+        name: 'terms',
+        component: TermsPage,
     },
     {
         path: '*',

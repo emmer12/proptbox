@@ -1,7 +1,7 @@
 <template>
     <div>
 
-         <nav-view v-show="!['session','access.signup','access.signin','setup','access.forget.password'].includes($route.name)"></nav-view>
+         <nav-view v-show="!['session','access.signup','access.signin','setup','access.forget.password','access.reset.password','chats'].includes($route.name)"></nav-view>
 
               <transition name="fade" enter-active-class="animated fadeIn"  leave-active-class="animated fadeOut" mode="out-in">
                   <router-view></router-view>
@@ -16,7 +16,8 @@
               <message v-if="user && !user.verified" :msg="'Your account has not been verified'"></message>
               <vue-snotify></vue-snotify>
 
-        <footer-nav></footer-nav>
+        <edit-modal :id="id" v-if="editMode"></edit-modal> 
+        <footer-nav v-show="!['chats','access.signup','access.signin','access.reset.password','setup','access.reset.password'].includes($route.name)"></footer-nav>
     </div>
 
 
@@ -24,6 +25,8 @@
 
 <script>
  import NavView from "./partials/NavView.vue";
+import EditModal from './partials/EditModal'
+
  import FooterNav from "./partials/FooterNav.vue";
  import Message from "./partials/Message";
 import { mapGetters } from 'vuex';
@@ -31,12 +34,15 @@ import { mapGetters } from 'vuex';
         components:{
             NavView,
             Message,
-            FooterNav
+            FooterNav,
+            EditModal
         },
         data(){
             return {
                 users:[],
-                show:true
+                show:true,
+                id:null,
+                editMode:false,
             }
         },
         mounted() {
@@ -64,9 +70,23 @@ import { mapGetters } from 'vuex';
             scrollTop:function(e){
                 console.log('scrolling');
               $('html,body').animate({scrollTop:0},'600','swing');
-            }
+            },
+               editShow(id){
+                this.id=id;
+                this.editMode=true
+              },
+              closeEdit(){
+                this.editMode=false     
+                }
         },
         created(){
+            window.eventBus.$on('showEdit',(data)=>{
+            this.editShow(data)
+           })
+            window.eventBus.$on('closeEdit',this.closeEdit)
+
+
+            
             // this.getCurrentLocation()
 
             // this.$Progress.start();

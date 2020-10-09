@@ -22,12 +22,14 @@
             },
                 destroyToken(state,rootState){
                 state.token=null
-                state.pinToken=null
-                rootState.user.user=null
+                state.user=null 
 
             },
             setUser(state,data){
                 state.user=data;
+            },
+            setFUser(state,data){
+                state.profile=data;
             },
             setStates(state,data){
                 state.states=data
@@ -46,8 +48,21 @@
             },
             setHRequest(state,data){
                 state.hRequest=data
-            }
-            
+            },
+
+            setChats(state,data){
+                state.chat.chats=data
+            },
+            setActive(state,data){
+                let activeChat=state.chat.chats.find(chat=>chat.id===data);
+                
+                state.chat.activeChat=activeChat
+                state.chat.messages=activeChat.msg
+            },
+            clearActive(state){
+                state.chat.activeChat=null
+                
+            },
 
     }
 

@@ -1,5 +1,6 @@
+
 <template>
-   <div class="contain">
+   <div class="contain" v-if="!notFound">
      <div class="banner">
      </div>
 
@@ -50,8 +51,11 @@
                      <div >
                          <button class="btn btn-custom" style="cursor: default;">&#8358;{{list.rent}} </button>
                      </div>
-                         <span>
-                            <svg width="40" height="52" viewBox="0 0 51 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                         <button ref="ccs" type="button" class="btn btn-primary btn-lg d-none" data-toggle="modal" data-target="#modelId">
+                        
+                        </button>
+                         <span style="cursor:pointer" v-if="!loading"  @click="openChat">
+                            <svg width="30" height="32" viewBox="0 0 51 52" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M16.3353 16.4267L33.998 16.1492C35.0432 16.1328 35.9037 16.9666 35.9201 18.0118C35.9365 19.0571 35.1027 19.9175 34.0575 19.9339L16.3948 20.2115C15.3495 20.2279 14.4891 19.394 14.4727 18.3488C14.4563 17.3035 15.2901 16.4431 16.3353 16.4267Z" fill="#0D50BD"/>
                                 <path d="M16.4545 23.9965L34.1171 23.719C35.1624 23.7026 36.0228 24.5364 36.0393 25.5817C36.0557 26.6269 35.2219 27.4874 34.1766 27.5038L16.5139 27.7813C15.4687 27.7977 14.6082 26.9639 14.5918 25.9186C14.5754 24.8734 15.4092 24.0129 16.4545 23.9965Z" fill="#0D50BD"/>
                                 <path d="M16.5731 31.5661L34.2358 31.2886C35.281 31.2722 36.1415 32.106 36.1579 33.1512C36.1743 34.1965 35.3405 35.0569 34.2953 35.0734L16.6326 35.3509C15.5873 35.3673 14.7269 34.5335 14.7105 33.4882C14.694 32.443 15.5279 31.5825 16.5731 31.5661Z" fill="#0D50BD"/>
@@ -71,10 +75,6 @@
                   <div class="body-details">
                      <div>Bills</div>
                      <div>Not Included</div>
-                 </div>
-                  <div class="body-details">
-                     <div>Security deposit</div>
-                     <div>House</div>
                  </div>
                   <div class="body-details">
                      <div>Property type</div>
@@ -109,30 +109,67 @@
                  </div>
 
                  <div class="des">
-                     <img src="/images/user.png" width="50px" height="50px" style="border-radius:25px" />
-                     <span>{{ list.user.bio || " Bios iof user " }}</span>
+                     <router-link tag="div" :to="{name:'profile',params:{id:list.user.id}}">
+                         <img :src="'/uploads/profile-images/'+list.user.profile_pic_filename" width="50px" height="50px" style="border-radius:25px" />
+                     </router-link>
+                     <span style="color:#444;font-weight:bolder">{{ list.user.fullname }}</span><br>
+                     
+                     <div v-if="list.user.bio">
+                         <strong>Bio</strong><br>
+                         {{ list.user.bio || " lorim i may not know what you are going throght today you have to staand, if God be for us who shall stand against us the mountain skiped like a wax....i have no other God but you ...i have no other God buy u" }}
+                    </div>
                      <div v-if="list.user.reveal_contact">
                     <a :href="'tel:'+list.user.phoneNo"> <i class="fa fa-phone" aria-hidden="true"></i> {{ list.user.phoneNo }}</a>
 
                      </div>
                  </div>
                  <div class="des">
-                     <div>
-                         <strong>About cohabitation</strong>
+                     <div v-if="list.space_type!=='apartment'">
+                         <strong>About Cohabitant</strong>
                      </div>
                      <p>{{ list.about_cohabitation }}</p>
                  </div>
-
-
                   
-             </div>
-             
+             </div>             
          </div>
-     </div>
 
+     </div>
      <div v-else>
       <preloader :type="'details'"></preloader>
      </div>
+
+     <!-- Button trigger modal -->
+    
+     
+     <!-- Modal -->
+     <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <h5 class="modal-title">Start Chat</h5>
+                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                             <span aria-hidden="true">&times;</span>
+                         </button>
+                 </div>
+                 <div class="modal-body">
+                       <div class="form-group">
+                         <label for="">Message</label>
+                         <input type="text" name="" id="" v-model="msg" class="form-control" placeholder="Send Message" required aria-describedby="helpId">
+                         <small id="helpId" class="text-muted"></small>
+                       </div>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-primary" :disabled="loading" @click="createChat"> <span v-if="loading"><i class="fa fa-spinner" aria-hidden="true"></i> </span> Send</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+   </div>
+   <div v-else class="container">
+        <div class="alert alert-info" role="alert">
+          <strong><i class="fa fa-wind-warning    "></i> Page not found</strong>
+      </div>
+      <router-link to="/listings" tag="button" class="btn btn-primary"> Go back Listing</router-link>
    </div>
 </template>
 
@@ -142,24 +179,101 @@ import Preloader from "./../partials/ContentPreloader";
 
 export default {
     components: {
-        Preloader
+        Preloader,
     },
     data() {
         return {
-            
+            notFound:"",
+            availableChat:null,
+            startChat:false,
+            msg:"",
+            loading:''
         }
     },
     methods: {
+
+      createChat(){
+        let data={}
+        data.to= this.list.user.id
+        data.on=this.list.id
+        data.msg=this.msg
+
+      this.$store.dispatch('createChat',data).then(()=>{
+       this.loading=false
+        this.msg=''
+        this.$refs.ccc.click()
+        this.$router.push({ name: "chats" });
+
+      }).catch(()=>{
+          this.loading=false;
+          this.msg='';
+          this.$snotify.error("Opps, something went wrong")
+
+      })
+    },
+        
       getListId(){
-          this.$store.dispatch('getListId',this.$route.params.id)
+          this.$store.dispatch('getListId',this.$route.params.id).then(()=>{
+              this.ckeckChat();
+          }).catch((res)=>{
+          
+         this.notFound=res.response.data.message
+     });
+      },
+      viewList(){
+          this.$store.dispatch('viewList',this.$route.params.id)
+      },
+      ckeckChat(){
+          let data={}
+          data.to= this.list.user.id
+          data.on=this.list.id
+         
+              this.loading=true;
+             this.$store.dispatch('checkChat',data).then((res)=>{
+              this.loading=false
+              if (!res.data.chats) {
+                  this.availableChat=null;
+              }else{
+                  this.availableChat=res.data.chats
+              }
+          })
+      },
+      openChat(){
+          if (this.loggedIn) {
+              if (this.availableChat) {
+                  this.$store.dispatch('setChat',this.availableChat.id);
+                  this.$router.push({ name: "chats" });
+              }else{
+                  this.startChat=true;
+                  this.$refs.ccs.click()
+              }      
+          }else{
+              this.$snotify.info("Sign up to start chat with"+this.list.user.fullname, {
+              timeout: 6000,
+              showProgressBar: true,
+              pauseOnHover: true,
+               closeOnClick: false,
+                buttons: [
+                    {text: 'Sign up', action: () =>this.$router.push('/signup'), bold: true}]
+            });
+          }
+      },
+      closeChat(){
+          this.openChat=false
       }
     },
     created () {
-     this.getListId();
+     this.getListId()
+     this.viewList();
+     window.scrollTo(0,0)
+
+     window.eventBus.$on('closeChat',this.closeChat);
     },
     computed:{
         ...mapGetters([
-            'list'
+            'list',
+            'user',
+            'loggedIn'
         ]),
         isVerified(){
              if (this.list.user.id_verified_at && this.list.user.phone_verified_at && this.list.user.email_verified_at) {
@@ -373,7 +487,6 @@ export default {
 		width: 80px;
 
 		&:hover{
-			background-color: rgba(#000, .5);
 			opacity: 1;
         }
 		&--prev{

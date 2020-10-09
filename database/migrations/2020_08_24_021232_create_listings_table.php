@@ -23,6 +23,7 @@ class CreateListingsTable extends Migration
             $table->integer('user_id');
             $table->string('payer_gender')->nullable();
             $table->string('space_for');
+            $table->boolean('boosted')->default(true);
             $table->integer('rating')->default('1');
             $table->string('duration')->nullable();
             $table->string('bedroom_type')->nullable();

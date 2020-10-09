@@ -125,6 +125,20 @@
             ></textarea>
           </div>
 
+          <div class="edit-images">
+            
+             <div v-show="!uploadedUp" class="" v-for="(image, index) in list.images" :key="index">
+                    <img :src="'/uploads/listing/'+ image" width="100px" height="100px"/>
+            </div> 
+          </div>
+
+           <vue-dropzone 
+           ref="myVueDropzone" 
+           id="dropzone" 
+           :options="dropzoneOptions" 
+           @vdropzone-success-multiple="uploaded" 
+            ></vue-dropzone>
+            
           <button class="btn btn-primary btn-block" :disabled="loading" @click="updateList">
             <span v-if="loading"><i class="fa fa-spinner" aria-hidden="true"></i> </span>
               Update
@@ -155,7 +169,31 @@ export default {
       value: true,
       loading: false,
       serverErrors: null,
-      menu: false
+      menu: false,
+      uploadedUp:false,
+      // 'http://localhost:8000/api/listing-file-upload',
+      //http://proptybox.com.ng/api/listing-file-upload
+      dropzoneOptions: {
+          url:'http://proptybox.com.ng/api/listing-file-upload',
+          thumbnailWidth: 100,
+          thumbnailHeight: 100,
+          maxFilesize: 0.5,
+          method:'POST',
+          addRemoveLinks: true,
+          // parallelUploads: 10,
+          
+          acceptedFiles:'image/*',
+          uploadMultiple:true,
+          dictDefaultMessage:"<i class='fa fa-cloud-upload'>Drag files here or click to Upload</i>",
+           headers: { "Authorization": "Bearer "+ localStorage.getItem('token')  },
+           init: function() { 
+            this.on("error", function(file, message) { 
+                window.eventBus.$emit('fileError',message)
+                this.removeFile(file); 
+            });
+
+        }
+      },
     };
   },
 
@@ -178,16 +216,9 @@ export default {
           });
     },
     uploaded(file,res){
-      if (this.newList.images.length) {
-        let prev=this.newList.images;
-        let next=res.files;
-        let open=prev.substr(0,prev.length-1);
-        let close=','.concat(next.substr(1));
-        
-        this.newList.images=open.concat(close);
-      }else{
-        this.newList.images=res.files
-      }
+        this.uploadedUp=true;
+        this.list.images=res.files;
+
     },
     closeEdit(e){
       console.log(e.target.classList.contains('contain'));
@@ -204,6 +235,13 @@ export default {
   created () {
      $('html,body').animate({scrollTop:0},'600','swing');
     this.getListId();
+      window.eventBus.$on('fileError',msg=>{
+        this.$snotify.error(msg, {
+              timeout: 6000,
+              showProgressBar: true,
+              pauseOnHover: true
+            });
+    })
   },
   mounted() {
     // let get=this.$ref.get
@@ -213,10 +251,13 @@ export default {
   },
 
   computed: {
+    
     ...mapGetters([
       'loggedIn',
       "list"
     ])
+    
+  
   }
 };
 </script>
@@ -231,6 +272,17 @@ button{
   }
   }
 }
+.edit-images{
+      display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 10px;
+    margin-bottom: 20px;
+
+    img{
+       padding:5px;
+    }
+}
 @keyframes rot{
   100%{
     transform: rotate(360deg);
@@ -238,11 +290,11 @@ button{
   }
 }
 .contain {
-    position: absolute;
+    position: fixed;
     top: 0px;
     left: 0px;
     width: 100%;
-    z-index: 9999;
+    z-index: 999;
     background: rgba(0, 0, 0, 0.5);
     padding-top: 80px;
   & .banner {

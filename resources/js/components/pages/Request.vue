@@ -1,9 +1,12 @@
 <template>
   <div class="request-con">
-    <div class="left  d-none d-sm-block d-md-block"  :class="{sticky}">
+    <div class="left"  :class="{sticky,added:tFilter}">
       <div class="header">
         <span>Filter</span>
+        <div style="position:absolute;right:10px;top:10px;color:grey;font-size:20px" class="d-sm-none" @click="tFilter=!tFilter"><i class="fa fa-times-circle-o" aria-hidden="true"></i> </div>
+
       </div>
+      
 <!-- 
       <div>
         <div class="sub-header">
@@ -20,9 +23,7 @@
           <span>Location</span>
         </div>
         <select @change="filterLocation" name id class="form-control" v-model="location">
-          <option selected value disabled>Select Location</option>
-          <option value="Lagos">Lagos</option>
-          <option value="Ondo">Ondo</option>
+          <option selected value="" disabled>Select Location</option>
           <option :value="state.name" v-for="(state, index) in states" :key="index">{{state.name}}</option>
         </select>
       </div>
@@ -32,7 +33,7 @@
           <span>Busget</span>
         </div>
 
-        <div class="row">
+      <div class="row">
                   <div class="col">
                     <div class="form-group">
                       <label for>Min budget</label>
@@ -62,10 +63,12 @@
     </div>
 
     <div class="right">
-      <div class="header">
-         <div class="s-con" id="s-con">
-            <input placeholder="Search"  @focus="focusSearch"  v-on:blur="blurSearch" v-model="search" class="form-control" />
-            <div class="btn btn-primary" @click="submitSearch" style="height:40px;margin-left:5px"><i class="fa fa-search" aria-hidden="true"></i></div>
+     <div class="header d-sm-none" > 
+          <div class="s-con" id="">
+            <input placeholder="Search" @focus="focusSearch" v-on:blur="blurSearch" v-model="search" class="form-control" />
+          </div>
+          <div>
+             <div class="btn btn-outlined" @click="toggleFilter">Filter <i class="fa fa-caret-down" aria-hidden="true"></i> </div>
           </div>
       </div>
       <div class="container">
@@ -106,7 +109,7 @@ export default {
   data() {
     return {
       requests: [],
-      loading: true,
+      loading: false,
       mode:'start',
       page: 1,
       search:"",
@@ -115,30 +118,28 @@ export default {
         max_budget:'',
         min_budget:''
       },
+      tFilter:false,
       sticky:false
     };
   },
   methods: {
-    ...mapActions(["getRequest","selectRLocation",'filterReqRange','Request','searchRequest']),
+    ...mapActions(["getRequest",'getState',"selectRLocation",'filterReqRange','Request','searchRequest']),
 
     infiniteHandler($state) {
-      this.getRequest({
-        page: this.page
-      }).then(({ data }) => {
-        this.loading = false;
-        if (this.page < data.meta.total || this.page===1) {
+     this.loading=true && !this.requests.length;
+     this.getRequest({
+        page:this.page
+      }).then(res=>{
+        this.loading=false;
+         if (res.data.data.length) {
           this.page += 1;
-          data.data.forEach(request => {
-            if (!this.requests.includes(request)) {
-              this.requests.push(request);
-            }
-          });
+          this.requests.push(...res.data.data);
           $state.loaded();
-        } else {
-          alert()
+        } 
+        else {
           $state.complete();
         }
-      });
+      })
     },
      submitSearch(){
       if (this.$route.query.search!==`${this.search}`) {
@@ -146,7 +147,7 @@ export default {
           }  
     },
    created () {
-     this.infiniteHandler()
+     this.getState();
     },
      filterLocation(){
     this.mode='location'
@@ -183,6 +184,9 @@ export default {
    },
    blurSearch(){
       let el=document.getElementById('s-con').classList.remove('focus')
+   },
+    toggleFilter(){
+     this.tFilter=!this.tFilter
    }
   },
   watch: {
@@ -198,10 +202,7 @@ export default {
     });
     if (this.$route.query.search) {
       this.searchR()
-    }else{
-      this.infiniteHandler()
     }
-    // this.getState();
     },
   
   computed: {
@@ -243,7 +244,12 @@ export default {
     & .header {
       padding: 10px;
       position: relative;
-      height: 70px;
+      background: #eef4ff;
+      // display: flex;
+      // flex-direction: column;
+      height: 150px;
+      justify-content: center;
+      align-items: center;
       & .btn-outlined {
         position: absolute;
         background: transparent;
@@ -267,6 +273,32 @@ export default {
  @media (max-width:460px){
     .request-con .right{
       margin-left:0px;
+      
+      & .header{
+         display:flex;
+       flex-direction:row;
+       justify-content: space-between;
+
+
+        & .btn-outlined {
+        position: relative;
     }
+      }
+    }
+    .request-con {
+      .left {
+      transition:0.3s;
+      position: absolute;
+      z-index:9999;
+      left:-270px;
+      background:white;
+
+
+      &.added{
+        left:0px
+      }
+
+    }
+   }
   }
 </style>

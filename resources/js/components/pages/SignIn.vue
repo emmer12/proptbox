@@ -21,7 +21,7 @@
               name="inputName"
               v-model.trim="$v.newUser.email.$model"
               id="inputName"
-              placeholder
+              placeholder="Email address"
             />
             <div class="invalid-feedback" v-if="!$v.newUser.email.required">This field is required</div>
             <div class="invalid-feedback " v-if="!$v.newUser.email.email">Please enter a valid email</div>
@@ -37,7 +37,7 @@
               id="inputName"
               :class="{'is-invalid':$v.newUser.password.$error}"
               v-model.trim="$v.newUser.password.$model"
-              placeholder
+              placeholder="********"
             />
             <div class="invalid-feedback" v-if="!$v.newUser.password.required">This field is required</div>
           </div>
@@ -59,11 +59,17 @@
         <div class="c-btn"><img src="/svg/google.svg" width="18px" @click="socialSignUp('google')" /> Continue with Google</div>
         <div class="c-btn"><img src="/svg/facebook.svg" width="18px"  @click="socialSignUp('facebook')" /> Continue with Facebook</div>
 
+        
+        <div>
+          <router-link to="/signup" tag="strong" style="cursor:pointer">Don't have an account ?</router-link>
+        </div>
+
         <loading :loading="loading"></loading>
 
         
         
       </form>
+
     </div>
 
 

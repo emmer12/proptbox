@@ -11,7 +11,7 @@
                 <div v-if="!loadingReq">
                   <div v-if="hRequest.length">
                     <div class="row">
-                      <div class="" v-for="(request, index) in hRequest" :key="index">
+                      <div class="" v-for="(request, index) in hRequest" :key="`request-${index}`">
                         <request-card :request="request"></request-card>
                       </div>
                     </div>
@@ -37,20 +37,59 @@
           <!-- <div class="header">
             <router-link to="#">Filter</router-link>
          </div> -->
+          <div class="header d-sm-none" >
+          <h4>Find a useful space in 24 hours</h4>
+          <div class="s-con" id="s-con">
+            <input placeholder="Search" @focus="focusSearch" v-on:blur="blurSearch" v-model="search" class="form-control" />
+            <div class="btn btn-primary" @click="submitSearch"  style="height: 37px;margin-left: 5px;line-height: 37px;padding: 0px 20px;"><i class="fa fa-search" aria-hidden="true"></i></div>
+          </div>
+         </div>
+          <div class="container d-sm-none">
+                <div v-if="!loadingReq">
+                  <div class="mobile-request" v-if="hRequest.length">
+                      <div class="card-m" v-for="(request, index) in hRequest" :key="`request-${index}`">
+                        <request-card-mobile :request="request"></request-card-mobile>
+                      </div>
+                      <div style="padding: 10px;align-self: center;">
+                        <router-link tag="button" class="btn btn-primary" style="border-radius:50%" :to="{name:'request'}"><i class="fa fa-arrow-right" aria-hidden="true"></i></router-link>
+                      </div>
+                  </div>
 
+                  <div v-else>
+                    <div class="alert alert-default" style="border-left:4px solid #3490dc" role="alert">
+                      <h4 class="alert-heading">No request available</h4>
+                    </div>
+                  </div>
+                </div>
+                <div v-else>
+                  <preloader :type="'request-mobile'"></preloader>
+                </div>
+           </div>
          <div class="body">
+           <div class="container">
+
            <div  v-if="!loading" >
-              <propt-card :lists="listing"></propt-card>
+             <div class="row">
+               <div v-if="!listing.length">
+                    <div class="alert alert-default" style="border-left:4px solid #3490dc" role="alert">
+                      <h4 class="alert-heading">No Listing available</h4>
+                    </div>
+               </div>
+               <div  v-else class="col-md-4 col-ms-6" v-for="list in listing" :key="`listing-${list.id}`" >
+                  <propt-card :list="list" :id="list.id"></propt-card>
+               </div>
+             </div>
            </div>
              
-           <div v-else>
+            <div v-else>
               <preloader :type="'list'"></preloader>
             </div>
+           </div>
           <infinite-loading @infinite="infiniteHandler"></infinite-loading> 
          </div>
-         <div v-if="!loggedIn">
+         <router-link to="/signup" v-if="!loggedIn">
            <span class="btn btn-primary">Register to view more</span>
-         </div>
+         </router-link>
        </div>
    </div>
 </template>
@@ -58,55 +97,67 @@
 <script>
 
 import ProptCard from '../partials/ProptCard'
+import RequestCardMobile from '../partials/RequestCardMobile'
 import RequestCard from '../partials/RequestCard'
 import { mapActions, mapGetters } from "vuex";
 import Preloader from './../partials/ContentPreloader'
 
+
 export default {
   components: {
     ProptCard,
-    RequestCard,
-    Preloader
+    RequestCardMobile,
+    Preloader,
+    RequestCard
   },
   data () {
     return {
       page:1,
       listing:[],
       loadingReq:true,
-      loading:true
+      loading:false,
+      search:''
     }
   },
    methods: {
+   focusSearch(){
+      let el=document.getElementById('s-con').classList.add('focus')
+   },
+   blurSearch(){
+      let el=document.getElementById('s-con').classList.remove('focus')
+   },
+    submitSearch(){
+      if (this.$route.query.search!==`${this.search}`) {
+           this.$router.push({name:'list',query:{search:this.search}})
+          }  
+    },
     ...mapActions(["getListing","getRequestLimit"]),
-
     infiniteHandler($state){
-      this.loading=true
-      this.getListing({
+      this.loading=true && !this.listing.length;
+     this.getListing({
         page:this.page
-      }).then(({data})=>{
-        this.loading=false
-         if (this.page<=data.meta.total) {
+      }).then(res=>{
+        this.loading=false;
+         if (res.data.data.length) {
           this.page += 1;
-          data.data.forEach(list=>{
-            if (!this.listing.includes(list)) {
-              this.listing.push(list)
-            }
-          })
+          this.listing.push(...res.data.data);
           $state.loaded();
-        } else {
+        } 
+        else {
           $state.complete();
         }
       })
     },
-    
-    
+ 
   },
 
   created() {
-    this.infiniteHandler();
     this.getRequestLimit().then(()=>{
       this.loadingReq=false;
     });
+  },
+  mounted () {
+  //  this.infiniteHandler()
   },
   computed: {
     ...mapGetters(["hRequest","loggedIn"])
@@ -163,15 +214,32 @@ export default {
       padding:10px;
 
        & .header{
-        height:50px;
-        line-height:50px; 
+         padding: 10px;
+      position: relative;
+      height: 70px;
+      background: #eef4ff;
+      display: flex;
+      flex-direction: column;
+      height: 150px;
+      justify-content: center;
+      align-items: center;
+      & .btn-outlined {
+        position: absolute;
+        background: transparent;
+        border-color: #3490dc;
+        margin: 5px;
+        right: 20px;
+      }
+       & .s-con{
+        width:70%;
         display: flex;
-        justify-content:flex-end;
-        padding:0px 10px; 
-        margin-right:50px;
-        font-weight: 700;  
-        border-bottom:1px solid #dfdfdf;
-        margin-bottom:20px;
+        transition:0.3s;
+        float: right;
+
+        &.focus{
+          width:100%;
+        } 
+      }
 
       }
     }
@@ -182,6 +250,19 @@ export default {
       & .right{
       margin-left:0px;
     }
+    }
+    .mobile-request{
+      display:flex;
+      overflow-x:scroll;
+
+      .card-m{
+        margin:10px;
+      }
+      .riquest-b{
+        width:300px;
+        margin:10px;
+      }
+
     }
   }
 </style>

@@ -8,7 +8,9 @@ const registerUser=(data)=>{
 const updateUser=(data)=>{
     return Api.patch('/update-user',data)
 }
-
+const changePass=(data)=>{
+    return Api.post('/change-pass',data)
+}
 const updateList=(data)=>{
     return Api.patch('/update-listing',data)
 }
@@ -136,6 +138,65 @@ const uploadFile=(data)=>{
 }
 
 
+const uploadVFile=(data)=>{
+    return Api.post('/upload-v-file',data)
+}
+
+const viewList=(data)=>{
+    return Api.post('/create-views',{id:data})
+}
+
+const verifyId=(data)=>{
+    return Api.post('/verify-id',data)
+}
+
+const getUserById=(data)=>{
+    return Api.get('/get-user-by-id',{
+        params:data
+    })
+}
+
+const createChat=(data)=>{
+    return Api.post('/create-chat',data);
+}
+
+
+const sendChat=(data)=>{
+    return Api.post('/send-chat',data);
+}
+
+const getChats=(data)=>{
+    return Api.get('/get-chats',{
+        params:data
+    })
+}
+
+
+const makePayment=(data)=>{
+    return Api.get('/verify-payment',{
+        params:data
+    })
+}
+
+const getMessage=(data)=>{
+    return Api.get('/get-chats-msg',{
+        params:data
+    })
+}
+
+
+const checkChat=(data)=>{
+return Api.get('/check-chat',{
+        params:data
+    })
+}
+
+
+
+const markChat=()=>{
+return Api.get('/mark-chat');
+}
+
 // M 100 350 Q 0 250 100 150 L 250 100 Q 450 50 500 150 Q 550 350 450 450 Q 400 500 250 400 Z
 export default {
     registerUser,
@@ -167,5 +228,18 @@ export default {
     searchListing,
     searchRequest,
     filterRange,
-    filterReqRange
+    filterReqRange,
+    viewList,
+    verifyId,
+    uploadVFile,
+    getUserById,
+    sendChat,
+    getChats,
+    createChat,
+    makePayment,
+    getMessage,
+    checkChat,
+    markChat,
+    changePass
+
 }

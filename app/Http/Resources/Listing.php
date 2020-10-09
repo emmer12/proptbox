@@ -25,6 +25,7 @@ class Listing extends JsonResource
         'available_from'=>$this->available_from,
         'payer_gender'=>$this->payer_gender,
         'bedroom_type'=>$this->bedroom_type,
+        'boosted' => $this->boosted,
         'rating'=>$this->rating,
         'duration'=>$this->duration,
         'rent'=>$this->rent,
@@ -37,6 +38,7 @@ class Listing extends JsonResource
         'created_at'=>$this->created_at,
         'images'=>json_decode($this->images),
         'user'=>$user,
+        'views'=>$this->views
     ];
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use App\Notifications\ResetPasswordNotification;
+use App\Notifications\OTPNotification;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -19,7 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'fullname', 'email', 'password','phoneNo','location','gender','email_verified_at','phone_verified_at','profile_pic_filename'
+        'fullname', 'email', 'password','phoneNo','location','gender','email_verified_at','phone_verified_at','profile_pic_filename','bio','reveal_contact'
     ];
 
     /**
@@ -72,5 +73,18 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Social::class);
     }
+
+
+    public function otpVerify()
+    {
+        $this->notify(new OTPNotification);
+        
+    }
+
+    public function routeNotificationForKarix()
+    {
+        return $this->phone;
+    }
+
 
 }
