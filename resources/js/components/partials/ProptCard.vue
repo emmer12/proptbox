@@ -12,10 +12,12 @@
                   </div>
               </div>
               <div class="boosted" v-if="list.boosted">
-                Boosted
+                Boosted 
               </div>
               <router-link :to="{name:'list-details',params:{id:list.id}}" tag="div" class="img">
                 <img :src="list.images ? '/uploads/listing/'+list.images[0] : '/images/'+ 1 +'.jpg'" width="100%"/>
+
+                <div class="location"><i class="fa fa-map-marker" aria-hidden="true"></i> {{list.space_location }}</div>
               </router-link>
 
               <div class="details">
@@ -168,9 +170,22 @@ export default {
        }
      }
    }
-   & .img img{
+   & .img {
+   img{
      border-radius:5px;
      height: 200px;
+   }
+
+   .location{
+         position: absolute;
+        transform: translateY(-40px);
+        color: #fff;
+        font-size: 16px;
+        font-weight: 700;
+        padding: 10px;
+        width: 94%;
+        background-image: linear-gradient(45deg, black, transparent);
+   }
    }
    & .details{
      border:1px solid #f6f6f6;
@@ -227,11 +242,12 @@ export default {
       justify-content: space-between;
 
       & span{
-        color:grey;
-        font-size: 12px;
+      color: #031a2d;
+      font-size: 12px;
+      font-weight: 800;
         & i{
         font-size:20px;
-        margin:0px 10px;
+        margin:0px 5px;
         
         }
       }

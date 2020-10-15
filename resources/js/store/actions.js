@@ -5,10 +5,10 @@ export default {
     registerUser({ commit,dispatch}, data) {
         return new Promise((resolve, reject) => {
             Api.registerUser(data).then(res => {
-                let token = res.data.access_token;
-                localStorage.setItem('token', token)
-                commit("retrieveToken",token)
-                dispatch("getUser");
+                // let token = res.data.access_token;
+                // localStorage.setItem('token', token)
+                // commit("retrieveToken",token)
+                // dispatch("getUser");
                 resolve(res)
             }).catch(err => {
                 reject(err)
@@ -346,13 +346,35 @@ export default {
         })
     },
 
-    emailVerification({commit}, data) {
+    emailVerification({commit,dispatch}, data) {
         return new Promise((resolve, reject) => {
             Api.verifyEmail(data).then(res => {
+                let token = res.data.access_token;
+                localStorage.setItem('token', token)
+                commit("retrieveToken",token)
+                dispatch("getUser");
                 resolve(res)
             }).catch(err => {
                 reject(err)
+            })
+        })
+    },
 
+    sendOtp({commit}) {
+        return new Promise((resolve, reject) => {
+            Api.sendOtp().then(res => {
+                resolve(res,commit)
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    },
+    verifyOtp({commit},data) {
+        return new Promise((resolve, reject) => {
+            Api.verifyOtp(data).then(res => {
+                resolve(res,commit)
+            }).catch(err => {
+                reject(err)
             })
         })
     },

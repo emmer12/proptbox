@@ -1,7 +1,7 @@
 <template>
     <div>
 
-         <nav-view v-show="!['session','access.signup','access.signin','setup','access.forget.password','access.reset.password','chats'].includes($route.name)"></nav-view>
+         <nav-view v-show="!['session','access.signup','access.signin','setup','complete.setup','access.forget.password','access.reset.password','chats'].includes($route.name)"></nav-view>
 
               <transition name="fade" enter-active-class="animated fadeIn"  leave-active-class="animated fadeOut" mode="out-in">
                   <router-view></router-view>
@@ -13,11 +13,15 @@
               <!-- <div class="scroll-top" ref="scroll-top" @click="scrollTop">
                   <i class="icon angle double up"></i>
               </div> -->
-              <message v-if="user && !user.verified" :msg="'Your account has not been verified'"></message>
+              <message v-show="!['chats','access.signup','access.signin','access.reset.password','setup','complete.setup','access.reset.password'].includes($route.name)" v-if="user && !user.verified" :msg="'Your account has not been verified'"></message>
               <vue-snotify></vue-snotify>
 
+        <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+          <ads :list="adsData" v-show="ads" ></ads>
+        </transition>
+
         <edit-modal :id="id" v-if="editMode"></edit-modal> 
-        <footer-nav v-show="!['chats','access.signup','access.signin','access.reset.password','setup','access.reset.password'].includes($route.name)"></footer-nav>
+        <footer-nav v-show="!['chats','access.signup','access.signin','access.reset.password','setup','complete.setup','access.reset.password'].includes($route.name)"></footer-nav>
     </div>
 
 
@@ -26,6 +30,7 @@
 <script>
  import NavView from "./partials/NavView.vue";
 import EditModal from './partials/EditModal'
+import Ads from './partials/Ads'
 
  import FooterNav from "./partials/FooterNav.vue";
  import Message from "./partials/Message";
@@ -35,7 +40,8 @@ import { mapGetters } from 'vuex';
             NavView,
             Message,
             FooterNav,
-            EditModal
+            EditModal,
+            Ads
         },
         data(){
             return {
@@ -43,6 +49,8 @@ import { mapGetters } from 'vuex';
                 show:true,
                 id:null,
                 editMode:false,
+                ads:false,
+                adsData:null
             }
         },
         mounted() {
@@ -77,13 +85,32 @@ import { mapGetters } from 'vuex';
               },
               closeEdit(){
                 this.editMode=false     
-                }
+                },
+
+              closeAd(){
+              this.ads=false     
+              },
+
+              showAds(data){
+                this.adsData=data
+                this.ads=true
+                console.log('====================================');
+                console.log(this.adsData);
+                console.log('====================================');
+              }
         },
         created(){
             window.eventBus.$on('showEdit',(data)=>{
             this.editShow(data)
            })
             window.eventBus.$on('closeEdit',this.closeEdit)
+
+            window.eventBus.$on('closeAd',this.closeAd)
+
+
+            window.eventBus.$on('showAds',(data)=>{
+              this.showAds(data)
+            })
 
 
             
@@ -142,4 +169,95 @@ import { mapGetters } from 'vuex';
        z-index: 999;
        
    }
+</style>
+
+
+
+<style lang="scss">
+.back{
+  padding:10px;
+  cursor:pointer;
+  i{
+    font-size: 25px;
+    color: #888;
+  }
+}
+
+.header {
+  & h4 {
+    color: #444;
+    padding: 10px 0px;
+  }
+}
+.verify-con-settings{
+  position:relative !important;
+}
+.verify-con,.verify-con-settings {
+  background: #f6f6f6;
+  padding: 10px;
+    right: 0px;
+    position: absolute;
+    bottom: 10px;
+  & .verify {
+    display: flex;
+
+    & .v-icon {
+      position: relative;
+
+      &.disabled{
+        pointer-events: none;
+        opacity: 0.4;
+      }
+
+      & span {
+        position: absolute;
+        background: green;
+        color: white;
+        right: 6px;
+        bottom: 23px;
+        border-radius: 50%;
+        padding: 3px;
+      }
+      i {
+        padding: 10px;
+        margin: 20px 10px;
+        font-size: 40px;
+        border-radius: 10px;
+        color: grey;
+        cursor: pointer;
+        &.active {
+          color: #0d50bd;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 460px) {
+  .settings .profile .loading {
+        margin-left: 50%;
+    }
+  .verify-con {
+    position: relative;
+    & h4{
+      font-size: 16px;
+     font-weight: 700;
+    }
+    & .verify {
+          justify-content: center;
+      & .v-icon {
+        & i {
+          font-size: 30px;
+          border-radius: 10px;
+          color: grey;
+          cursor: pointer;
+          padding: 10px 10px;
+          &.active {
+            color: #0d50bd;
+          }
+        }
+      }
+    }
+  }
+}
 </style>

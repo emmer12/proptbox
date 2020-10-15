@@ -73,19 +73,15 @@
                      <div>&#8358;{{list.rent}} per {{ list.duration }}</div>
                  </div>
                   <div class="body-details">
-                     <div>Bills</div>
-                     <div>Not Included</div>
-                 </div>
-                  <div class="body-details">
                      <div>Property type</div>
-                     <div>{{list.space_type}}</div>
+                     <div>{{list.property_type}}</div>
                  </div>
                   <div class="body-details">
                      <div>Space Location</div>
                      <div>{{ list.space_location }}</div>
                  </div>
                   <div class="body-details">
-                     <div>Bedroom type</div>
+                     <div>Bathroom type</div>
                      <div>{{ list.bedroom_type}}</div>
                  </div>
                   <div class="body-details">
@@ -94,7 +90,7 @@
                  </div>
 
                    <div class="body-details">
-                     <div>Payer Gender</div>
+                     <div>Preferred Gender</div>
                      <div>{{ list.payer_gender }}</div>
                  </div>
 
@@ -147,7 +143,7 @@
              <div class="modal-content">
                  <div class="modal-header">
                      <h5 class="modal-title">Start Chat</h5>
-                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                         <button ref="ccc" type="button" class="close" data-dismiss="modal" aria-label="Close">
                              <span aria-hidden="true">&times;</span>
                          </button>
                  </div>
@@ -164,12 +160,24 @@
              </div>
          </div>
      </div>
+
+
+    <transition enter-active-class="animated slideInLeft" leave-active-class="animated slideOutLeft">
+    <div class="boost-card" v-show="bMsg" v-if="user && list.user.id==user.id && !list.boosted">
+        <span @click="bMsg=!bMsg"><i class="fa fa-times-circle" aria-hidden="true"></i> </span>
+         <h1>This post has not been boosted</h1>
+         <p>Boost now to get your listing bumped up to the top daily</p>
+
+        <router-link  :to="{name:'boost',params:{id:list.id}}" tag="button" class="btn btn-outline-primary">Boost</router-link>
+     </div>
+    </transition>
    </div>
    <div v-else class="container">
         <div class="alert alert-info" role="alert">
           <strong><i class="fa fa-wind-warning    "></i> Page not found</strong>
       </div>
       <router-link to="/listings" tag="button" class="btn btn-primary"> Go back Listing</router-link>
+      
    </div>
 </template>
 
@@ -187,7 +195,8 @@ export default {
             availableChat:null,
             startChat:false,
             msg:"",
-            loading:''
+            loading:'',
+            bMsg:false
         }
     },
     methods: {
@@ -201,7 +210,7 @@ export default {
       this.$store.dispatch('createChat',data).then(()=>{
        this.loading=false
         this.msg=''
-        this.$refs.ccc.click()
+        this.$refs.ccc.click();
         this.$router.push({ name: "chats" });
 
       }).catch(()=>{
@@ -221,10 +230,18 @@ export default {
      });
       },
       viewList(){
-          this.$store.dispatch('viewList',this.$route.params.id)
+          let viewed=localStorage.getItem('view-'+this.$route.params.id);
+          if (viewed) {
+                return
+              }else{
+                  this.$store.dispatch('viewList',this.$route.params.id).then(()=>{
+                      localStorage.setItem('view-'+this.$route.params.id,1)
+                  })
+              }
       },
       ckeckChat(){
-          let data={}
+          if (this.loggedIn) {
+              let data={}
           data.to= this.list.user.id
           data.on=this.list.id
          
@@ -237,6 +254,9 @@ export default {
                   this.availableChat=res.data.chats
               }
           })
+          }else{
+              this.availableChat=null
+          }
       },
       openChat(){
           if (this.loggedIn) {
@@ -266,7 +286,10 @@ export default {
      this.getListId()
      this.viewList();
      window.scrollTo(0,0)
-
+     let that=this
+     setTimeout(()=>{
+         that.bMsg=true
+     },10000)
      window.eventBus.$on('closeChat',this.closeChat);
     },
     computed:{
@@ -308,6 +331,31 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
+
+.boost-card{
+    position:fixed;
+    bottom: 100px;
+    left:0px;
+    height: 300px;
+    width:200px;
+    background: #222;
+    border-radius: 10px;
+    color:#fff;
+    padding:10px;
+
+    span{
+        position: relative;
+        margin-left: 90%;
+        font-size: 16px;
+        cursor:pointer;
+
+    }
+
+    h1{
+    font-size: 30px;
+    color: #5895f9;
+    }
+}
 
 .contain{
     & .banner{

@@ -85,7 +85,9 @@
               <preloader :type="'list'"></preloader>
             </div>
            </div>
-          <infinite-loading @infinite="infiniteHandler"></infinite-loading> 
+          <infinite-loading @infinite="infiniteHandler">
+            <div slot="no-more"></div>
+          </infinite-loading> 
          </div>
          <router-link to="/signup" v-if="!loggedIn">
            <span class="btn btn-primary">Register to view more</span>

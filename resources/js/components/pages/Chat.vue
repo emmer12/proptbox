@@ -14,12 +14,17 @@
                     {{ message.msg }}
                  </div>
              </div>
+             <div class="chat-box right"  v-if="loading" >
+                 <div class="msg " style="background:#9e9e9e61;color: #666;">
+                    loading...
+                 </div>
+             </div>
          </div>
       </div>
 
       <div class="footer">
         <input v-model="msg" type="text" placeholder="">
-        <button class="btn btn-primary " style="border-radius: 50%;" :disabled="!msg.length" @click="submitChat"><i class="fa fa-send-o" aria-hidden="true"></i> </button>
+        <button class="btn btn-primary " style="border-radius: 50%;" :disabled="!msg.length || loading" @click="submitChat"><i class="fa fa-send-o" aria-hidden="true"></i> </button>
       </div> 
   </div>
   
@@ -34,6 +39,7 @@ export default {
       chats:[],
       chatList:[],
       newChat:'',
+      loading:false
     }
   },
 
@@ -43,36 +49,45 @@ export default {
       data.chat_id=this.activeChat.id;
       data.to=(this.user.id === this.activeChat.to.id) ? this.activeChat.from.id : this.activeChat.to.id;
       data.msg=this.msg;
+      this.loading=true;
+      this.scrollT()
       this.$store.dispatch('sendChat',data).then((res)=>{
+        this.loading=false;
       let el=document.getElementById('bbody');
         this.$store.dispatch('getChats');
         this.messages.push(res.data.msg);
+        let that=this
         setTimeout(()=>{
-          let scrollH=el.scrollHeight;
-          el.scrollTop=scrollH
+           that.scrollT()
         },100)
 
         this.msg='';
       })
+    },
+    scrollT(){
+       let el=document.getElementById('bbody');
+         let scrollH=el.scrollHeight;
+          el.scrollTop=scrollH
     },
     createChat(){
       let data={}
       data.to=this.user.id;
       data.on=this.$route.params.id;
       data.newChat=this.msg;
+      
       this.$store.dispatch('createChat',data).then((res)=>{
+        this.loading=false;
         this.newChat=''
         this.activeChat=res.data.chats
       })
     },
     listen(){
-      console.log('====================================');
-      console.log(Echo);
-      console.log('====================================');
+    
       Echo.private('chat.'+this.activeChat.id).listen('NewChat',(res)=>{
         if (res.chat.user_id!==this.user.id) {
           this.messages.push(res.chat);
         }
+        this.scrollT()
         
 })
     },
@@ -86,7 +101,7 @@ export default {
       this.listen(); 
          let el=document.getElementById('bbody');
          let scrollH=el.scrollHeight;
-         el.scrollTop=scrollH
+         el.scrollTop=scrollH 
       }, 100);
     });
 

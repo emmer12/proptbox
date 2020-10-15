@@ -33,7 +33,9 @@ class ListingController extends Controller
 
         $value=$request->query('s');
 
-        $listing=Listing::where('bedroom_type','LIKE',"%$value%")->orWhere('space_type','LIKE',"%$value%")->orWhere('space_address','LIKE',"%$value%")->latest()->paginate(20);
+        $listing=Listing::where('bedroom_type','LIKE',"%$value%")->orWhere('space_type','LIKE',"%$value%")->orWhere('space_address','LIKE',"%$value%")->orWhere('about_property','LIKE',"%$value%")->orderBy('boosted_at','DESC')->paginate(20);
+        
+        
         return ListingResource::collection($listing);
     }
 
@@ -70,6 +72,7 @@ class ListingController extends Controller
     //    die(Auth::user()->id);
 
         $listing->space_type=$request->input('space_type');
+        $listing->property_type=$request->input('property_type');
         $listing->space_for=$request->input('space_for');
         $listing->space_location=$request->input('space_location');
         $listing->space_address=$request->input('space_address');
@@ -99,8 +102,10 @@ class ListingController extends Controller
             
             
         }
+
+        $listing['images']=json_decode($listing['images']);
         // $tag = Tag::insert($tags);
-        return response()->json(['success'=>true,'msg'=>"listing created"],200);
+        return response()->json(['success'=>true,'msg'=>"listing created",'list'=>$listing],200);
     }
 
 
@@ -110,9 +115,11 @@ class ListingController extends Controller
     public function listingByLocation(Request $request)
     {
         // return response()->json(Auth::user(), 200);
-
         
-        $listing=Listing::orderBy('boosted_at','DESC')->orderBy('created_at','DESC')->where('space_location',Auth::user()->location)->paginate(10);
+        $query=Listing::orderBy('boosted_at','DESC');
+
+        $listing=$query->orderBy('created_at','DESC')->where('space_location',Auth::user()->location)->paginate(10);
+       
         return ListingResource::collection($listing);
       
     }
@@ -127,7 +134,8 @@ class ListingController extends Controller
 
 
     public function listingByFLocation(Request $request){
-        $listing=Listing::where('space_location',$request->query('location'))->orderBy('boosted_at','DESC')->orderBy('created_at','DESC')->paginate(12);
+        $query=Listing::orderBy('boosted_at','DESC');
+        $listing=$query->orderBy('created_at','DESC')->where('space_location',$request->query('location'))->paginate(12);
         return ListingResource::collection($listing);
 
     }
@@ -135,7 +143,8 @@ class ListingController extends Controller
     public function guestList()
     {
         // return response()->json(Auth::user(), 200);
-        $listing=Listing::orderBy('boosted_at','DESC')->orderBy('created_at','DESC')->take(20)->paginate(20);
+        $query=Listing::orderBy('boosted_at','DESC');
+        $listing=$query->orderBy('created_at','DESC')->take(20)->paginate(20);
         return ListingResource::collection($listing);
     }
 

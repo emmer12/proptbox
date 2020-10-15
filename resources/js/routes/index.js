@@ -21,6 +21,7 @@ import Dashboard from '../components/pages/Dashboard';
 import MyListing from '../components/pages/MyListing';
 import MyRequest from '../components/pages/MyRequest';
 import EmailVerify from '../components/pages/EmailVerify';
+import VerifyEmail from '../components/pages/VerifyEmail';
 import IdVerification from '../components/pages/IdRequest';
 import Boost from '../components/pages/Boost';
 import OtherPage from '../components/pages/OtherPage';
@@ -28,6 +29,9 @@ import ChatPage from '../components/pages/ChatPage';
 import AboutPage from '../components/pages/AboutPage';
 import ContactPage from '../components/pages/ContactPage';
 import TermsPage from '../components/pages/TermsPage';
+import AccountSettings from '../components/pages/AccountSettings';
+import ProfileSettings from '../components/pages/ProfileSettings';
+import Settings from '../components/pages/Settings';
 
 export const routes = [
     {
@@ -106,6 +110,31 @@ export const routes = [
         meta: {
             requiresVisitor: true,
         }
+    },
+
+    {
+        path:'/settings',
+        name:'settings',
+        component:Settings,
+        meta: {
+            requiresAuth:true
+         }
+    },
+    {
+        path: '/settings/account',
+        name: 'account-set',
+        component: AccountSettings,
+        meta: {
+            requiresAuth:true
+         }
+    },
+    {
+        path: '/settings/profile',
+        name: 'profile-set',
+        component: ProfileSettings,
+        meta: {
+            requiresAuth:true
+         }
     },
     {
         path: '/requests',
@@ -203,6 +232,11 @@ export const routes = [
         meta: {
             requiresAuth: true,
         }
+    },
+    {
+        path: '/email-verify',
+        name: 'email.verify',
+        component:VerifyEmail,
     },
     {
         path: '/verify-email',

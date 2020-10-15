@@ -66,10 +66,13 @@ Route::group(['middleware' => 'auth:api'], function () {
     
     Route::get('/mark-chat','API\UserController@markChat');
 
+    Route::post('/send-otp','API\UserController@otpSend');
+
+    Route::post('/verify-otp','API\UserController@verifyOTP');
+
 });
 
 Route::get('/get-user-by-id','API\UserController@getUserById');
-
 
 Route::post('/create-views','API\ListingController@createView');
 

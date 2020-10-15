@@ -18,7 +18,7 @@
 
           <div class="form-group">
             <label for="space_type">Space Type</label>
-            <select 
+            <select
             :class="{'is-invalid':$v.newList.space_type.$error}"
             v-model.trim="$v.newList.space_type.$model"
             class="form-control" name="" id="space_type" placeholder="Space type">
@@ -40,7 +40,7 @@
             class="form-control" name="" id="space_for" placeholder="Space type">
               <option value="" selected disabled>Space For</option>
               <option value="Rent">Rent</option>
-              <option value="Cohab" v-if="newList.space_type==='apartment'">Cohab</option>
+              <option value="Space sharing" v-if="newList.space_type==='apartment'">Space sharing</option>
             </select>
             <div
               class="invalid-feedback"
@@ -117,9 +117,10 @@
             v-model="newList.payer_gender"
             class="form-control" name="" id="space_type" placeholder="Space type">
               <option value="" selected disabled>Preferred Gender</option>
+              <option value="Anyone welcome">Anyone welcome</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
-              <option value="Couple Only">Couple only</option>
+              <option v-if="newList.space_for!=='Space sharing'" value="Couple Only">Couple only</option>
             </select>
           </div>
 
@@ -132,6 +133,7 @@
                   { key: 'apartment', value: 'Apartment' },
                   { key: 'rent', value: 'Rent' },
                   { key: 'cohab', value: 'Cohab' },
+                  { key: 'space shareing', value: 'Space sharing' },
                   { key: 'self-contain', value: 'Self contained' },
                   { key: '1-bedroom-flat', value: '1 Bedroom flat' },
                   { key: '2-bedroom-flat', value: '2 Bedroom flat' },
@@ -141,7 +143,7 @@
           </div>
          
           <div class="form-group" v-if="newList.space_type==='apartment'">
-            <label for>Bedroom Type</label>
+            <label for>Bathroom Type</label>
               <select 
             v-model="newList.bedroom_type"
             class="form-control" name="" id="bedroom_type" >
@@ -152,6 +154,25 @@
             </select>
           </div>
 
+           
+          <div class="form-group" v-if="newList.space_type==='apartment' && !otherMode">
+            <label for>Property Type</label>
+              <select 
+            v-model="newList.property_type"
+            class="form-control" name="" id="bedroom_type" @change="(val)=>checkOtherMode(val)">
+              <option value="" selected disabled>Property type</option>
+              <option value="1 Bedroom">1 Bedroom</option>
+              <option value="2 Bedroom">2 Bedroom</option>
+              <option value="3 Bedroom">3 Bedroom</option>
+              <option value="Self-Contained">Self contained</option>
+              <option value="others">Others---please specify</option>
+
+            </select>
+          </div>
+          <div class="form-group" v-show="otherMode">
+            <label for>Property type</label>
+            <input v-model="property_other"  v-on:blur="changeType" class="form-control" placeholder="Please specify property type" />
+            </div>
           <div class="form-group">
             <label for>About Property</label>
             <small><i class="fa fa-question-circle" aria-hidden="true"></i> Tell us what's "wow" about the property and the area</small>
@@ -165,11 +186,11 @@
             >This field is required</div>
           </div>
           
-          <div class="form-group" v-if="newList.space_type==='apartment' && newList.space_for!=='rent'">
+          <div class="form-group" v-if="newList.space_type==='apartment' && newList.space_for!=='Rent'">
             <label for>About Cohabitant</label>
             <small><i class="fa fa-question-circle" aria-hidden="true"></i> Share a bit about yourself (personality) and what you're looking out for in your cohabitant(s) </small>
             <textarea
-              placeholder="About Cohabitation"
+              placeholder="About Cohabitant"
               class="form-control" 
               v-model="newList.about_cohabitation"
             ></textarea>
@@ -226,6 +247,7 @@ export default {
         rent: "",
         duration: "",
         space_address: "",
+        property_type: "",
         space_for: "",
         space_type: "",
         payer_gender: "",
@@ -233,13 +255,15 @@ export default {
         selectedTags:[],
         images:'',
       },
+      otherMode:false,
+      property_other:"",
       // 'http://localhost:8000/api/listing-file-upload',
       //http://proptybox.com.ng/api/listing-file-upload
       dropzoneOptions: {
-          url:'http://localhost:8000/api/listing-file-upload',
+          url:'http://proptybox.com.ng/api/listing-file-upload',
           thumbnailWidth: 100,
           thumbnailHeight: 100,
-          maxFilesize: 0.5,
+          maxFilesize: 20,
           method:'POST',
           addRemoveLinks: true,
           // parallelUploads: 10,
@@ -291,11 +315,13 @@ export default {
         this.loading = true;
         this.$store
           .dispatch("createList", this.newList)
-          .then(() => {
+          .then((res) => {
             this.newList = {};
             this.loading = false;
             this.$snotify.success("List created")
-            this.$router.push({ name: "my.listing" });
+            this.$router.push({ name: "home" });
+            console.log(res)
+            window.eventBus.$emit('showAds',res.data.list)
           })
           .catch(err => {
           this.loading = false;
@@ -326,6 +352,15 @@ export default {
     getState(){
       this.$store.dispatch('getState');
     },
+    checkOtherMode(e){
+      if (e.target.value=='others') {
+        this.otherMode=true
+      }
+    },
+    changeType(){
+      this.newList.property_type=this.property_other;
+
+    }
   },
   mounted() {
     // let get=this.$ref.get

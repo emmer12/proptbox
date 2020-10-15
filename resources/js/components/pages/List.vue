@@ -26,7 +26,7 @@
       </div>
 
       <div>
-        <div class="sub-header">
+        <!-- <div class="sub-header">
           <span>Budget</span>
         </div>
                <div class="row">
@@ -54,7 +54,7 @@
                     </div>
                   </div>
                   
-                </div>
+                </div> -->
       </div>
     </div>
 
@@ -86,7 +86,9 @@
               <preloader :type="'list'"></preloader>
             </div>
         </div>
-      <infinite-loading v-if="mode==='start'" @infinite="infiniteHandler"></infinite-loading>
+      <infinite-loading v-if="mode==='start'" @infinite="infiniteHandler">
+        <div slot="no-more"></div>
+      </infinite-loading>
     </div>
   </div>
 </template>
@@ -207,7 +209,7 @@ export default {
       let el=document.getElementById('s-con').classList.add('focus')
    },
    blurSearch(){
-      let el=document.getElementById('s-con').classList.remove('focus')
+      this.searchL()
    },
    toggleFilter(){
      this.tFilter=!this.tFilter

@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use App\Notifications\ResetPasswordNotification;
 use App\Notifications\OTPNotification;
+use Illuminate\Support\Facades\Cache;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -39,6 +40,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'reveal_contact'=>'boolean'
     ];
 
 
@@ -74,16 +76,22 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Social::class);
     }
 
+    public function generateOTP()
+    {
+       $OTP=rand(100000,999999);
+       Cache::put('OTP', $OTP, now()->addDay());
 
+       return $OTP; 
+    }
     public function otpVerify()
     {
-        $this->notify(new OTPNotification);
+       return $this->notify(new OTPNotification($this->generateOTP()));
         
     }
 
     public function routeNotificationForKarix()
     {
-        return $this->phone;
+        return $this->phoneNo;
     }
 
 

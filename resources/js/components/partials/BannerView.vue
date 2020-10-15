@@ -16,8 +16,8 @@
           </div>
         </div>
 
-        <div class="action" v-if="user.id==loggedInUser.id">
-          <div class="comment" style="cursor:pointer" >
+        <div class="action" v-if="loggedInUser && user.id==loggedInUser.id">
+          <div class="comment" style="cursor:pointer" v-if="!loading"  @click="openChat">
                          <svg width="27" height="29" viewBox="0 0 51 52" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M16.3353 16.4267L33.998 16.1492C35.0432 16.1328 35.9037 16.9666 35.9201 18.0118C35.9365 19.0571 35.1027 19.9175 34.0575 19.9339L16.3948 20.2115C15.3495 20.2279 14.4891 19.394 14.4727 18.3488C14.4563 17.3035 15.2901 16.4431 16.3353 16.4267Z" fill="#0D50BD"/>
                             <path d="M16.4545 23.9965L34.1171 23.719C35.1624 23.7026 36.0228 24.5364 36.0393 25.5817C36.0557 26.6269 35.2219 27.4874 34.1766 27.5038L16.5139 27.7813C15.4687 27.7977 14.6082 26.9639 14.5918 25.9186C14.5754 24.8734 15.4092 24.0129 16.4545 23.9965Z" fill="#0D50BD"/>
@@ -26,14 +26,14 @@
                         </svg>
                      </div>
           <router-link
-            :to="{name:'dashboard'}"
+            :to="{name:'settings'}"
             tag="a"
           >
             <i class="fa fa-cog" aria-hidden="true"></i>
           </router-link>
         </div>
 
-      <div class="verify-con" v-if="user.id==loggedInUser.id">
+      <div class="verify-con" v-if="loggedInUser && user.id==loggedInUser.id">
                 <h4>Verify Account</h4>
                 <div class="verify">
                   <div class="v-icon" @click="verify('email')">
@@ -58,12 +58,92 @@
 <script>
 import { mapGetters } from "vuex";
 export default {
-  props: ["from",'user'],
-  methods: {},
+  props: ['user'],
+  data() {
+    return {
+      availableChat:null,
+      startChat:false,
+      msg:"",
+      loading:'',
+      notFound:"",
+
+    }
+  },
+  methods: {
+     createChat(){
+        let data={}
+        data.to=this.$route.params.id
+        data.on='this.list.id'
+        data.msg=this.msg
+        this.$store.dispatch('createChat',data).then(()=>{
+        this.loading=false
+        this.msg=''
+        this.$refs.ccc.click()
+        this.$router.push({ name: "chats" });
+
+      }).catch(()=>{
+          this.loading=false;
+          this.msg='';
+          this.$snotify.error("Opps, something went wrong")
+
+      })
+    },
+      openChat(){
+          if (this.loggedIn) {
+            if (this.loggedInUser.id==(this.$route.params.id || this.user.id)) {
+               this.$router.push({ name: "chats" });
+            }else{
+                if (this.availableChat) {
+                  this.$store.dispatch('setChat',this.availableChat.id);
+                  this.$router.push({ name: "chats" });
+              }else{
+                  this.startChat=true;
+                  this.$refs.ccs.click()
+              }  
+            }
+          }else{
+              this.$snotify.info("Sign up to start chat with"+this.user.fullname, {
+              timeout: 6000,
+              showProgressBar: true,
+              pauseOnHover: true,
+               closeOnClick: false,
+                buttons: [
+                    {text: 'Sign up', action: () =>this.$router.push('/signup'), bold: true}]
+            });
+          }
+      },
+      ckeckChat(){
+          let data={}
+          data.to=this.$route.params.id
+          data.on='user'
+          this.loading=true;
+          this.$store.dispatch('checkChat',data).then((res)=>{
+          this.loading=false
+          if (!res.data.chats) {
+              this.availableChat=null;
+          }else{
+              this.availableChat=res.data.chats
+          }
+        })
+      },
+      closeChat(){
+          this.openChat=false
+      }
+  },
+  created() {
+    window.eventBus.$on('closeChat',this.closeChat);
+  },
+  mounted() {
+     this.ckeckChat()
+  },
   computed: {
     loggedInUser(){
       return this.$store.getters.user
-    }
+    },
+    loggedIn(){
+      return this.$store.getters.loggedIn
+    },
+
   }
 };
 </script>

@@ -44,7 +44,8 @@
         <div class="form-group">
           <label for="phone" class="col-sm-1-12 col-form-label">Phone Number <span>*</span></label>
           <div class="col-sm-1-12">
-            <input
+            <vue-tel-input  v-model.trim="$v.newUser.phone.$model" :enabledFlags="false" :required="true" :onlyCountries="['NG']"></vue-tel-input>
+            <!-- <input
               type="number"
               :class="{'is-invalid':$v.newUser.phone.$error}"
               class="form-control"
@@ -52,11 +53,12 @@
               v-model.trim="$v.newUser.phone.$model"
               id="phone"
               placeholder="phone"
-            />
+            />-->
             <div
               class="invalid-feedback"
               v-if="!$v.newUser.phone.required"
-            >This field is required</div>
+            >This field is required</div> 
+  
           </div>
         </div>
         <!-- <div class="form-group">
@@ -240,7 +242,7 @@ export default {
         .then(() => {
           this.newUser = {};
           this.loading = false;       
-            this.$router.push({ name: "complete.setup" });
+            this.$router.push({ name: "email.verify" });
         })
         .catch(err => {
           this.loading = false;

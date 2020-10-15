@@ -194,8 +194,18 @@ return Api.get('/check-chat',{
 
 
 const markChat=()=>{
-return Api.get('/mark-chat');
+   return Api.get('/mark-chat');
 }
+
+const verifyOtp=(data)=>{
+   return Api.post('verify-otp',data);
+}
+
+const sendOtp=()=>{
+   return Api.post('/send-otp');
+}
+
+
 
 // M 100 350 Q 0 250 100 150 L 250 100 Q 450 50 500 150 Q 550 350 450 450 Q 400 500 250 400 Z
 export default {
@@ -231,6 +241,8 @@ export default {
     filterReqRange,
     viewList,
     verifyId,
+    sendOtp,
+    verifyOtp,
     uploadVFile,
     getUserById,
     sendChat,

@@ -1,8 +1,10 @@
 <template>
   <div class="container" v-if="!notFound">
-     <banner-view v-if="profile" :from="'list'" :user="profile"></banner-view>
-      <div v-else>
+    <div v-if="loading">
          <preloader :type="'pro'"></preloader>
+    </div>
+      <div v-else>
+           <banner-view  :user="profile"></banner-view>
       </div>
     <div class="listing">
         <div class="header">
@@ -55,14 +57,25 @@ export default {
     },
     data() {
         return {
-            notFound:''
+            notFound:false,
+            loading:false
+        }
+    },
+    methods: {
+        getProfile(){
+            this.loading=true;
+              this.$store.dispatch('getUserById',{id:this.$route.params.id}).then(()=>{
+               this.loading=false   
+
+              }).catch((res)=>{
+               this.loading=false   
+               this.notFound=res.response.data.message          
+              })  
         }
     },
     created () {
       window.scrollTo(0,0)
-      this.$store.dispatch('getUserById',{id:this.$route.params.id}).catch((res)=>{
-          this.notFound=res.response.data.message          
-      })  
+      this.getProfile()
     },
 
     computed: {

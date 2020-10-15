@@ -57,6 +57,7 @@ class RequestController extends Controller
         $requests->space_location=$request->input('space_location');
         $requests->space_type=$request->input('space_type');
         $requests->about_property=$request->input('about_property');
+        $requests->about_cohabitation=$request->input('about_cohabitation');
         $requests->user_id=Auth::user()->id;
         $requests->save();
 

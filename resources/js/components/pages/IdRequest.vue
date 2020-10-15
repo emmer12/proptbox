@@ -205,7 +205,7 @@ export default {
               showProgressBar: true,
               pauseOnHover: true
             });
-            this.$router.push({ name: "dashboard" });
+            this.$router.push({ name: "account-set" });
           })
           .catch(err => {
             this.loading = false;

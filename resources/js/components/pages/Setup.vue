@@ -36,9 +36,7 @@
               <label for="location">Location</label>
               <select class="custom-select"  :class="{'is-invalid':$v.newUser.location.$error}" id="location" v-model.trim="$v.newUser.location.$model">
                 <option selected value="" disabled>Select your Location</option>
-                <option value="Lagos">Lagos</option>
-                <option value="Ondo">Ondo</option>
-                <option value="Oyo">Oyo</option>
+                <option :value="state.name" v-for="(state, index) in states" :key="index">{{state.name}}</option>
               </select>
             </div>
             <div class="invalid-feedback" v-if="!$v.newUser.location.required">This field is required</div>
@@ -158,7 +156,21 @@ export default {
             this.serverErrors = err.response ? err.response.data.msg : "invalid cridential"
         });
       }
-    }
+    },
+
+     getState(){
+      this.$store.dispatch('getState');
+    },
+  },
+
+  mounted () {
+    this.getState()
+  },
+
+  computed: {
+     states(){
+       return this.$store.getters.states;
+     }
   }
 };
 </script>

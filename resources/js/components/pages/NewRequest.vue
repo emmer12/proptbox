@@ -55,15 +55,14 @@
               placeholder="Space type"
             >
               <option value selected disabled>Space For</option>
-              <option value="rent">Rent</option>
-              <option value="shear">Sheare</option>
+              <option value="Rent">Rent</option>
+              <option value="Space sharing" v-if="newList.space_type==='apartment'">Space sharing</option>
             </select>
             <div
               class="invalid-feedback"
               v-if="!$v.newList.space_for.required"
             >This field is required</div>
           </div>
-
           <div class="form-group">
             <div class="col-sm-1-12">
               <div class="form-group">
@@ -119,6 +118,17 @@
               </div>
             </div>
           </div>
+
+           <div class="form-group" v-if="newList.space_type==='apartment' && newList.space_for!=='Rent'">
+            <label for>About Cohabitant</label>
+            <small><i class="fa fa-question-circle" aria-hidden="true"></i> Share a bit about yourself (personality) and what you're looking out for in your cohabitant(s) </small>
+            <textarea
+              placeholder="About Cohabitant"
+              class="form-control" 
+              v-model="newList.about_cohabitation"
+            ></textarea>
+          </div>
+
           <div class="form-group">
             <label for>About Property</label>
             <textarea
@@ -164,6 +174,7 @@ export default {
         space_for: "",
         space_type: "",
         space_location: "",
+        about_cohabitation:"",
         selectedTags: []
       },
       loading: false,

@@ -56,13 +56,15 @@
                 <div v-if="loggedIn" class="avatar" @click="openDrop=!openDrop">
                   <img v-if="user" :src="'/uploads/profile-images/'+user.profile_pic_filename"  />
                   <i class="fa fa-caret-down" aria-hidden="true"></i>
-                  <div class="dropdown" v-show="openDrop">
+                    <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+                     <div class="dropdown" v-show="openDrop">
                     <ul>
-                      <router-link tag="li" :to="{name:'dashboard'}">Account Settings</router-link>
+                      <router-link tag="li" :to="{name:'settings'}">Settings</router-link>
                       <router-link tag="li" :to="{name:'logout'}">Logout</router-link>
                     </ul>
                   </div>
-                </div>
+                    </transition>
+                </div>   
                 <div v-else class="log-sign">
                   <router-link tag="a" :to="{name:'access.signup'}">Sign up</router-link>
                   <router-link tag="a" class="btn btn-primary" :to="{name:'access.signin'}">Sign in</router-link>
@@ -288,27 +290,33 @@ export default {
   & .avatar {
     cursor: pointer;
     margin-left: 10px;
+      transition:0.2s;
     & .dropdown {
       background: #fff;
       line-height: 20px;
       color: #444;
-      z-index: 999;
-      border-radius: 3px;
-      padding: 10px;
+      z-index: 9999;
+      border-radius: 12px;
+      /* padding: 10px; */
+      box-sizing:border-box;
       width: 200px;
       position: absolute;
+      right: 0px;
       ul {
         margin: 0px;
         padding: 0px;
 
         & li {
           list-style: none;
-          padding: 10px;
-          border-bottom: 1px solid #ccc;
+           padding: 10px;
+           display: block;
           cursor: pointer;
+          transition:0.2s;
 
           &:hover {
             background: #eef4ff;
+            border:2px solid #3490dc;
+            border-radius:5px;
           }
         }
       }

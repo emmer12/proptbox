@@ -4,15 +4,15 @@
           <i class="fa fa-times" aria-hidden="true"></i>
       </span>
       <div class="header">
-          <h4>Proptbox</h4>
+          <img src="/images/logo.svg" />
       </div>
 
       <div class="">
           <ul>
-              <router-link :class="{active:$route.name=='dashboard'}" tag="li" :to="{name:'dashboard'}">My Account</router-link>
-              <router-link :class="{active:$route.name=='my.listing'}" tag="li" :to="{name:'my.listing'}">Listing</router-link>
-              <router-link :class="{active:$route.name=='my.request'}" tag="li" :to="{name:'my.request'}">Request</router-link>
-              <router-link :class="{active:$route.name=='support'}" tag="li" to="/">Support </router-link>
+              <router-link :class="{active:$route.name=='dashboard'}" tag="li" :to="{name:'dashboard'}">Profile</router-link>
+              <router-link :class="{active:$route.name=='list'}" tag="li" :to="{name:'list'}">Listings</router-link>
+              <router-link :class="{active:$route.name=='request'}" tag="li" :to="{name:'request'}">Requests</router-link>
+              <!-- <router-link :class="{active:$route.name=='support'}" tag="li" to="/">Support </router-link> -->
           </ul>
       </div>
 

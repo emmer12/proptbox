@@ -4,7 +4,9 @@ import Vuelidate from 'vuelidate'
 import Snotify,{ SnotifyPosition} from 'vue-snotify'
 import Vue from 'vue'
 import VueAgile from 'vue-agile'
-import moment from 'moment' 
+import moment from 'moment'
+import VueTelInput from 'vue-tel-input'
+ 
 require('./bootstrap');
 require('@voerro/vue-tagsinput/dist/style.css')
 
@@ -23,6 +25,7 @@ Vue.component('tags-input', VoerroTagsInput);
 Vue.use(VueRouter);
 Vue.use(Vuelidate)
 Vue.use(VueAgile)
+Vue.use(VueTelInput) 
 
 
 import InfiniteLoading from 'vue-infinite-loading';

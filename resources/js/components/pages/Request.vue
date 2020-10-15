@@ -29,7 +29,7 @@
       </div>
 
       <div>
-        <div class="sub-header">
+        <!-- <div class="sub-header">
           <span>Busget</span>
         </div>
 
@@ -58,7 +58,7 @@
                     </div>
                   </div>
                   
-                </div>
+                </div> -->
       </div>
     </div>
 
@@ -91,7 +91,9 @@
         </div>
       </div>
 
-      <infinite-loading v-if="mode==='start'" @infinite="infiniteHandler"></infinite-loading>
+      <infinite-loading v-if="mode==='start'" @infinite="infiniteHandler">
+        <div slot="no-more"></div>
+      </infinite-loading>
     </div>
   </div>
 </template>
@@ -183,7 +185,7 @@ export default {
       let el=document.getElementById('s-con').classList.add('focus')
    },
    blurSearch(){
-      let el=document.getElementById('s-con').classList.remove('focus')
+      this.searchR()
    },
     toggleFilter(){
      this.tFilter=!this.tFilter

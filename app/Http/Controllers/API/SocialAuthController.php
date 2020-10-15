@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use App\User;
 use App\Social as SocialAccount;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 
@@ -47,7 +48,8 @@ class SocialAuthController extends Controller
             $appUser = User::create([
                 'fullname' => $user->name,
                 'password' => Str::random(7),
-                'email' => $email                
+                'email' => $email,
+                'email_verified_at'=>Carbon::now()                
             ]);
 
             $socialAccount = SocialAccount::create([

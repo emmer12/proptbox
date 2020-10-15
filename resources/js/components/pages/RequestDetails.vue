@@ -54,6 +54,13 @@
                      <div>&#8358; {{request.min_budget + '-' + request.max_budget}}</div>
                  </div>
 
+                 <hr>
+                  <div class="des">
+                     <div v-if="request.space_type!=='apartment'">
+                         <strong>About Cohabitant</strong>
+                     </div>
+                     <p>{{ request.about_cohabitation }}</p>
+                 </div>
 
                  <hr>
 
@@ -157,11 +164,12 @@ export default {
       })
     },
       ckeckChat(){
-          let data={}
-          data.to= this.request.user.id
-          data.on=this.request.id+'request'
+           if (this.loggedIn) {
+              let data={}
+          data.to= this.list.user.id
+          data.on=this.list.id
          
-             this.loading=true;
+              this.loading=true;
              this.$store.dispatch('checkChat',data).then((res)=>{
               this.loading=false
               if (!res.data.chats) {
@@ -170,6 +178,9 @@ export default {
                   this.availableChat=res.data.chats
               }
           })
+          }else{
+              this.availableChat=null
+          }
       },
        openChat(){
           if (this.loggedIn) {

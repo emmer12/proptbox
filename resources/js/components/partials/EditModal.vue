@@ -32,8 +32,9 @@
             v-model="list.space_for"
             class="form-control" name="" id="space_for" placeholder="Space type">
               <option :value="list.space_for" selected disabled>{{list.space_for}}</option>
-              <option value="rent">Rent</option>
-              <option value="shear" v-if="list.space_type==='apartment'">Shear</option>
+              <option value="Rent">Rent</option>
+              <option value="Space sharing" v-if="list.space_type==='apartment'">Space sharing</option>
+
             </select>
           </div>
 
@@ -43,9 +44,8 @@
               <label for="location">Location</label>
               <select class="form-control" id="location" v-model="list.space_location">
                 <option selected :value="list.space_location" disabled>{{list.space_location}}</option>
-                <option value="Lagos">Lagos</option>
-                <option value="Ondo">Ondo</option>
-                <option value="Oyo">Oyo</option>
+                <option :value="state.name" v-for="(state, index) in states" :key="index">{{state.name}}</option>
+
               </select>
             </div>
           </div>
@@ -88,26 +88,44 @@
             />
         
           </div>
-           <div class="form-group" v-if="list.space_type==='apartment'">
-            <label for="space_type">Payer Type</label>
+          <div class="form-group" v-if="list.space_type==='apartment'">
+            <label for="space_type">Preferred Gender</label>
             <select 
             v-model="list.payer_gender"
             class="form-control" name="" id="space_type" placeholder="Space type">
-              <option value="" selected disabled>Payer Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Femle</option>
-              <option value="others">Others</option>
+              <option value="" selected disabled>Preferred Gender</option>
+              <option value="Anyone welcome">Anyone welcome</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option v-if="newlist.space_for!=='Space sharing'" value="Couple Only">Couple only</option>
             </select>
           </div>
-         
-          <div class="form-group" v-if="list.space_type==='apartment'">
-            <label for>Bedroom Type</label>
-            <input
-              placeholder="E.g, Self contain,Three bed room flat"
-              class="form-control" 
-              v-model="list.bedroom_type"
-            />
+
+            <div class="form-group" v-if="list.space_type==='apartment'">
+            <label for>Bathroom Type</label>
+              <select 
+            v-model="list.bedroom_type"
+            class="form-control" name="" id="bedroom_type" >
+              <option value="" selected disabled>Bedroom type</option>
+              <option value="Shared bathroom">Shared bathroom</option>
+              <option value="Own bathroom ">Own bathroom</option>
+              <option value="Ensuite">Ensuite</option>
+            </select>
           </div>
+
+          <div class="form-group" v-if="list.space_type==='apartment'">
+            <label for>Property Type</label>
+              <select 
+            v-model="list.property_type"
+            class="form-control" name="" id="bedroom_type" >
+              <option value="" selected disabled>Property type</option>
+              <option value="1 Bedroom">1 Bedroom</option>
+              <option value="2 Bedroom">2 Bedroom</option>
+              <option value="3 Bedroom">3 Bedroom</option>
+              <option value="Self-Contained">Self contained</option>
+            </select>
+          </div>
+
 
           <div class="form-group">
             <label for>About Property</label>
@@ -116,7 +134,7 @@
             v-model="list.about_property"></textarea>
           </div>
           
-          <div class="form-group" v-if="list.space_type==='apartment' && list.space_for!=='rent'">
+          <div class="form-group" v-if="list.space_type==='apartment' && list.space_for!=='Rent'">
             <label for>About Cohabitation</label>
             <textarea
               placeholder="About Cohabitation"
@@ -177,7 +195,7 @@ export default {
           url:'http://proptybox.com.ng/api/listing-file-upload',
           thumbnailWidth: 100,
           thumbnailHeight: 100,
-          maxFilesize: 0.5,
+          maxFilesize: 20,
           method:'POST',
           addRemoveLinks: true,
           // parallelUploads: 10,
@@ -230,7 +248,13 @@ export default {
     },
     getListId(){
           this.$store.dispatch('getListId',this.id)
-      }
+      },
+       getState(){
+      this.$store.dispatch('getState');
+    },
+     getState(){
+      this.$store.dispatch('getState');
+    },
   },
   created () {
      $('html,body').animate({scrollTop:0},'600','swing');
@@ -248,13 +272,15 @@ export default {
     let timeline = new TimelineLite();
     timeline.from(".c-list-con", { y: 50, opacity: 0 });
     timeline.from(".form-h", { x: -20, opacity: 0 });
+    this.getState();
   },
 
   computed: {
     
     ...mapGetters([
       'loggedIn',
-      "list"
+      "list",
+      "states"
     ])
     
   

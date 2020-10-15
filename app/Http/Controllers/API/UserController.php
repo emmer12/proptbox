@@ -9,6 +9,8 @@ use App\User;
 use App\Http\Resources\User as UserResource;
 use App\Http\Resources\ChatsResouces;
 use App\Notifications\chatNotification;
+use App\Notifications\OTPNotification;
+use Illuminate\Support\Facades\Cache;
 use Auth;
 use Image;
 use App\Chat;
@@ -253,7 +255,7 @@ class UserController extends Controller
 
     public function checkChat(Request $request)
     {
-        $chats=Chat::where('on',$request->query('on'))->where('to',$request->query('to'))->where('from',Auth::user()->id)->first();
+        $chats=Chat::where('to',$request->query('to'))->where('from',Auth::user()->id)->first();
         return response()->json(['success'=>true,'chats'=>$chats],200);
     }
 
@@ -323,8 +325,27 @@ class UserController extends Controller
     }
 
    
-    public function destroy($id)
+    public function otpSend()
     {
-        //
+        
+        Auth::user()->otpVerify();
+
+        return response()->json(['success'=>true,'saved'=>Cache::get('OTP')],200);
+
+    
     }
+    public function verifyOTP(Request $request)
+    {
+        $otp=$request->input('otp');
+        if (Cache::get('OTP') == $otp) {
+          Auth::user()->update([
+              'phone_verified_at'=>now()
+          ]);
+          Cache::delete('OTP');
+          return response()->json(['success'=>true,'saved'=>Cache::get('OTP')],200);
+        }else{
+            return response()->json(['success'=>false,'msg'=>"Invalid or wrong OTP {$otp}"],400); 
+        }
+    }
+  
 }

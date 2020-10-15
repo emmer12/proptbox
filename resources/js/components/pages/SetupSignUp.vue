@@ -4,7 +4,6 @@
         <div class="logo">
             <img src="/images/logo.svg" />
         </div>
-
         <div style="border-radius:50%">
           <img src="/images/user.png" height="100px" width="100px" style="border-radius:50%" />
         </div>
@@ -115,7 +114,7 @@ export default {
         .then(() => {
           this.newUser = {};
           this.loading = false;
-          this.$router.push({ name: "dashboard" });
+          this.$router.push({ name: "home" });
         })
         .catch(err => {
           this.loading = false;

@@ -43,7 +43,7 @@ class AuthController extends Controller
         $user->email = $request->input('email');
         $user->password = Hash::make($request->input('password'));
         $user->save();
-        // $user->sendEmailVerificationNotification();
+        $user->sendEmailVerificationNotification();
         $token = $user->createToken('proptbox-v1')->accessToken;
 
 
@@ -87,22 +87,28 @@ class AuthController extends Controller
         if (!hash_equals((string) $request->hash, sha1($user->getEmailForVerification()))) {
             throw new AuthorizationException;
         }
+        $token = $user->createToken('proptbox-v1')->accessToken;
 
         if ($user->hasVerifiedEmail()) {
             return response()->json([
                 "msg" => "User already verified",
-                "success" => false
-            ]);
+                "success" => false,
+                "access_token"=>$token
+            ],200);
         }
 
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
         }
 
+
+
+
         return response()->json([
             "msg" => "Email Verify successfully",
-            "success" => true
-        ]);
+            "success" => true,
+            "access_token"=>$token
+        ],200);
     }
 
 
@@ -133,9 +139,9 @@ class AuthController extends Controller
         if (!empty($result->error)) {
             return response()->json(['msg' => "Invalid cridential"], 400);
         }
-        // else if(!$user) {
-        //     return response()->json(['msg' => "Email not verified"], 400);
-        // }
+        else if(!$user) {
+            return response()->json(['msg' => "Email not verified"], 400);
+        }
         else{
             return response()->json([
                 'data' => $result

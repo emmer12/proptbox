@@ -5,9 +5,9 @@
             <div class="top-section">
               <router-link :to="{name:'profile',params:{id:request.user.id}}"><img :src="'/uploads/profile-images/'+request.user.profile_pic_filename" width="100%" /></router-link>
               <div class="details">
+                <div class="location"><i class="fa fa-map-marker" aria-hidden="true"></i> {{request.space_location }}</div>
                 <h4>{{request.user.fullname}}</h4>
-                <span>{{request.user.age}} yrs</span> |
-                <span>Female</span>
+                <span>{{request.user.age}} yrs</span> | <span>{{ request.user.gender}}</span>
                 <p>looking for an {{ request.space_type}}</p>
               </div>
             </div>
@@ -38,6 +38,15 @@ export default {
   margin-bottom: 10px;
   // clip-path:circle(300px at 0px 0px);
 
+  .location{
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    padding: 10px;
+    font-weight: 600;
+    color: #222;
+  }
+
   & .top-section {
     display: flex;
     border-bottom: 1px solid #ddd;
@@ -67,6 +76,7 @@ export default {
     & .c-t-b {
       display: flex;
       justify-content: flex-end;
+      white-space: nowrap;
 
       & strong {
         margin-right: 10px;
