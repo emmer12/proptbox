@@ -231,7 +231,7 @@ export default {
       },
       viewList(){
           let viewed=localStorage.getItem('view-'+this.$route.params.id);
-          if (viewed) {
+          if (viewed==1) {
                 return
               }else{
                   this.$store.dispatch('viewList',this.$route.params.id).then(()=>{

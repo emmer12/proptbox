@@ -369,10 +369,11 @@ export default {
             })
         })
     },
-    verifyOtp({commit},data) {
+    verifyOtp({dispatch},data) {
         return new Promise((resolve, reject) => {
             Api.verifyOtp(data).then(res => {
-                resolve(res,commit)
+                dispatch("getUser");
+                resolve(res)
             }).catch(err => {
                 reject(err)
             })

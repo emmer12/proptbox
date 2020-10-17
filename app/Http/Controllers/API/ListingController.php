@@ -118,7 +118,7 @@ class ListingController extends Controller
         
         $query=Listing::orderBy('boosted_at','DESC');
 
-        $listing=$query->orderBy('created_at','DESC')->where('space_location',Auth::user()->location)->paginate(10);
+        $listing=$query->orderBy('created_at','DESC')->where('space_location',Auth::user()->location)->orWhere('rating','1')->paginate(10);
        
         return ListingResource::collection($listing);
       

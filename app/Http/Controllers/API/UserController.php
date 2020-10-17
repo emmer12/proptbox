@@ -128,7 +128,7 @@ class UserController extends Controller
     public function uploadFile(Request $request)
     {
         $validate=$request->validate([
-            'file' => 'required|image|mimes:jpg,png,jpeg,svg|max:1048'
+            'file' => 'required|image|mimes:jpg,png,jpeg,svg|max:2048'
         ]);
         // 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'
         if ($request->file()) {
@@ -155,7 +155,7 @@ class UserController extends Controller
     public function uploadVFile(Request $request)
     {
         $validate=$request->validate([
-            'file' => 'required|image|mimes:jpg,png,jpeg,svg|max:1048'
+            'file' => 'required|image|mimes:jpg,png,jpeg,svg|max:2048'
         ]);
         if ($request->file()) {
 
@@ -278,7 +278,7 @@ class UserController extends Controller
           CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
           CURLOPT_CUSTOMREQUEST => "GET",
           CURLOPT_HTTPHEADER => array(
-            "Authorization: Bearer sk_test_f95cf6515fb76187eb141a0777fd476eb987b76e",
+            "Authorization: Bearer sk_live_0001af7b009a202a78532535bbb406f737cbd3f7",
             "Cache-Control: no-cache",
           ),
          ));

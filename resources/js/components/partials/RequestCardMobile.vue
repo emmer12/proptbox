@@ -7,17 +7,19 @@
               
               <div class="details">
                 <div class="location"><i class="fa fa-map-marker" aria-hidden="true"></i> {{request.space_location }}</div>
-                <h4>{{request.user.fullname}}</h4>
+                 <h4 v-if="request.user.fullname.length > 15">{{request.user.fullname.substr(0,15) + '...'}}</h4>
+                <h4 v-else>{{request.user.fullname}}</h4>
                 <span>{{request.user.age}} yrs</span> | <span>{{ request.user.gender}}</span>
                 <p>looking for an {{ request.space_type}}</p>
               </div>
             </div>
             <div class="bottom-section">
-              <p v-if="request.about_property.length>25">{{request.about_property.substr(0,25) + '...' }}</p>
-              <p v-else>{{request.about_property}}</p>
+              <!-- <p v-if="request.about_property.length>25">{{request.about_property.substr(0,25) + '...' }}</p> -->
+              <!-- <p v-else>{{request.about_property}}</p> -->
               <div class="c-t-b">
                 <strong>Budget</strong>
-                <span>&#8358;{{request.min_budget + '-' + request.max_budget}}</span>
+                <span v-if=" request.max_budget.length > 4">&#8358;{{request.min_budget + '-' + request.max_budget.substr(0,4) + '..'}}</span>
+                <span v-else>&#8358;{{request.min_budget + '-' + request.max_budget}}</span>
               </div>
             </div>
           </router-link>
@@ -37,6 +39,7 @@ export default {
   background: #f4f4f4;
   padding: 15px;
   margin: 10px;
+  padding-top: 37px;
   // clip-path:circle(300px at 0px 0px);
   .location{
     position: absolute;
@@ -75,7 +78,7 @@ export default {
     & .c-t-b {
       display: flex;
       justify-content: flex-end;
-      white-space: nowrap;
+      // white-space: nowrap;
 
       & strong {
         margin-right: 10px;

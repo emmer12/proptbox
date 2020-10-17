@@ -66,8 +66,8 @@
                     </transition>
                 </div>   
                 <div v-else class="log-sign">
-                  <router-link tag="a" :to="{name:'access.signup'}">Sign up</router-link>
-                  <router-link tag="a" class="btn btn-primary" :to="{name:'access.signin'}">Sign in</router-link>
+                  <router-link tag="a"  :to="{name:'access.signin'}">Sign in</router-link>
+                  <router-link tag="a" :to="{name:'access.signup'}" class="btn  btn-outline-primary">Sign up</router-link>
                 </div>
               </div>
             </div>
@@ -95,9 +95,6 @@
         </div>
       </div>
     </div>
-
-    <div v-show="tReveal" style="margin-top:100px">Nav reveal test</div>
-  
 
     <!-- Drawer View -->
     <transition v-if="loggedIn"

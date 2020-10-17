@@ -4,7 +4,7 @@ const mode = 'production'
 // 'http://proptybox.com.ng/api' 
 // 
 const api = axios.create({
-  baseURL:'http://127.0.0.1:8000/api'
+  baseURL:'https://proptybox.com.ng/api'
 });
 
 

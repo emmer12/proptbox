@@ -9,7 +9,7 @@
 
       <div class="">
           <ul>
-              <router-link :class="{active:$route.name=='dashboard'}" tag="li" :to="{name:'dashboard'}">Profile</router-link>
+              <router-link :class="{active:$route.name=='my.listing'}" tag="li" :to="{name:'my.listing'}">Profile</router-link>
               <router-link :class="{active:$route.name=='list'}" tag="li" :to="{name:'list'}">Listings</router-link>
               <router-link :class="{active:$route.name=='request'}" tag="li" :to="{name:'request'}">Requests</router-link>
               <!-- <router-link :class="{active:$route.name=='support'}" tag="li" to="/">Support </router-link> -->

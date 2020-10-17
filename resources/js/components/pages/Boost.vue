@@ -99,7 +99,7 @@ export default {
       pageNotFound: false,
       amount: "",
       verifying: false,
-      paystackkey: "pk_test_9a79054f46776dddee3854e7f2d75fc3dc341353" //paystack public key
+      paystackkey: "pk_live_a1e33f740e5dab84d89fc3485e0a3e19e4b397c1" //paystack public key
     };
   },
   methods: {

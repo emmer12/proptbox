@@ -90,7 +90,7 @@ const getTags=()=>{
 }
 
 const getState=()=>{
- return axios.get('http://locationsng-api.herokuapp.com/api/v1/states');
+ return axios.get('https://locationsng-api.herokuapp.com/api/v1/states');
 }
 
 const filterTag=(data)=>{

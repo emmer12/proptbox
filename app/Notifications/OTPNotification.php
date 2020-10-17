@@ -18,9 +18,10 @@ class OTPNotification extends Notification
      *
      * @return void
      */
-    public function __construct($OTP)
+    public function __construct($OTP,$phoneNo)
     {
         $this->OTP=$OTP;
+        $this->phoneNo=$phoneNo;
     }
 
     /**
@@ -42,8 +43,9 @@ class OTPNotification extends Notification
      */
     public function toKarix($notifiable)
     {
+        $phone=substr($this->phoneNo,1);
         return KarixMessage::create()
-                ->to('+2348128955882')
+                ->to("+234{$phone}")
                 ->from('+2349068647442')
                 ->content("Use OTP {$this->OTP} to verify your phone number");
     }

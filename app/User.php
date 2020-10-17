@@ -85,7 +85,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
     public function otpVerify()
     {
-       return $this->notify(new OTPNotification($this->generateOTP()));
+       return $this->notify(new OTPNotification($this->generateOTP(),$this->phoneNo));
         
     }
 

@@ -90,7 +90,7 @@ export default {
           })
           .catch(err => {
             this.loading = false;
-            this.serverError=err.response.data.response == 'passwords.user' ? `user with email Address ${this.newUser.email} not found` : "err.response.data.message";
+            this.serverError=err.response.data.response == 'passwords.user' ? `user with email Address ${this.newUser.email} not found` : err.response.data.message;
             
            this.$snotify.error("Opps, something went wrong.Please try again")
           });

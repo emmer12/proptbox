@@ -8,7 +8,7 @@
 
     <div class="alert alert-success" role="alert" v-if="success">
         <strong>Email address verified successfully</strong>
-        <p>You will be redirected in few seconds to complete you accoun settings.</p>
+        <p>You will be redirected in few seconds to complete you account settings.</p>
     </div>
 
 

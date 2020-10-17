@@ -1,7 +1,7 @@
 <template>
     <div>
 
-         <nav-view v-show="!['session','access.signup','access.signin','setup','complete.setup','access.forget.password','access.reset.password','chats'].includes($route.name)"></nav-view>
+         <nav-view v-show="!['session','access.signup','verify-email','access.signin','setup','complete.setup','access.forget.password','access.reset.password','chats'].includes($route.name)"></nav-view>
 
               <transition name="fade" enter-active-class="animated fadeIn"  leave-active-class="animated fadeOut" mode="out-in">
                   <router-view></router-view>
@@ -13,15 +13,15 @@
               <!-- <div class="scroll-top" ref="scroll-top" @click="scrollTop">
                   <i class="icon angle double up"></i>
               </div> -->
-              <message v-show="!['chats','access.signup','access.signin','access.reset.password','setup','complete.setup','access.reset.password'].includes($route.name)" v-if="user && !user.verified" :msg="'Your account has not been verified'"></message>
+              <message v-show="!['chats','access.signup','verify-email','access.signin','access.reset.password','setup','complete.setup','access.reset.password'].includes($route.name)" v-if="user && !user.verified" :msg="'Your account has not been verified'"></message>
               <vue-snotify></vue-snotify>
 
         <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-          <ads :list="adsData" v-show="ads" ></ads>
+          <ads :list="adsData" v-if="ads" ></ads>
         </transition>
 
         <edit-modal :id="id" v-if="editMode"></edit-modal> 
-        <footer-nav v-show="!['chats','access.signup','access.signin','access.reset.password','setup','complete.setup','access.reset.password'].includes($route.name)"></footer-nav>
+        <footer-nav v-show="!['chats','access.signup','access.signin','verify-email','access.reset.password','setup','complete.setup','access.reset.password'].includes($route.name)"></footer-nav>
     </div>
 
 

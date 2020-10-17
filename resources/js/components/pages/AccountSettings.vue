@@ -292,6 +292,7 @@ export default {
         .then(() => {
           this.otpLoading = false;
           this.otp=""
+          document.querySelector('.close').click();
           this.$snotify.success("Phone number verified", { 
             timeout: 6000,
               showProgressBar: true,

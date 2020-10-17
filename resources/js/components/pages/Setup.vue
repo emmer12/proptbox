@@ -146,7 +146,7 @@ export default {
         .then(() => {
           this.newUser = {};
           this.loading = false;
-          this.$router.push({ name: "dashboard" });
+          this.$router.push({ name: "home" });
         })
         .catch(err => {
           this.loading = false;

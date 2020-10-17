@@ -44,8 +44,8 @@
         <div class="form-group">
           <label for="phone" class="col-sm-1-12 col-form-label">Phone Number <span>*</span></label>
           <div class="col-sm-1-12">
-            <vue-tel-input  v-model.trim="$v.newUser.phone.$model" :enabledFlags="false" :required="true" :onlyCountries="['NG']"></vue-tel-input>
-            <!-- <input
+            <!-- <vue-tel-input  v-model="newUser.phone" :validCharactersOnly="true" :dropdownOptions="{ disabledDialCode: false, tabindex: 0 }"  :required="true" :onlyCountries="['NG']" :placeholder="'Enter a phone number'"></vue-tel-input> -->
+            <input
               type="number"
               :class="{'is-invalid':$v.newUser.phone.$error}"
               class="form-control"
@@ -53,7 +53,7 @@
               v-model.trim="$v.newUser.phone.$model"
               id="phone"
               placeholder="phone"
-            />-->
+            />
             <div
               class="invalid-feedback"
               v-if="!$v.newUser.phone.required"
@@ -227,6 +227,7 @@ export default {
      getState(){
       this.$store.dispatch('getState');
     },
+    
      register() {
      this.$v.$touch();
       this.$refs.form.classList.remove('shake')
@@ -236,7 +237,7 @@ export default {
          tis.$refs.form.classList.add('shake')
         },1000)
      }else{
-        this.loading = true;
+      this.loading = true;
       this.$store
         .dispatch("registerUser", this.newUser)
         .then(() => {

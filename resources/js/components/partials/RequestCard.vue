@@ -6,7 +6,8 @@
               <router-link :to="{name:'profile',params:{id:request.user.id}}"><img :src="'/uploads/profile-images/'+request.user.profile_pic_filename" width="100%" /></router-link>
               <div class="details">
                 <div class="location"><i class="fa fa-map-marker" aria-hidden="true"></i> {{request.space_location }}</div>
-                <h4>{{request.user.fullname}}</h4>
+                <h4 v-if="request.user.fullname.length> 15">{{request.user.fullname.substr(0,15) + '...'}}</h4>
+                <h4 v-else>{{request.user.fullname}}</h4>
                 <span>{{request.user.age}} yrs</span> | <span>{{ request.user.gender}}</span>
                 <p>looking for an {{ request.space_type}}</p>
               </div>
@@ -36,6 +37,7 @@ export default {
   background: #f4f4f4;
   padding: 15px;
   margin-bottom: 10px;
+  padding-top: 37px;
   // clip-path:circle(300px at 0px 0px);
 
   .location{

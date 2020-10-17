@@ -1,8 +1,8 @@
 <template>
    <div class="home-con">
-       <div class="sidebar d-none d-sm-block d-md-block">
+       <div class="sidebar d-none d-sm-block d-md-block" :class="{added:sFix}">
          <div class="header">
-           <span>Request</span>
+           <span class="text--primary">Requests</span>
            <router-link  :to="{name:'request'}">View all</router-link>
            
          </div>
@@ -118,7 +118,8 @@ export default {
       listing:[],
       loadingReq:true,
       loading:false,
-      search:''
+      search:'',
+      sFix:false,
     }
   },
    methods: {
@@ -157,6 +158,10 @@ export default {
     this.getRequestLimit().then(()=>{
       this.loadingReq=false;
     });
+     let that = this;
+    document.addEventListener("scroll", function() {
+         that.sFix = window.scrollY < 150 ? false : true;
+    });
   },
   mounted () {
   //  this.infiniteHandler()
@@ -174,6 +179,7 @@ export default {
       // padding-bottom:200px;
       &.added{
         top:70px;
+        position:fixed;
       }
       position: absolute;
       width:300px;
