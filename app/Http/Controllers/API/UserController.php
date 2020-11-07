@@ -72,7 +72,8 @@ class UserController extends Controller
     {
         
         $validate=$request->validate([
-           'email' => ['email', 'max:255', 'unique:users,email,'.Auth::user()->id]
+           'email' => ['email', 'max:255', 'unique:users,email,'.Auth::user()->id],
+           'phoneNo'=>['min:11']
 
        ]);
 

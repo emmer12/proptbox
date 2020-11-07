@@ -1,10 +1,11 @@
 import axios from 'axios';
 const mode = 'production'
-// 'http://127.0.0.1:8000/api'
-// 'http://proptybox.com.ng/api' 
+let dev='http://127.0.0.1:8000/api/v1'
+let prod= 'https://proptybox.com.ng/api/v1' 
+let production= 'https://proptybox.com/api/v1' 
 // 
 const api = axios.create({
-  baseURL:'https://proptybox.com.ng/api'
+  baseURL:dev
 });
 
 
@@ -19,3 +20,4 @@ api.interceptors.request.use(function(config){
   
 })
 export default api;
+

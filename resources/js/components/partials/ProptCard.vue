@@ -171,9 +171,13 @@ export default {
      }
    }
    & .img {
-   img{
-     border-radius:5px;
      height: 200px;
+   img{
+     object-fit:cover;
+     border-radius:5px;
+     width:100%;
+     height:100%;
+
    }
 
    .location{

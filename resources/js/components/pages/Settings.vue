@@ -9,6 +9,7 @@
              <router-link :to="{name:'profile-set'}" tag="li">Profile settings</router-link>
              <router-link :to="{name:'about'}" tag="li">About us</router-link>
              <router-link :to="{name:'terms'}" tag="li">Terms and conditon</router-link>
+             <router-link v-if="user.isAdmin" :to="{name:'admin'}" tag="li">Admin Dashboard</router-link>
              <router-link to="/logout" tag="li">Logout</router-link>
          </ul>
      </div>
@@ -28,11 +29,12 @@ data() {
   return {
   }
 },
-methods: {
-},
-created() {
-},
 
+computed: {
+  user(){
+    return this.$store.getters.user
+  }
+}
 }
 </script>
 

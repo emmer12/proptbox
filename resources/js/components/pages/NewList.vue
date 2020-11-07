@@ -225,7 +225,7 @@
 <script>
 import Loading from './../partials/FormLoading';
 import UploadComponent from './../partials/UploadComponent';
-import { TimelineLite } from "gsap/all";
+import { gsap } from "gsap";
 import { required, minLength, email } from "vuelidate/lib/validators";
 import vue2Dropzone from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
@@ -257,10 +257,11 @@ export default {
       },
       otherMode:false,
       property_other:"",
-      // 'http://localhost:8000/api/listing-file-upload',
-      //http://proptybox.com.ng/api/listing-file-upload
+      // 'http://localhost:8000/api/v1/listing-file-upload',
+      //https://proptybox.com.ng/api/v1/listing-file-upload
+      // 'https://proptybox.com/api/v1/listing-file-upload'
       dropzoneOptions: {
-          url:'http://proptybox.com.ng/api/listing-file-upload',
+          url:'https://proptybox.com/api/v1/listing-file-upload',
           thumbnailWidth: 100,
           thumbnailHeight: 100,
           maxFilesize: 20,
@@ -364,9 +365,9 @@ export default {
   },
   mounted() {
     // let get=this.$ref.get
-    let timeline = new TimelineLite();
-    timeline.from(".c-list-con", { y: 50, opacity: 0 });
-    timeline.from(".form-h", { x: -20, opacity: 0 });
+    // let timeline = new TimelineLite();
+    gsap.from(".c-list-con", { y: 50, opacity: 0 });
+    gsap.from(".form-h", { x: -20, opacity: 0 });
   },
   created(){
     this.getState();

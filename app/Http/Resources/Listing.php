@@ -24,6 +24,7 @@ class Listing extends JsonResource
         'about_property'=>$this->about_property,
         'available_from'=>$this->available_from,
         'payer_gender'=>$this->payer_gender,
+        'property_type'=>$this->property_type,
         'bedroom_type'=>$this->bedroom_type,
         'boosted' => $this->boosted,
         'rating'=>$this->rating,

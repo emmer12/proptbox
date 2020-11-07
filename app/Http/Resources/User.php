@@ -37,7 +37,8 @@ class User extends JsonResource
             'updated_at' => $this->updated_at,
             'verified'=> $this->verified,
             'notifications'=> $this->notifications,
-            'reveal_contact'=> $this->reveal_contact
+            'reveal_contact'=> $this->reveal_contact,
+            'isAdmin'=> $this->isAdmin
 
             ];
     }

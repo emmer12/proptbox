@@ -114,11 +114,18 @@
         </div>
       </div>
     </div>
+
+    <footer-b></footer-b>
   </div>
 </template>
 
 <script>
-export default {};
+import FooterB from './../partials/Footer'
+export default {
+  components: {
+    FooterB
+  }
+};
 </script>
 
 

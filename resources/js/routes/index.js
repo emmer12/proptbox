@@ -32,6 +32,11 @@ import TermsPage from '../components/pages/TermsPage';
 import AccountSettings from '../components/pages/AccountSettings';
 import ProfileSettings from '../components/pages/ProfileSettings';
 import Settings from '../components/pages/Settings';
+import Admin from '../components/pages/Admin';
+import AdminRequests from '../components/pages/AdminRequests';
+import AdminListings from '../components/pages/AdminListings';
+import AdminBoosted from '../components/pages/AdminBoosted';
+import AdminUsers from '../components/pages/AdminUsers';
 
 export const routes = [
     {
@@ -39,7 +44,6 @@ export const routes = [
         name: 'home',
         component: HomePage
     },
-
    {
     path: '/session',
     name: 'session',
@@ -119,6 +123,53 @@ export const routes = [
         meta: {
             requiresAuth:true
          }
+    },
+    {
+        path:'/admin/dashboard',
+        name:'admin',
+        component:Admin,
+        meta: {
+            requiresAuth:true,
+            requiresAdmin:true
+         },
+         children:[
+            {
+                path: '',
+                name: 'admin.users',
+                component:AdminUsers,
+                meta: {
+                    requiresAuth:true,
+                    requiresAdmin:true
+                 }
+            },
+            {
+                path: '/admin/listings',
+                name: 'admin.listing',
+                component:AdminListings,
+                meta: {
+                    requiresAuth:true,
+                    requiresAdmin:true
+                 }
+            },
+            {
+                path: '/admin/requests',
+                name: 'admin.request',
+                component:AdminRequests,
+                meta: {
+                    requiresAuth:true,
+                    requiresAdmin:true
+                 }
+            },
+            {
+                path: '/admin/boosted',
+                name: 'admin.boosted',
+                component:AdminBoosted,
+                meta: {
+                    requiresAuth:true,
+                    requiresAdmin:true
+                 }
+            },
+         ]
     },
     {
         path: '/settings/account',

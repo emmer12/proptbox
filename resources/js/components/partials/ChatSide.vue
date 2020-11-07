@@ -25,12 +25,15 @@
              </div>
          </div>
          <div v-else>
-         <div class="chats" :class="{added:activeChat ? activeChat.id===chat.id : false}" v-for="(chat, index) in chats" :key="index" @click="setChat(chat.id)">
-           <img class="img" :src="'/uploads/profile-images/'+((user.id==chat.from.id ) ? chat.to.profile_pic_filename : chat.from.profile_pic_filename)" >
-           <div class="name">
+         <div class="chats" :class="{added:activeChat ? activeChat.id===chat.id : false}" v-for="(chat, index) in chats" :key="index" >
+           <router-link tag="div" :to="{name:'profile',params:{id:(user.id==chat.from.id ) ? chat.to.id : chat.from.id }}">
+            <img class="img" :src="'/uploads/profile-images/'+((user.id==chat.from.id ) ? chat.to.profile_pic_filename : chat.from.profile_pic_filename)" >
+           </router-link>
+           <div class="name" @click="setChat(chat.id)">
                <!-- <span>{{ chat.list.list_type || 'Request'}}</span> -->
                <strong>{{(user.id==chat.from.id ) ? chat.to.fullname : chat.from.fullname }}</strong>
-               <p>{{chat.msg.length ? chat.msg[chat.msg.length-1].msg : "Empty Message"}}</p>
+               <p v-if="chat.msg[chat.msg.length-1].msg.length>40">{{chat.msg.length ? chat.msg[chat.msg.length-1].msg.substr(0,40) + '...'  : "Empty Message"}}</p>
+               <p v-else>{{chat.msg.length ? chat.msg[chat.msg.length-1].msg : "Empty Message"}}</p>
            </div>
          </div>
          </div>

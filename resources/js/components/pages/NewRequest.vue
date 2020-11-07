@@ -159,7 +159,7 @@
 <script>
 import { required, minLength, email } from "vuelidate/lib/validators";
 import Loading from "./../partials/FormLoading";
-import { TimelineLite } from "gsap/all";
+import { gsap } from "gsap";
 export default {
   components: {
     Loading
@@ -214,7 +214,7 @@ export default {
           })
           .catch(err => {
             this.loading = false;
-            this.$snotify.error("Opps, something went wrong");
+            this.$snotify.error(this.$snotify.error(err.response.data.errors ?  Object.values(err.response.data.errors)[0][0] : "Opps, something went wrong please try again"));
             this.serverErrors = Object.values(err.response.data.errors);
             window.scrollTo(0, 0);
           });
@@ -226,9 +226,9 @@ export default {
   },
   mounted() {
     // let get=this.$ref.get
-    let timeline = new TimelineLite();
-    timeline.from(".c-list-con", { y: 50, opacity: 0 });
-    timeline.from(".form-h", { x: -20, opacity: 0 });
+    // let timeline = new TimelineLite();
+    gsap.from(".c-list-con", { y: 50, opacity: 0 });
+    gsap.from(".form-h", { x: -20, opacity: 0 });
 
     this.getState();
   },

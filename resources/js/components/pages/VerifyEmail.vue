@@ -2,8 +2,9 @@
     <div style="padding:20px">
        <div class="email-sent">
            <i class="fa fa-check-circle" aria-hidden="true"></i>
-           <h1> A verificaion link has been sen to your email account</h1>
-           <p>Please click on the link that has just been sent to your email acount to verify your email and coninue the sign up process.</p>
+           <h1> A verificaion link has been sent to your email account</h1>
+           <p>Please click on the link that has just been sent to your email account to verify your email and continue the sign up process.</p>
+           <p>if not recieved check your spam folder</p>
        </div>
     </div>
 </template>

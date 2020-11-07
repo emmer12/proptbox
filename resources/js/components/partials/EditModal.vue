@@ -93,11 +93,11 @@
             <select 
             v-model="list.payer_gender"
             class="form-control" name="" id="space_type" placeholder="Space type">
-              <option value="" selected disabled>Preferred Gender</option>
+              <option :value="list.payer_gender" selected disabled>Preferred Gender</option>
               <option value="Anyone welcome">Anyone welcome</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
-              <option v-if="newlist.space_for!=='Space sharing'" value="Couple Only">Couple only</option>
+              <option v-if="list.space_for!=='Space sharing'" value="Couple Only">Couple only</option>
             </select>
           </div>
 
@@ -106,7 +106,7 @@
               <select 
             v-model="list.bedroom_type"
             class="form-control" name="" id="bedroom_type" >
-              <option value="" selected disabled>Bedroom type</option>
+              <option :value="list.bedroom_type" selected disabled>Bedroom type</option>
               <option value="Shared bathroom">Shared bathroom</option>
               <option value="Own bathroom ">Own bathroom</option>
               <option value="Ensuite">Ensuite</option>
@@ -118,7 +118,7 @@
               <select 
             v-model="list.property_type"
             class="form-control" name="" id="bedroom_type" >
-              <option value="" selected disabled>Property type</option>
+              <option :value="list.property_type" selected disabled>Property type</option>
               <option value="1 Bedroom">1 Bedroom</option>
               <option value="2 Bedroom">2 Bedroom</option>
               <option value="3 Bedroom">3 Bedroom</option>
@@ -189,10 +189,11 @@ export default {
       serverErrors: null,
       menu: false,
       uploadedUp:false,
-      // 'http://localhost:8000/api/listing-file-upload',
-      //http://proptybox.com.ng/api/listing-file-upload
+      // 'http://localhost:8000/api/v1/listing-file-upload',
+      //https://proptybox.com.ng/api/v1/listing-file-upload
+      //https://proptybox.com/api/v1/listing-file-upload
       dropzoneOptions: {
-          url:'http://proptybox.com.ng/api/listing-file-upload',
+          url:'https://proptybox.com/api/v1/listing-file-upload',
           thumbnailWidth: 100,
           thumbnailHeight: 100,
           maxFilesize: 20,

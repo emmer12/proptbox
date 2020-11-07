@@ -33,6 +33,18 @@ const getUser=()=>{
     return Api.get('auth-user');
 }
 
+const getAllUsers=()=>{
+    return Api.get('get-all-users');
+}
+const getAllRequests=()=>{
+    return Api.get('get-all-requests');
+}
+const getAllListings=()=>{
+    return Api.get('get-all-listings');
+}
+const getAllBoosted=()=>{
+    return Api.get('get-all-boosted');
+}
 const getListId=(id)=>{
     return Api.get('get-list-by-id/'+id);
 }
@@ -48,7 +60,12 @@ const createList=(data)=>{
 const deleteList=(data)=>{
     return Api.delete('/delete-listing/'+data)
 }
-
+const deleteUser=(data)=>{
+    return Api.delete('/delete-user/'+data)
+}
+const deleteRequest=(data)=>{
+    return Api.delete('/delete-request/'+data)
+}
 const sendRequest=(data)=>{
     return Api.post('/send-request',data)
 }
@@ -214,7 +231,11 @@ export default {
     loginUser,
     verifyEmail,
     getUser,
+    getAllUsers,
     getListing,
+    getAllListings,
+    getAllRequests,
+    getAllBoosted,
     getListId,
     createList,
     deleteList,
@@ -252,6 +273,8 @@ export default {
     getMessage,
     checkChat,
     markChat,
-    changePass
+    changePass,
+    deleteRequest,
+    deleteUser
 
 }

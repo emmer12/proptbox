@@ -75,14 +75,14 @@ class RequestController extends Controller
     
     public function requestLimit()
     {
-        $requests=Requests::where('space_location',Auth::user()->location)->take(6)->get();;
+        $requests=Requests::take(6)->get();
         return RequestResource::collection($requests); 
     }
 
 
     public function requestByLocation()
     {
-        $requests=Requests::orderBy('created_at','DESC')->where('space_location',Auth::user()->location)->paginate(9);
+        $requests=Requests::orderBy('created_at','DESC')->paginate(20);
         return RequestResource::collection($requests);
     }
 

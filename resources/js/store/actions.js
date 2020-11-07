@@ -153,6 +153,25 @@ export default {
         })
     },
 
+    deleteUser({dispatch},data){
+        return new Promise((resolve, reject) => {
+            Api.deleteUser(data).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+    deleteRequest({dispatch},data){
+        return new Promise((resolve, reject) => {
+            Api.deleteRequest(data).then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    },
     sendRequest({ commit,dispatch}, data) {
         return new Promise((resolve, reject) => {
             Api.sendRequest(data).then(res => {
@@ -202,6 +221,50 @@ export default {
         return new Promise((resolve, reject) => {
             Api.getUser().then(res => {
                 commit('setUser',res.data.data);
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+
+    getAllUsers({ commit }){
+        return new Promise((resolve, reject) => {
+            Api.getAllUsers().then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+    
+    getAllListings({ commit }){
+        return new Promise((resolve, reject) => {
+            Api.getAllListings().then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+    
+    getAllRequests({ commit }){
+        return new Promise((resolve, reject) => {
+            Api.getAllRequests().then(res => {
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+
+            })
+        })
+    },
+    
+    getAllBoosted({ commit }){
+        return new Promise((resolve, reject) => {
+            Api.getAllBoosted().then(res => {
                 resolve(res)
             }).catch(err => {
                 reject(err)
@@ -384,6 +447,7 @@ export default {
         if (getters.loggedIn) {
             return new Promise((resolve)=>{
                     localStorage.removeItem('token')
+                    localStorage.removeItem('user')
                     commit("destroyToken",rootState)
                     resolve(true)
                 })
@@ -581,6 +645,10 @@ export default {
     console.log(data);
     
     },
+
+    board({commit}){
+     commit('setBoard')
+    }
 
 
 }

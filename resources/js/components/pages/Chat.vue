@@ -207,7 +207,7 @@ export default {
         text-align:right;justify-content:flex-end;
 
         .msg{
-        background:#89a1fc;color:#fff;border-top-right-radius:0;border-top-left-radius:5px}.message-container.right .message::before{border-top-color:#89a1fc;border-left-color:#89a1fc;border-right-color:transparent;left:auto;right:-7px;
+        background:#3490dc;color:#fff;border-top-right-radius:0;border-top-left-radius:5px}.message-container.right .message::before{border-top-color:#3490dc;border-left-color:#3490dc;border-right-color:transparent;left:auto;right:-7px;
         }
       }
       .msg{

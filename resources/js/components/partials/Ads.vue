@@ -79,6 +79,11 @@ export default {
       left:50%;
       transform:translate(-50%,-50%);
 
+      img{
+          max-height:255px;
+          object-fit:cover;
+      }
+
       .title{
           h4{
               color:#5b9fdc;

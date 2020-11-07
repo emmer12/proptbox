@@ -1,5 +1,5 @@
 <template>
-  <div class="signup-con ">
+  <div class="signup-con " style="margin:10px">
          <form  v-on:submit.prevent ref="form">
          <div class="form-group">
           <label for="email" class="col-sm-1-12 col-form-label">Email  <span>*</span></label>

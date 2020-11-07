@@ -32,8 +32,8 @@
                  </div>
                  <div class="c-t-a">
                      <div class="verified" v-if="isVerified">
-                         <p style="padding:0px 50px" >Account varified </p>
-                         <svg style="cursor:pointer" width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                         <p style="padding:20px 50px" >Account verified </p>
+                         <svg style="cursor:pointer" width="25" height="25" viewBox="0 0 25 25" fill="" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <rect width="25" height="25" fill="url(#pattern0)"/>
                             <defs>
                             <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
@@ -47,8 +47,8 @@
                          <h4>{{list.space_type | capFirst}}</h4>
                          <p>{{ list.space_address}}</p>
                      </div>
+                     <div class="c-cb">
                      <div>
-                     <div >
                          <button class="btn btn-custom" style="cursor: default;">&#8358;{{list.rent}} </button>
                      </div>
                          <button ref="ccs" type="button" class="btn btn-primary btn-lg d-none" data-toggle="modal" data-target="#modelId">
@@ -383,6 +383,7 @@ export default {
            & .display{
                & img{
                    border-radius:50%;
+
                }
            }
 
@@ -408,6 +409,11 @@ export default {
        & .des-header1{
            & .display{
                border-bottom:8px solid #3490dc;
+
+               img{
+                   object-fit: cover;
+                   
+               }
            }
 
            & .c-t-a{
@@ -419,7 +425,7 @@ export default {
                overflow:hidden;
 
                 & svg{
-                margin-top: -73px;
+                margin-top: 0px;
                 }
                & .verified{
                    position:absolute;
@@ -436,6 +442,11 @@ export default {
                    float:right;
                    margin-left: 100px;
                    padding:0px 10px;
+
+                   svg{
+                   position: relative;
+                   top: -40px;
+                   }
                & i{
                    color: #334499;
                    font-size: 28px;
@@ -490,7 +501,7 @@ export default {
 
 </style>
 
-<style lang="scss" scoped>
+<style lang="scss" >
     
 @media (max-width:460px){
     
@@ -506,6 +517,16 @@ export default {
             margin: 0px;
             padding: 20px 10px;
 
+            .c-cb{
+                margin-top: 10px;
+            }
+            span{
+                  svg{
+                   position: relative;
+                //    top: -30px;
+                   }
+            }
+
            
          }
     & .des-body{
@@ -520,7 +541,7 @@ export default {
 }
 </style>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .agile{
 	&__nav-button{
 		background: transparent;

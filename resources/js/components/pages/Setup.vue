@@ -28,6 +28,7 @@
               placeholder="Phone number"
             />
             <div class="invalid-feedback" v-if="!$v.newUser.phoneNo.required">This field is required</div>
+            <div class="invalid-feedback" v-if="!$v.newUser.minLength.required">Phone number must be at least 11 digit</div>
           </div>
         </div>
         <div class="form-group">
@@ -116,6 +117,7 @@ export default {
       newUser:{
         phoneNo:{
           required,
+          minLength: minLength(11)
         },
         location:{
           required

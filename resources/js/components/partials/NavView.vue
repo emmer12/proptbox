@@ -60,7 +60,9 @@
                      <div class="dropdown" v-show="openDrop">
                     <ul>
                       <router-link tag="li" :to="{name:'settings'}">Settings</router-link>
+                      <router-link v-if="user.isAdmin" :to="{name:'admin'}" tag="li">Admin Dashboard</router-link>
                       <router-link tag="li" :to="{name:'logout'}">Logout</router-link>
+
                     </ul>
                   </div>
                     </transition>
@@ -73,7 +75,7 @@
             </div>
           </div>
         </div>
-        <div class="nav-c nav-bottom" v-show="!['about','terms'].includes($route.name)">
+        <div class="nav-c nav-bottom" v-if="!onBoarding" v-show="!['about','terms'].includes($route.name)">
           <div class="row">
             <div class="col-md-6">
               <div class="left-b" v-if="$route.name==='home'">
@@ -207,7 +209,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["user", "loggedIn"]),
+    ...mapGetters(["user", "loggedIn","onBoarding"]),
 
      notify(){
       if (this.$store.getters.user) {
@@ -260,7 +262,6 @@ export default {
   top: 0;
   z-index: 999;
   position: relative;
-  overflow: hidden;
 }
 .nav-top {
   position: relative;

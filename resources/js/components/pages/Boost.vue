@@ -153,6 +153,7 @@ export default {
   },
 
   mounted() {
+    window.eventBus.$emit('closeAd')
     this.loading = true;
     // this.getUser()
   },

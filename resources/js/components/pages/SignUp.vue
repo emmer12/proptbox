@@ -58,6 +58,10 @@
               class="invalid-feedback"
               v-if="!$v.newUser.phone.required"
             >This field is required</div> 
+                 <div
+              class="invalid-feedback"
+              v-if="!$v.newUser.phone.minLenth"
+            >Phone number must be at least 11 digit</div> 
   
           </div>
         </div>
@@ -209,7 +213,7 @@ export default {
       // username: { required },
       fullname: { required },
       location: { required },
-      phone: { required},
+      phone: { required,minLength: minLength(11)},
       email: { required, email },
       password: {required, minLength: minLength(6) },
       password_confirmation: { required,sameAsPassword:sameAs('password') }

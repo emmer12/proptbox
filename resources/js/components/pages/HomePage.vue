@@ -1,10 +1,13 @@
 <template>
-   <div class="home-con">
+  <div class="home-con">
+   <div class="boarding" v-if="!loggedIn && onBoarding">
+     <on-boarding></on-boarding>
+   </div>  
+   <div v-else class="main">
        <div class="sidebar d-none d-sm-block d-md-block" :class="{added:sFix}">
          <div class="header">
            <span class="text--primary">Requests</span>
            <router-link  :to="{name:'request'}">View all</router-link>
-           
          </div>
            <div class="body">
               <div class="container">
@@ -94,11 +97,13 @@
          </router-link>
        </div>
    </div>
+  </div>
 </template>
 
 <script>
 
 import ProptCard from '../partials/ProptCard'
+import OnBoarding from '../partials/OnBoarding'
 import RequestCardMobile from '../partials/RequestCardMobile'
 import RequestCard from '../partials/RequestCard'
 import { mapActions, mapGetters } from "vuex";
@@ -110,7 +115,8 @@ export default {
     ProptCard,
     RequestCardMobile,
     Preloader,
-    RequestCard
+    RequestCard,
+    OnBoarding
   },
   data () {
     return {
@@ -162,12 +168,17 @@ export default {
     document.addEventListener("scroll", function() {
          that.sFix = window.scrollY < 150 ? false : true;
     });
+    fetch('https://proptybox.com.ng/api/all-listing-for-guest').then(res=>res.json()).then(data=>{
+      console.log('====================================');
+      console.log(data);
+      console.log('====================================');
+    })
   },
   mounted () {
   //  this.infiniteHandler()
   },
   computed: {
-    ...mapGetters(["hRequest","loggedIn"])
+    ...mapGetters(["hRequest","loggedIn","onBoarding"])
   }
 }
 </script>

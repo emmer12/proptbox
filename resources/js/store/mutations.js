@@ -23,10 +23,13 @@
                 destroyToken(state,rootState){
                 state.token=null
                 state.user=null 
+                state.onBoarding=true
+                localStorage.removeItem('board')
 
             },
             setUser(state,data){
                 state.user=data;
+                localStorage.setItem('user',JSON.stringify(data));
             },
             setFUser(state,data){
                 state.profile=data;
@@ -63,6 +66,11 @@
                 state.chat.activeChat=null
                 
             },
+            setBoard(state){
+                state.onBoarding=false;
+                localStorage.setItem('board',true)
+
+            }
 
     }
 

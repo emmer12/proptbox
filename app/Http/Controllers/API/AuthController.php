@@ -31,7 +31,7 @@ class AuthController extends Controller
             'fullname' => ['required', 'string', 'max:255'],
             'password' => 'required|min:6|confirmed',
             'location' => ['required', 'string', 'max:255'], 
-            'phone' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:255','min:11'],
         ]);
 
         $user = new User();

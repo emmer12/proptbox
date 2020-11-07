@@ -55,6 +55,10 @@ import { mapGetters } from 'vuex';
         },
         mounted() {
             // this.$Progress.finish()
+
+            window.onbeforeunload=function() {
+              localStorage.removeItem('board')
+            }
         },
         methods: {
             getCurrentLocation(){

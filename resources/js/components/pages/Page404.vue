@@ -1,6 +1,7 @@
 <template>
-  <div class="s">
-      404
+  <div class="not-found">
+      <h1>Page not found</h1>
+      <router-link to="/" tag="button" class="btn btn-primary">Back to homepage</router-link >
   </div>
 </template>
 
@@ -10,6 +11,15 @@ export default {
 }
 </script>
 
-<style>
+<style lang='scss' scoped>
+ .not-found{
+   text-align:center;
+   padding:10px;
 
+
+   h1{
+     font-weight: 900;
+     font-size: 2.4rem;
+   }
+ }
 </style>

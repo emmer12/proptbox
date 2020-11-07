@@ -29,6 +29,9 @@ export default {
     profile(state){
         return state.profile
     },
+    onBoarding(state){
+        return state.onBoarding
+    },
     chats(state){
         return state.chat.chats
     },

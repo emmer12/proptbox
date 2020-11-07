@@ -173,7 +173,7 @@ export default {
         })
         .catch(err => {
           this.loading = false;
-          this.$snotify.error("Opps, something went wrong please try again");
+          this.$snotify.error(err.response.data.errors ?  Object.values(err.response.data.errors)[0][0] : "Opps, something went wrong please try again");
         });
     },
 

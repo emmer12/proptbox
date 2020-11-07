@@ -13,6 +13,9 @@
           <div class="details">
             <h4>{{user.fullname}}</h4>
             <p>{{ user.gender}}, {{ user.age}}</p>
+             <div class="btn-phone" v-if="user.reveal_contact" >
+                 <a class="btn btn-primary" :href="'tel:'+user.phoneNo"> <i class="fa fa-phone" aria-hidden="true"></i> {{ user.phoneNo }}</a>
+              </div>
           </div>
         </div>
 
@@ -40,10 +43,10 @@
                     <i class="fa fa-envelope" :class="{active:user.email_verified_at}"></i>
                     <span class="fa fa-check" v-if="user.email_verified_at"></span>
                   </div>
-                  <div class="v-icon" @click="verify('id')" >
+                  <router-link tag="div" class="v-icon" :to="{name:'id.verification'}">
                     <i class="fa fa-user" aria-hidden="true" :class="{active:user.id_verified_at}"></i>
                     <span class="fa fa-check" v-if="user.id_verified_at"></span>
-                  </div>
+                  </router-link>
                   <div class="v-icon" @click="verify('phone')">
                     <i class="fa fa-phone-square" aria-hidden="true" :class="{active:user.phone_verified_at}"></i>
                     <span class="fa fa-check" v-if="user.phone_verified_at"></span>
@@ -52,11 +55,55 @@
         </div>
       </div>
     </div>
+
+           <!-- Button trigger modal -->
+      <button type="button" class="btn btn-primary btn-lg d-none" data-toggle="modal" data-target="#modelId" id="acivatePin">
+        Launch
+      </button>
+    
+
+     <!-- Modal -->
+      <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Verify Phone Number</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+              <p>One Time Password (OTP) has been sent to your mobile ****{{ user.phoneNo.substr(-4) }}, please enter same here to veridy your phone number</p>
+              <div class="form-group">
+                <input type="number"
+                  class="form-control" name="" 
+                  aria-describedby="helpId"
+                   :class="{'is-invalid':$v.otp.$error}" 
+                   v-model.trim="$v.otp.$model"
+                  placeholder="OTP">
+                  <div
+                    class="invalid-feedback"
+                    v-if="!$v.otp.required"
+                  >OTP is required</div>
+              </div>
+          
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" @click="verifyNum" :disabled="otpLoading"><span v-if="otpLoading"><i class="fa fa-spinner" aria-hidden="true"></i> </span> Verify</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+import { required } from "vuelidate/lib/validators";
+
 export default {
   props: ['user'],
   data() {
@@ -66,7 +113,16 @@ export default {
       msg:"",
       loading:'',
       notFound:"",
+      otpLoading:false,
+      sloading:false,
+      otp:'',
+      pinF:false
 
+    }
+  },
+  validations: {
+    otp:{
+      required,
     }
   },
   methods: {
@@ -88,6 +144,40 @@ export default {
 
       })
     },
+      verifyNum(){
+          this.otpLoading =true;
+          this.$store
+        .dispatch("verifyOtp",{otp:this.otp})
+        .then(() => {
+          this.otpLoading = false;                                 
+          this.otp=""                
+          document.querySelector('.close').click();
+          this.$snotify.success("Phone number verified", { 
+            timeout: 6000,
+              showProgressBar: true,
+              pauseOnHover: true
+            });
+        }).catch((res)=>{
+          this.otpLoading = false;
+           this.$snotify.error(res.response.data.msg, { 
+            timeout: 6000,
+              showProgressBar: true,
+              pauseOnHover: true
+            });                                                                                                                                                                                     
+        })
+    },     
+    verify(field) {
+      let acivatePin=document.getElementById('acivatePin');
+      if (field === "email") {
+      } else if (field === "phone") {
+        this.$store.dispatch('sendOtp').then(()=>{
+          this.pinF=true;
+          acivatePin.click()
+        })
+      } else {
+        alert("Id verification...");
+      }
+    },             
       openChat(){
           if (this.loggedIn) {
             if (this.loggedInUser.id==(this.$route.params.id || this.user.id)) {
@@ -212,5 +302,9 @@ export default {
       }
     }
    }
+   }
+
+   .btn-phone{
+     margin-bottom:15px
    }
 </style>

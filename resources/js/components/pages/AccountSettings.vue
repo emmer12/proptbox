@@ -290,8 +290,8 @@ export default {
           this.$store
         .dispatch("verifyOtp",{otp:this.otp})
         .then(() => {
-          this.otpLoading = false;
-          this.otp=""
+          this.otpLoading = false;                                 
+          this.otp=""                
           document.querySelector('.close').click();
           this.$snotify.success("Phone number verified", { 
             timeout: 6000,
@@ -304,11 +304,9 @@ export default {
             timeout: 6000,
               showProgressBar: true,
               pauseOnHover: true
-            });
-            
+            });                                                                                                                                                                                     
         })
     },
-
     changePass(){
       this.$v.$touch();
        if (this.$v.$invalid) {
@@ -336,7 +334,6 @@ export default {
         });
        }
     },
-
     verify(field) {
       let acivatePin=document.getElementById('acivatePin');
       if (field === "email") {

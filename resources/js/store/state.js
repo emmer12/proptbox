@@ -4,7 +4,7 @@ Vue.use(Vuex);
 
 export default {
       token:localStorage.getItem('token') || null,
-      user:null,
+      user: JSON.parse(localStorage.getItem('user')) || null,
       space:[],
       request:[],
       hRequest:[],
@@ -23,5 +23,6 @@ export default {
         activeChat:null,
         chats:[],
         messages:[]
-      }
+      },
+      onBoarding:JSON.parse(localStorage.getItem('board')) ?  false : true
     }

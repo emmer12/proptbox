@@ -15,7 +15,7 @@ window.Vue = require('vue');
 import { store } from './store/'
 
 
-const DEFAULT_TITLE="ProptBox"
+const DEFAULT_TITLE="ProptyBox"
 
 
 import VoerroTagsInput from '@voerro/vue-tagsinput';
@@ -77,7 +77,20 @@ router.beforeEach((to, from, next) => {
             })
         }
         else {
-            next();
+            if (to.matched.some(record =>record.meta.requiresAdmin)) {
+                console.log('====================================');
+                console.log(store.getters.user.isAdmin);
+                console.log('====================================');
+                if (!store.getters.user.isAdmin) {
+                    next({
+                        name: 'home',
+                    })
+                }else{
+                    next()
+                }
+            }else{
+                next();
+            }
         }
     }
     else if (to.matched.some(record => record.meta.requiresVisitor)) {

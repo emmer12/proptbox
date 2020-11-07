@@ -216,9 +216,9 @@ class ListingController extends Controller
      */
     public function destroy($id)
     {
-        $userId=Auth::user()->id;
+        $user=Auth::user();
         $post=Listing::findOrFail($id);
-        if ($post->user_id == $userId) {
+        if ($post->user_id == $user->id || $user->isAdmin ){
             $post->delete();
            return response()->json(['success'=>true,'msg'=>"listing deleted"],200);
             

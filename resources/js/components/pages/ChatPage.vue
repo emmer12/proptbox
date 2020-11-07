@@ -48,9 +48,9 @@ export default {
         .main{
             &.added{
                     position: absolute;
-                    top: 0px;
                     margin-left: 0px;
                     width: 100%;
+                    top: -15px;
                 
             }
         }
