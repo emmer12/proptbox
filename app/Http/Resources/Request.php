@@ -22,6 +22,7 @@ class Request extends JsonResource
             'min_budget' => $this->min_budget,
             'max_budget' => $this->max_budget,
             'space_location' => $this->space_location,
+            'about_cohabitation' => $this->about_cohabitation,
             'space_type' => $this->space_type,
             'space_for' => $this->space_for,
             'user' => User::find($this->user_id),

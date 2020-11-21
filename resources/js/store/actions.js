@@ -89,7 +89,8 @@ export default {
                if(res.data.access_token){
                    let token = res.data.access_token;
                    localStorage.setItem('token', token)
-                commit("retrieveToken",token)
+                commit("retrieveToken",token);
+                commit("setBoard");
                 dispatch("getUser");
                 resolve(res)
             }else{

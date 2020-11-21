@@ -1,17 +1,19 @@
 <template>
   <div>
-
           <router-link tag="div" :to="{name:'request-details',params:{id:request.id}}" class="card r-card">
             <div class="top-section">
               <router-link :to="{name:'profile',params:{id:request.user.id}}"><img :src="'/uploads/profile-images/'+request.user.profile_pic_filename" width="100%" /></router-link>
               
               <div class="details">
-                <div class="location"><i class="fa fa-map-marker" aria-hidden="true"></i> {{request.space_location }}</div>
-                 <h4 v-if="request.user.fullname.length > 15">{{request.user.fullname.substr(0,15) + '...'}}</h4>
+                 <div class="location">
+                  <span v-if="request.space_location.length>30"><i class="fa fa-map-marker" aria-hidden="true"></i> {{request.space_location.substr(0,30) + '...' }}</span>
+                  <span v-else><i class="fa fa-map-marker" aria-hidden="true"></i> {{request.space_location }}</span>
+                </div>
+                 <h4 v-if="request.user.fullname.length > 10">{{request.user.fullname.substr(0,10) + '...'}}</h4>
                 <h4 v-else>{{request.user.fullname}}</h4>
                 <span>{{request.user.age}} yrs</span> | <span>{{ request.user.gender}}</span>
-                <p>looking for an {{ request.space_type}}</p>
-              </div>
+                <p>looking for {{ request.space_for == 'Rent' ? 'an apartment' : 'a roommate' }}</p>
+              </div> 
             </div>
             <div class="bottom-section">
               <!-- <p v-if="request.about_property.length>25">{{request.about_property.substr(0,25) + '...' }}</p> -->
@@ -23,7 +25,6 @@
               </div>
             </div>
           </router-link>
-        
   </div>
 </template>
 
@@ -35,10 +36,11 @@ export default {
 
 <style lang="scss" scoped>
 .r-card {
-  width: 100%;
+  width: 230px;
   background: #f4f4f4;
   padding: 15px;
   margin: 10px;
+  height:230px;
   padding-top: 37px;
   // clip-path:circle(300px at 0px 0px);
   .location{

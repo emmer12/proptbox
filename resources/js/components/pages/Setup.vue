@@ -8,7 +8,7 @@
         <div style="border-radius:50%">
           <img src="/images/user.png" height="100px" width="100px" style="border-radius:50%" />
         </div>
-        <h5 style="margin:10px">Fow Steps to go</h5>
+        <h5 style="margin:10px">Few steps to go</h5>
     </div>
     <div class="container">
       <form v-on:submit.prevent ref="form" :class="{shake:invalid}">
@@ -28,7 +28,7 @@
               placeholder="Phone number"
             />
             <div class="invalid-feedback" v-if="!$v.newUser.phoneNo.required">This field is required</div>
-            <div class="invalid-feedback" v-if="!$v.newUser.minLength.required">Phone number must be at least 11 digit</div>
+            <div class="invalid-feedback" v-if="!$v.newUser.phoneNo.minLength">Phone number must be at least 11 digit</div>
           </div>
         </div>
         <div class="form-group">

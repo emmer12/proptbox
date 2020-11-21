@@ -148,9 +148,7 @@ export default {
            this.$router.push({name:'request',query:{search:this.search}})
           }  
     },
-   created () {
-     this.getState();
-    },
+   
      filterLocation(){
     this.mode='location'
     this.loading=true
@@ -205,6 +203,8 @@ export default {
     if (this.$route.query.search) {
       this.searchR()
     }
+
+     this.getState();
     },
   
   computed: {

@@ -14,12 +14,15 @@
                  <div class="c-t-a">
                      <div class="details">
                          <h4>{{request.user.fullname}}</h4>
-                         <p>looking for an {{ request.space_type}} </p>
+                        <p>looking for {{ request.space_for == 'Rent' ? 'an apartment' : 'a roommate' }}</p>
+
                      </div>
                     
+                    <div class="location"><i class="fa fa-map-marker" aria-hidden="true"></i> {{request.space_location }}</div>
                      <div>
                          <button class="btn btn-custom" style="cursor:default">&#8358; {{request.min_budget + "-" + request.max_budget}}</button>
                      </div>
+                     
                  </div>
                    <button ref="ccs" type="button" class="btn btn-primary btn-lg d-none" data-toggle="modal" data-target="#modelId"></button>
                   <div class="comment" style="cursor:pointer" v-if="!loading"  @click="openChat">
@@ -37,16 +40,17 @@
                      <div>Rent</div>
                      <div>${{request.rent}} every month</div>
                  </div> -->
+
                   <div class="body-details">
                      <div>Property type</div>
                      <div>{{request.space_type}}</div>
                  </div>
-                  <div class="body-details">
+                  <!-- <div class="body-details">
                      <div>Space Location</div>
                      <div>{{ request.space_location}}</div>
-                 </div>
+                 </div> -->
                   <div class="body-details">
-                     <div>Space for</div>
+                     <div>Space Type</div>
                      <div>{{ request.space_for}}</div>
                  </div>
                   <div class="body-details">
@@ -56,10 +60,10 @@
 
                  <hr>
                   <div class="des">
-                     <div v-if="request.space_type!=='apartment'">
+                     <div v-if="request.space_for!=='Rent'">
                          <strong>About Cohabitant</strong>
+                         <p>{{ request.about_cohabitation }}</p>
                      </div>
-                     <p>{{ request.about_cohabitation }}</p>
                  </div>
 
                  <hr>
@@ -105,7 +109,7 @@
                        </div>
                  </div>
                  <div class="modal-footer">
-                     <button type="button" class="btn btn-primary" :disabled="loading" @click="createChat"> <span v-if="loading"><i class="fa fa-spinner" aria-hidden="true"></i> </span> Send</button>
+                     <button type="button" class="btn btn-primary" :disabled="loading || !msg.length" @click="createChat"> <span v-if="loading"><i class="fa fa-spinner" aria-hidden="true"></i> </span> Send</button>
                  </div>
              </div>
          </div>
@@ -134,7 +138,7 @@ export default {
           availableChat:null,
           startChat:false,
           msg:"",
-          loading:''  
+          loading:false  
         }
     },
     methods: {

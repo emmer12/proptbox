@@ -1,7 +1,7 @@
 <template>
     <div>
 
-         <nav-view v-show="!['session','access.signup','verify-email','access.signin','setup','complete.setup','access.forget.password','access.reset.password','chats'].includes($route.name)"></nav-view>
+         <nav-view v-show="!['session','access.signup','verify-email','access.signin','setup','complete.setup','access.forget.password','access.reset.password','chats','email.verify'].includes($route.name)"></nav-view>
 
               <transition name="fade" enter-active-class="animated fadeIn"  leave-active-class="animated fadeOut" mode="out-in">
                   <router-view></router-view>
@@ -21,7 +21,7 @@
         </transition>
 
         <edit-modal :id="id" v-if="editMode"></edit-modal> 
-        <footer-nav v-show="!['chats','access.signup','access.signin','verify-email','access.reset.password','setup','complete.setup','access.reset.password'].includes($route.name)"></footer-nav>
+        <footer-nav v-show="!['chats','access.signup','access.signin','verify-email','access.reset.password','setup','complete.setup','access.reset.password','about'].includes($route.name)"></footer-nav>
     </div>
 
 
@@ -57,6 +57,7 @@ import { mapGetters } from 'vuex';
             // this.$Progress.finish()
 
             window.onbeforeunload=function() {
+              if (localStorage.getItem('token')) return;
               localStorage.removeItem('board')
             }
         },

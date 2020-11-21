@@ -120,10 +120,11 @@
                      </div>
                  </div>
                  <div class="des">
-                     <div v-if="list.space_type!=='apartment'">
-                         <strong>About Cohabitant</strong>
+                     <!-- <div v-if="list.space_type!=='apartment'"> -->
+                    <div v-if="list.space_for==='Space sharing'">
+                        <strong>About Cohabitant</strong>
+                        <p>{{ list.about_cohabitation }}</p>
                      </div>
-                     <p>{{ list.about_cohabitation }}</p>
                  </div>
                   
              </div>             
@@ -155,7 +156,7 @@
                        </div>
                  </div>
                  <div class="modal-footer">
-                     <button type="button" class="btn btn-primary" :disabled="loading" @click="createChat"> <span v-if="loading"><i class="fa fa-spinner" aria-hidden="true"></i> </span> Send</button>
+                     <button type="button" class="btn btn-primary" :disabled="loading || !msg.length" @click="createChat"> <span v-if="loading"><i class="fa fa-spinner" aria-hidden="true"></i> </span> Send</button>
                  </div>
              </div>
          </div>
@@ -195,7 +196,7 @@ export default {
             availableChat:null,
             startChat:false,
             msg:"",
-            loading:'',
+            loading:false,
             bMsg:false
         }
     },
@@ -206,7 +207,7 @@ export default {
         data.to= this.list.user.id
         data.on=this.list.id
         data.msg=this.msg
-
+        this.loading=true
       this.$store.dispatch('createChat',data).then(()=>{
        this.loading=false
         this.msg=''

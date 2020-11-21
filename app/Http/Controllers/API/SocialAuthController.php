@@ -41,8 +41,9 @@ class SocialAuthController extends Controller
         if (!$appUser) {
             if (empty($user->email)) {
                 $email=$user->name.'@facebook.com';
+            }else{
+                $email=$user->email;
             }
-            $email=$user->email;
             // create user and add the provider
             $newUser=true;
             $appUser = User::create([
@@ -78,6 +79,7 @@ class SocialAuthController extends Controller
 
         // login our user and get the token
         $passportToken = $appUser->createToken('proptbox-v1')->accessToken;
+
 
         return response()->json([
             'access_token' => $passportToken,

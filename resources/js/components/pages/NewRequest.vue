@@ -34,9 +34,9 @@
               id="space_type"
               placeholder="Space type"
             >
-              <option value selected disabled>Space Type</option>
+              <option value selected disabled>Property Type</option>
               <option value="apartment">Apartment</option>
-              <option value="office">Office</option>
+              <!-- <option value="office">Office</option> -->
             </select>
             <div
               class="invalid-feedback"
@@ -54,26 +54,26 @@
               id="space_for"
               placeholder="Space type"
             >
-              <option value selected disabled>Space For</option>
+              <option value selected disabled>Space for</option>
               <option value="Rent">Rent</option>
-              <option value="Space sharing" v-if="newList.space_type==='apartment'">Space sharing</option>
+              <option value="Roomies">Roomies</option>
             </select>
             <div
               class="invalid-feedback"
               v-if="!$v.newList.space_for.required"
             >This field is required</div>
           </div>
-          <div class="form-group">
+          <!-- <div class="form-group">
             <div class="col-sm-1-12">
               <div class="form-group">
                 <label for="location">Location</label>
                 <select
                   class="form-control"
-                  :class="{'is-invalid':$v.newList.space_location.$error}"
+                          
                   id="location"
                   v-model.trim="$v.newList.space_location.$model"
                 >
-                  <option selected value disabled>Select your Location</option>
+                  <option selected value="Ondo" >Select your Location</option>
                  <option :value="state.name" v-for="(state, index) in states" :key="index">{{state.name}}</option>
                 </select>
               </div>
@@ -82,8 +82,24 @@
                 v-if="!$v.newList.space_location.required"
               >This field is required</div>
             </div>
-          </div>
+          </div> -->
 
+           <div class="form-group">
+                <label for="address">Space Location</label>
+                <input
+                  type="text"                  
+                  id="address"
+                  placeholder="Space Location"
+                  class="form-control"
+                   :class="{'is-invalid':$v.newList.space_location.$error}"
+                  v-model.trim="$v.newList.space_location.$model"
+                />
+                <div
+                  class="invalid-feedback"
+                  v-if="!$v.newList.space_location.required"
+                >This field is required</div>
+              </div>
+  
           <div class="row">
             <div class="col">
               <div class="form-group">
@@ -119,7 +135,7 @@
             </div>
           </div>
 
-           <div class="form-group" v-if="newList.space_type==='apartment' && newList.space_for!=='Rent'">
+           <div class="form-group" v-if="newList.space_for!=='Rent'">
             <label for>About Cohabitant</label>
             <small><i class="fa fa-question-circle" aria-hidden="true"></i> Share a bit about yourself (personality) and what you're looking out for in your cohabitant(s) </small>
             <textarea

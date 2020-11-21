@@ -12,7 +12,6 @@
 
             retrieveToken(state,token){
                 state.token=token
-            
             },
             setListId(state,data){
                 state.listDetails=data
@@ -64,12 +63,10 @@
             },
             clearActive(state){
                 state.chat.activeChat=null
-                
             },
             setBoard(state){
                 state.onBoarding=false;
                 localStorage.setItem('board',true)
-
             }
 
     }

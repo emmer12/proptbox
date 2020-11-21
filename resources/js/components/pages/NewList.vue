@@ -24,7 +24,7 @@
             class="form-control" name="" id="space_type" placeholder="Space type">
               <option value="" selected disabled>Space Type</option>
               <option value="apartment">Apartment</option>
-              <option value="office">Office</option>
+              <!-- <option value="office">Office</option> -->
             </select>
             <div
               class="invalid-feedback"
@@ -40,7 +40,7 @@
             class="form-control" name="" id="space_for" placeholder="Space type">
               <option value="" selected disabled>Space For</option>
               <option value="Rent">Rent</option>
-              <option value="Space sharing" v-if="newList.space_type==='apartment'">Space sharing</option>
+              <option value="Roomies">Roomies</option>
             </select>
             <div
               class="invalid-feedback"

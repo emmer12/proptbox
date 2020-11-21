@@ -32,7 +32,7 @@
         </div>
 
         <div class="form-group" >
-            <label for="space_type">Payer Type</label>
+            <label for="space_type">Gender</label>
             <select 
             v-model.trim="$v.newUser.gender.$model"
             :class="{'is-invalid':$v.newUser.gender.$error}"

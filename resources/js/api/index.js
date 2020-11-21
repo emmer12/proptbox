@@ -5,7 +5,7 @@ let prod= 'https://proptybox.com.ng/api/v1'
 let production= 'https://proptybox.com/api/v1' 
 // 
 const api = axios.create({
-  baseURL:dev
+  baseURL:production
 });
 
 
