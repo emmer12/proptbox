@@ -120,7 +120,7 @@
               <option value="Anyone welcome">Anyone welcome</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
-              <option v-if="newList.space_for!=='Space sharing'" value="Couple Only">Couple only</option>
+              <option v-if="newList.space_for!=='Roomies'" value="Couple Only">Couple only</option>
             </select>
           </div>
 
@@ -147,7 +147,7 @@
               <select 
             v-model="newList.bedroom_type"
             class="form-control" name="" id="bedroom_type" >
-              <option value="" selected disabled>Bedroom type</option>
+              <option value="" selected disabled>Bathroom type</option>
               <option value="Shared bathroom">Shared bathroom</option>
               <option value="Own bathroom ">Own bathroom</option>
               <option value="Ensuite">Ensuite</option>

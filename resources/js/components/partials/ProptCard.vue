@@ -24,7 +24,7 @@
                   <div class="title">
                     <h4>{{ list.space_type }}</h4>
                     <button v-if="list.id%2==0" class="btn btn-success btn-sm">For {{ list.space_for }}</button>
-                    <button v-else class="btn btn-primary btn-sm">For {{ list.space_for }}</button>
+                    <button v-else class="btn btn-primary btn-sm">{{ list.space_for }}</button>
                   </div>
                   <div class="l-p">
                      <h4 v-if="list.space_address.length>20">{{list.space_address.substr(0,20) + '...' }}</h4>
@@ -119,6 +119,7 @@ export default {
  .p-card{
    padding:10px;
    margin-bottom:20px;
+   height:420px;
 
    .boosted{
     position: absolute;
@@ -234,6 +235,7 @@ export default {
       }
 
     & .description{
+       height:50px;
         & h4{
           color:#444;
           font-size: 18px;

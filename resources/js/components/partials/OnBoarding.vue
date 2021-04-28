@@ -270,9 +270,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+ .section1,.section2{
+     h1{
+         color:#3f3d56;
+         font-size:50px;
+         font-weight:700;
+     }
+     p{
+      line-height: 1.6em;
+     font-size: 18px;
+     }
+ }
   .hero{
       height:90vh;
       display:flex;
+
+      p{
+      line-height: 1.6em;
+     font-size: 18px;
+     }
 
       .left{
           align-self:center;
@@ -340,12 +356,13 @@ export default {
 
   .section1{
       background:#fff;
-      padding-top:50px
+      padding-top:50px;
 
   }
   .section2{
       background:#EEF4FF;
-      padding-top:50px
+      padding-top:50px;
+      
   }
 
   .header{

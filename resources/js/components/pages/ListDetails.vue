@@ -121,7 +121,7 @@
                  </div>
                  <div class="des">
                      <!-- <div v-if="list.space_type!=='apartment'"> -->
-                    <div v-if="list.space_for==='Space sharing'">
+                    <div v-if="list.space_for==='Roomies'">
                         <strong>About Cohabitant</strong>
                         <p>{{ list.about_cohabitation }}</p>
                      </div>

@@ -1,5 +1,5 @@
 <template>
-   <div v-if="!onBoarding || loggedIn">
+   <div v-if="!onBoarding || user">
      <div class="spacer" style="height:120px"></div>
    <div class="footer-container d-sm-none" id="foot-nav">
     <router-link tag="div" :class="{active:$route.name=='home'}" :to="{name:'home'}">
