@@ -2,6 +2,6 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/propovac/public_html/
-    - /bin/cp -R pubic/* $DEPLOYPATH
+    - /bin/cp -R public/* $DEPLOYPATH
 
     
