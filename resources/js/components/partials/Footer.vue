@@ -9,11 +9,12 @@
                    <div class="col-md-4">
                        <div>
                            <div class="logo">
-                              <img src="/images/logo.svg" />
+                              <img src="/images/logo.svg" alt="Proptybox logo" />
                            </div>
                           <p>
                               Proptybox is the first space renter and space sharing in Nigeria with a mission to make finding room rentals and finding great people to live with easy, affordable & safe using technology
                           </p>
+                         
                        </div>
                    </div>       
 
@@ -24,7 +25,9 @@
                             <router-link :to="{name:'about'}" tag="li">About us</router-link>
                             <router-link :to="{name:'terms'}" tag="li">Terms and conditon</router-link>
                         </ul>                  
-
+                             <div class="playstore" data-toggle="modal" data-target="#modelId">
+                              <img src="/images/google-play-badge-logo.png" width="100%" alt="Proptybox On Playstore" />
+                          </div>
                        </div>
                    </div>       
 
@@ -45,11 +48,46 @@
                 </div>
             </div>
         </footer>
+
+
+        <!-- Button trigger modal -->
+
+        
+        <!-- Modal -->
+        <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Loading...</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Work in progress available soon.
+                        </p>
+                    </div>
+                  
+                </div>
+            </div>
+        </div>
   </div>
 </template>
 
 <script>
 export default {
+    data() {
+        return {
+            soon:false
+        }
+    },
+
+    methods: {
+        showSoon(){
+            alert('comming soon')
+        }
+    },
 
 }
 </script>
@@ -92,6 +130,18 @@ export default {
           i{
               font-size:20px;
               cursor:pointer
+          }
+      }
+
+      .playstore{
+              height: 70px;
+    width: 150px;
+    cursor: pointer;
+    position: relative;
+          img{
+              position: absolute;
+                top: -33px;
+                left: -15px;
           }
       }
   }
