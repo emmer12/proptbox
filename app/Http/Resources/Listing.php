@@ -37,8 +37,8 @@ class Listing extends JsonResource
         'space_type'=>$this->space_type,
         'updated_at'=>$this->updated_at,
         'created_at'=>$this->created_at,
-        'images'=>json_decode($this->images),
         'user'=>$user,
+        'images'=>$this->images()->get(),
         'views'=>$this->views
     ];
     }

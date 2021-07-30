@@ -247,7 +247,7 @@ export default {
             border-bottom:8px solid #3490dc;
            & .display{
                & img{
-                   border-radius:50%;
+                   border-radius:10px;
                }
            }
 

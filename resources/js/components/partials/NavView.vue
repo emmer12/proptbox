@@ -4,11 +4,11 @@
       <div class="container">
         <div class="nav-c nav-top" :class="{added:tReveal}">
           <div class="row">
-            <div class="col-md-5 col-sm-10">
+            <div class="col-md-4 col-sm-10">
               <div class="left">
-                <div class="bar" @click="openDrawer">
+                <!-- <div class="bar" @click="openDrawer">
                   <i class="fa fa-bars"></i>
-                </div>
+                </div> -->
                 <router-link to="/" class="logo">
                   <img src="/images/logo.svg" />
                 </router-link>
@@ -23,27 +23,8 @@
                 <span v-if="notify.length">{{ notify.length }}</span>
               </router-link>
             <div class="col-md-4">
-               <div class="mid">
-                  <div>
-                  <router-link
-                    tag="button"
-                    class="btn btn-primary pr-4 pl-4"
-                    :to="{name: loggedIn ? 'new-list' : 'access.signin'}"
-                    :class="{'active':$route.name=='new-list' }"
-                  >List your space</router-link>
-                  <router-link
-                    tag="button"
-                    class="btn btn-primary"
-                    :class="{'active':'new-request'}"
-                    :to="{name:loggedIn ? 'new-request' : 'access.signup'}"
-                  >Need a space ?</router-link>
-                </div>
-            </div>
-            </div>
-            <div class="col-md-3 col-sm-2">
-              <div class="right">
-                <div class="s-icon" @click="sShow=!sShow"><i class="fa fa-search" aria-hidden="true"></i> </div>
-                <div class="search-field" v-show="sShow">
+              
+                 <div class="search-field" >
                     <div class="form-group">
                       <select class="form-control" name="" v-model="sTerm" id="">
                         <option selected value="listing">Listing</option>
@@ -51,8 +32,29 @@
                       </select>
                     </div>
                    <input placeholder="Search" v-model="search" class="form-control" />
-                   <div class="btn btn-primary" @click="submitSearch" style="height:40px;margin-left:5px"><i class="fa fa-search" aria-hidden="true"></i></div>
+                   <div class="btn search" @click="submitSearch" ><i class="fa fa-search" aria-hidden="true"></i></div>
                 </div>
+
+                
+              
+            </div>
+
+            <div class="col-md-4 col-sm-2">
+              <div class="right">
+                <div class="d-flex">
+                  <router-link
+                    tag="li"
+                    class="pr-4 pl-4"
+                    :to="{name: loggedIn ? 'new-list' : 'access.signin'}"
+                    :class="{'active':$route.name=='new-list' }"
+                  >List Space</router-link>
+                  <router-link
+                    tag="li"
+                    class=""
+                    :class="{'active':'new-request'}"
+                    :to="{name:loggedIn ? 'new-request' : 'access.signup'}"
+                  >Need a space ?</router-link>
+              </div> 
                 <div v-if="loggedIn" class="avatar" @click="openDrop=!openDrop">
                   <img v-if="user" :src="'/uploads/profile-images/'+user.profile_pic_filename"  />
                   <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -66,17 +68,21 @@
                     </ul>
                   </div>
                     </transition>
-                </div>   
+                </div>                 
                 <div v-else class="log-sign">
-                  <router-link tag="a"  :to="{name:'access.signin'}">Sign in</router-link>
-                  <router-link tag="a" :to="{name:'access.signup'}" class="btn  btn-outline-primary">Sign up</router-link>
+                  <router-link tag="a" :to="{name:'access.signup'}" class="btn  btn-custom-2">Sign up</router-link>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="nav-c nav-bottom" v-if="!onBoarding" v-show="!['about','terms'].includes($route.name)">
-          <div class="row">
+      
+      </div>
+    </div>
+
+      <div class="nav-bottom" v-if="!onBoarding" v-show="!['about','terms'].includes($route.name)">
+          <div class="container">
+              <div class="row">
             <div class="col-md-6">
               <div class="left-b" v-if="$route.name==='home'">
                 <div class="culture">
@@ -94,9 +100,8 @@
               </div>
             </div>
           </div>
+          </div>
         </div>
-      </div>
-    </div>
 
     <!-- Drawer View -->
     <transition v-if="loggedIn"
@@ -257,16 +262,21 @@ export default {
       }
 }
 .nav {
-  background-color: #eef4ff;
+  background-color: #3490dc;
   left: 0;
   top: 0;
   z-index: 999;
   position: relative;
+
+  img{
+        background: #d8e6fb;
+    border-radius: 10px;
+    object-fit: cover;
+  }
 }
 .nav-top {
   position: relative;
   height: 70px;
-  border-bottom: 1px solid #ccc;
   transition: all 1s;
   &.added {
     position: fixed;
@@ -278,8 +288,9 @@ export default {
   }
 
   & .log-sign {
+        right: -70px;
+        position: relative;
     & a {
-      padding: 10px;
       font-weight: 700;
       text-decoration: none;
     }
@@ -332,6 +343,7 @@ export default {
     display: flex;
     justify-content: space-between;
     line-height: 100px !important;
+    float: right;
   }
   
 
@@ -364,18 +376,6 @@ export default {
     font-size: 19px;
     cursor: pointer;
   }
-    
-    & .search-field{
-         background: white;
-        padding: 10px;
-        position: absolute;
-        top: 70px;
-        z-index: 9999;
-        display: flex;
-        max-width: 400px;
-        width: 400px;
-        transform: translateX(-360px);
-    }
     & img {
       height: 40px;
       width: 40px;
@@ -450,4 +450,45 @@ export default {
    }
   }
 }
+
+.search-field{
+    padding: 10px;
+    z-index: 999;
+    display: flex;
+    max-width: 400px;
+    width: 400px;
+
+    input{
+       padding: 10px;
+       height: 45px;
+       border-radius: 0px;
+       
+    }
+    select{
+      height:45px
+    }
+
+    .search{
+      height: 45px;
+      background: #fff;
+      color: #3490dc;
+      font-size: 20px;
+
+    }
+    }
+
+    .d-flex{
+      display: flex;
+
+      li{
+        text-transform: uppercase;
+        font-weight: 500;
+      }
+    }
+
+    .btn-custom-2{
+    background: #1f6eaf;
+    padding: 10px 20px;
+    color: #fff;
+    }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div>
 
-          <router-link tag="div" :to="{name:'request-details',params:{id:request.id}}" class="card r-card">
+          <router-link tag="div" :to="{name:'request-details',params:{id:request.id}}" class="r-card">
             <div class="top-section">
               <router-link :to="{name:'profile',params:{id:request.user.id}}"><img :src="'/uploads/profile-images/'+request.user.profile_pic_filename" width="100%" /></router-link>
               <div class="details">
@@ -38,10 +38,13 @@ export default {
 <style lang="scss" scoped>
 .r-card {
   width: 100%;
-  background: #f4f4f4;
-  padding: 15px;
-  margin-bottom: 10px;
-  padding-top: 37px;
+    background: #ffffff;
+    padding: 15px;
+    margin-bottom: 10px;
+    padding-top: 37px;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
   // clip-path:circle(300px at 0px 0px);
 
   .location{
@@ -57,11 +60,11 @@ export default {
     display: flex;
     border-bottom: 1px solid #ddd;
     & img {
-      width: 100px;
-      height: 100px;
+      width: 50px;
+      height: 50px;
       border-radius: 50px;
       position: relative;
-      // float:left;
+      object-fit: cover;
     }
 
     & .details {
@@ -69,6 +72,10 @@ export default {
       padding: 10px;
       align-items: center;
       // text-align: center;
+
+      h4{
+        font-size: 18px;
+      }
 
       & p {
         line-height: 16px;

@@ -21,6 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::group(['prefix' => 'v1'], function () {
+    Route::post('/listing-file-upload', 'API\ListingController@uploadFiles');
     Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/create-property', 'API\PropertyController@create');
         Route::post('/send-request', 'API\RequestController@create');
@@ -34,7 +35,6 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('/upload-v-file', 'API\UserController@uploadVFile');
 
 
-        Route::post('/listing-file-upload', 'API\ListingController@uploadFiles');
 
         Route::get('/all-request-limit-by-location', 'API\RequestController@requestLimit');
         Route::get('/all-request-by-location', 'API\RequestController@requestByLocation');

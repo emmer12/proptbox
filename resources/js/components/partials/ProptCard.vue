@@ -15,9 +15,11 @@
                 Boosted 
               </div>
               <router-link :to="{name:'list-details',params:{id:list.id}}" tag="div" class="img">
-                <img :src="list.images ? '/uploads/listing/'+list.images[0] : '/images/'+ 1 +'.jpg'" width="100%"/>
+                <img 
+                  onerror="this.src='/images/meduim-product-placeholder.png'"
+                 :src="list.images.length ? '/uploads/listing/'+list.images[0].filename : '/images/'+ 1 +'.jpg'" width="100%"/>
 
-                <div class="location"><i class="fa fa-map-marker" aria-hidden="true"></i> {{list.space_location }}</div>
+                <div class="location"><i class="fa fa-map-marker" aria-hidden="true"></i> {{list.space_location }} {{list.id}}</div>
               </router-link>
 
               <div class="details">

@@ -9,6 +9,7 @@ use App\Listing;
 use App\Tag;
 use App\View;
 use App\Http\Resources\Listing as ListingResource;
+use App\ListImages;
 use Auth;
 use Image;
 use Input;
@@ -63,8 +64,7 @@ class ListingController extends Controller
             'space_for' => ['required'],
             'rent' => ['required'],
             'duration' => ['required'],
-            'images' => ['required'],
-
+            'images' => ['sometimes'],
         ]);
         
         $listing=new Listing();
@@ -83,7 +83,7 @@ class ListingController extends Controller
         $listing->bedroom_type=$request->input('bedroom_type');
         $listing->about_property=$request->input('about_property');
         $listing->about_cohabitation=$request->input('about_cohabitation');
-        $listing->images=$request->input('images');
+        // $listing->images=$request->input('images');
         $listing->user_id=Auth::user()->id;
         $listing->save();
 
@@ -103,7 +103,7 @@ class ListingController extends Controller
             
         }
 
-        $listing['images']=json_decode($listing['images']);
+        // $listing['images']=json_decode($listing['images']);
         // $tag = Tag::insert($tags);
         return response()->json(['success'=>true,'msg'=>"listing created",'list'=>$listing],200);
     }
@@ -165,28 +165,35 @@ class ListingController extends Controller
     public function uploadFiles(Request $request)
     {
         // $validate=$request->validate([
-        //     'file' => 'required|image|mimes:jpg,png,jpeg,svg|max:1048'
+        //     'files' => 'required|image|mimes:jpg,png,jpeg,svg|max:5048'
         // ]);
-        // $_FILES['file']['name']
-     
-        foreach($request->file('file') as $file) {
-            // if ($request->file()) {
+
+        if ($request->hasFile('files')) {
+        foreach($request->file('files') as $file) {
                 $fileName = 'listing-'.time().'-'.$file->getClientOriginalName(); 
                 $path = public_path('uploads/listing/'.$fileName);
           
                 Image::make($file)->resize(600,null, function ($constraint) {
                     $constraint->aspectRatio();
-                })->save($path); 
+                })->save($path);
 
+              ListImages::create([
+                    'listing_id'=>44,
+                    'filename'=>$fileName
+                ]);
+
+                
                 $preview[]=$fileName;
                 
-        // }
+         }
+
+         return response()->json(['files'=>json_encode($preview)]);
+
         }
-        
-        return response()->json(['files'=>json_encode($preview)]);
+        else{
+            return response()->json(['files'=>'mooooo']);
 
-
-    
+        }
     }
 
     /**

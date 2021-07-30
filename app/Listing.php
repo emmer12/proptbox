@@ -25,6 +25,21 @@ class Listing extends Model
             return $this->belongsToMany('App\Tag')->withTimestamps();
     }
 
+    /**
+     * The roles that belong to the Listing
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+      /**
+       * Get all of the comments for the Listing
+       *
+       * @return \Illuminate\Database\Eloquent\Relations\HasMany
+       */
+      public function images()
+      {
+          return $this->hasMany(ListImages::class);
+      }
+
     public function views()
     {
         return $this->hasMany('App\View');

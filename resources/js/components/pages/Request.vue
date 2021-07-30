@@ -62,7 +62,7 @@
       </div>
     </div>
 
-    <div class="right">
+    <div class="right" style="margin-top:50px">
      <div class="header d-sm-none" > 
           <div class="s-con" id="">
             <input placeholder="Search" @focus="focusSearch" v-on:blur="blurSearch" v-model="search" class="form-control" />
@@ -222,6 +222,9 @@ export default {
     position: absolute;
     padding: 10px;
     border-right:1px solid #ccc;
+    background: #fff;
+    height: 100%;
+    top: 50px;
     & .header {
       padding: 10px;
 
