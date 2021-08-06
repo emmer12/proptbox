@@ -1,42 +1,43 @@
 
-import HomePage from '../components/pages/HomePage.vue';
-import Page404 from '../components/pages/Page404';
-import SignUp from '../components/pages/SignUp';
-import SignIn from '../components/pages/SignIn';
-import Setup from '../components/pages/Setup';
-import SetupSignUp from '../components/pages/SetupSignUp';
-import ForgetPassword from '../components/pages/ForgetPassword';
-import ResetPassword from '../components/pages/ResetPassword';
-import Session from '../components/pages/Session';
-import SocialLoging from '../components/pages/SocialLoging';
-import Profile from '../components/pages/Profile';
-import List from '../components/pages/List';
-import Request from '../components/pages/Request';
-import Logout from '../components/pages/Logout';
-import NewList from '../components/pages/NewList';
-import NewRequest from '../components/pages/NewRequest';
-import ListDetails from '../components/pages/ListDetails';
-import RequestDetails from '../components/pages/RequestDetails';
-import Dashboard from '../components/pages/Dashboard';
-import MyListing from '../components/pages/MyListing';
-import MyRequest from '../components/pages/MyRequest';
-import EmailVerify from '../components/pages/EmailVerify';
-import VerifyEmail from '../components/pages/VerifyEmail';
-import IdVerification from '../components/pages/IdRequest';
-import Boost from '../components/pages/Boost';
-import OtherPage from '../components/pages/OtherPage';
-import ChatPage from '../components/pages/ChatPage';
-import AboutPage from '../components/pages/AboutPage';
-import ContactPage from '../components/pages/ContactPage';
-import TermsPage from '../components/pages/TermsPage';
-import AccountSettings from '../components/pages/AccountSettings';
-import ProfileSettings from '../components/pages/ProfileSettings';
-import Settings from '../components/pages/Settings';
-import Admin from '../components/pages/Admin';
-import AdminRequests from '../components/pages/AdminRequests';
-import AdminListings from '../components/pages/AdminListings';
-import AdminBoosted from '../components/pages/AdminBoosted';
-import AdminUsers from '../components/pages/AdminUsers';
+import HomePage from '../pages/HomePage.vue';
+import Page404 from '../pages/Page404';
+import SignUp from '../pages/SignUp';
+import SignIn from '../pages/SignIn';
+import Setup from '../pages/Setup';
+import SetupSignUp from '../pages/SetupSignUp';
+import ForgetPassword from '../pages/ForgetPassword';
+import ResetPassword from '../pages/ResetPassword';
+import Session from '../pages/Session';
+import SocialLoging from '../pages/SocialLoging';
+import Profile from '../pages/Profile';
+import List from '../pages/List';
+import Request from '../pages/Request';
+import Logout from '../pages/Logout';
+import NewList from '../pages/NewList';
+import ListEdit from '../pages/ListEdit';
+import NewRequest from '../pages/NewRequest';
+import ListDetails from '../pages/ListDetails';
+import RequestDetails from '../pages/RequestDetails';
+import Dashboard from '../pages/Dashboard';
+import MyListing from '../pages/MyListing';
+import MyRequest from '../pages/MyRequest';
+import EmailVerify from '../pages/EmailVerify';
+import VerifyEmail from '../pages/VerifyEmail';
+import IdVerification from '../pages/IdRequest';
+import Boost from '../pages/Boost';
+import OtherPage from '../pages/OtherPage';
+import ChatPage from '../pages/ChatPage';
+import AboutPage from '../pages/AboutPage';
+import ContactPage from '../pages/ContactPage';
+import TermsPage from '../pages/TermsPage';
+import AccountSettings from '../pages/AccountSettings';
+import ProfileSettings from '../pages/ProfileSettings';
+import Settings from '../pages/Settings';
+import Admin from '../pages/Admin';
+import AdminRequests from '../pages/AdminRequests';
+import AdminListings from '../pages/AdminListings';
+import AdminBoosted from '../pages/AdminBoosted';
+import AdminUsers from '../pages/AdminUsers';
 
 export const routes = [
     {
@@ -205,7 +206,11 @@ export const routes = [
         name: 'list',
         component: List
     },
-
+    {
+        path: '/listings/edit/:id/:creating?',
+        name: 'list-edit',
+        component: ListEdit
+    },
     {
         path: '/profile/:id',
         name: 'profile',
@@ -309,17 +314,17 @@ export const routes = [
         }
     },
     {
-        path: '/about',
+        path: '/about/:mobile?',
         name: 'about',
         component: AboutPage,
     },
      {
-        path: '/contact',
+        path: '/contact/:mobile?',
         name: 'contact',
         component: ContactPage,
     },
     {
-        path: '/terms',
+        path: '/terms/:mobile?',
         name: 'terms',
         component: TermsPage,
     },

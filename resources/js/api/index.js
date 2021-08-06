@@ -5,7 +5,7 @@ let production= 'https://proptybox.com/api/v1'
 let devIp= 'http://192.168.43.229:8000/api/v1' 
 
 const api = axios.create({
-  baseURL:devIp
+  baseURL:dev
 });
 
 

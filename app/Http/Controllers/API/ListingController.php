@@ -168,8 +168,8 @@ class ListingController extends Controller
         //     'files' => 'required|image|mimes:jpg,png,jpeg,svg|max:5048'
         // ]);
 
-        if ($request->hasFile('files')) {
-        foreach($request->file('files') as $file) {
+        if ($request->hasFile('file')) {
+        foreach($request->file('file') as $file) {
                 $fileName = 'listing-'.time().'-'.$file->getClientOriginalName(); 
                 $path = public_path('uploads/listing/'.$fileName);
           
@@ -178,7 +178,7 @@ class ListingController extends Controller
                 })->save($path);
 
               ListImages::create([
-                    'listing_id'=>44,
+                    'listing_id'=>$request->input('id'),
                     'filename'=>$fileName
                 ]);
 
